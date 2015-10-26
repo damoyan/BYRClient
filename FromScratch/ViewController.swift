@@ -12,7 +12,14 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        let smth = SMTHURLConnection()
+        smth.init_smth()
+        smth.reset_status()
         // Do any additional setup after loading the view, typically from a nib.
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), { () -> Void in
+            let res = smth.net_LoginBBS("ypy", "yupengyang")
+            println("res: \(res)")
+        })
     }
 
     override func didReceiveMemoryWarning() {
