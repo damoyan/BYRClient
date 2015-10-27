@@ -6,8 +6,5 @@
 //  Copyright (c) 2015 Yu Pengyang. All rights reserved.
 //
 
-import Cocoa
+import Foundation
 
-class APIManager: NSObject {
-
-}

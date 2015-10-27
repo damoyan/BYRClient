@@ -13,8 +13,6 @@
 		B3C6C5931BDE148C004B1000 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B3C6C5921BDE148C004B1000 /* Images.xcassets */; };
 		B3C6C5961BDE148C004B1000 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = B3C6C5941BDE148C004B1000 /* LaunchScreen.xib */; };
 		B3C6C5A21BDE148C004B1000 /* FromScratchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C6C5A11BDE148C004B1000 /* FromScratchTests.swift */; };
-		B3C6C5AF1BDE2282004B1000 /* libSMTH_0.2.3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3C6C5AC1BDE2282004B1000 /* libSMTH_0.2.3.a */; };
-		B3C6C5B31BDE2927004B1000 /* client_signature.m in Sources */ = {isa = PBXBuildFile; fileRef = B3C6C5B21BDE2927004B1000 /* client_signature.m */; };
 		B3C6C5B61BDE2B9A004B1000 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C6C5B51BDE2B9A004B1000 /* APIManager.swift */; };
 /* End PBXBuildFile section */
 
@@ -39,12 +37,6 @@
 		B3C6C59B1BDE148C004B1000 /* FromScratchTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FromScratchTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3C6C5A01BDE148C004B1000 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B3C6C5A11BDE148C004B1000 /* FromScratchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FromScratchTests.swift; sourceTree = "<group>"; };
-		B3C6C5AC1BDE2282004B1000 /* libSMTH_0.2.3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libSMTH_0.2.3.a; sourceTree = "<group>"; };
-		B3C6C5AD1BDE2282004B1000 /* smth_netop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = smth_netop.h; sourceTree = "<group>"; };
-		B3C6C5AE1BDE2282004B1000 /* SMTHURLConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMTHURLConnection.h; sourceTree = "<group>"; };
-		B3C6C5B01BDE23D1004B1000 /* FScratch-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FScratch-Bridging-Header.h"; sourceTree = "<group>"; };
-		B3C6C5B11BDE283B004B1000 /* client_signature.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = client_signature.h; sourceTree = "<group>"; };
-		B3C6C5B21BDE2927004B1000 /* client_signature.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = client_signature.m; sourceTree = "<group>"; };
 		B3C6C5B51BDE2B9A004B1000 /* APIManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -53,7 +45,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B3C6C5AF1BDE2282004B1000 /* libSMTH_0.2.3.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,7 +62,6 @@
 			isa = PBXGroup;
 			children = (
 				B3C6C5881BDE148C004B1000 /* FromScratch */,
-				B3C6C5AB1BDE2282004B1000 /* libSMTH */,
 				B3C6C59E1BDE148C004B1000 /* FromScratchTests */,
 				B3C6C5871BDE148C004B1000 /* Products */,
 			);
@@ -103,9 +93,6 @@
 		B3C6C5891BDE148C004B1000 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				B3C6C5B01BDE23D1004B1000 /* FScratch-Bridging-Header.h */,
-				B3C6C5B11BDE283B004B1000 /* client_signature.h */,
-				B3C6C5B21BDE2927004B1000 /* client_signature.m */,
 				B3C6C58A1BDE148C004B1000 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -126,16 +113,6 @@
 				B3C6C5A01BDE148C004B1000 /* Info.plist */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		B3C6C5AB1BDE2282004B1000 /* libSMTH */ = {
-			isa = PBXGroup;
-			children = (
-				B3C6C5AC1BDE2282004B1000 /* libSMTH_0.2.3.a */,
-				B3C6C5AD1BDE2282004B1000 /* smth_netop.h */,
-				B3C6C5AE1BDE2282004B1000 /* SMTHURLConnection.h */,
-			);
-			path = libSMTH;
 			sourceTree = "<group>";
 		};
 		B3C6C5B41BDE2B84004B1000 /* Model */ = {
@@ -249,7 +226,6 @@
 				B3C6C5B61BDE2B9A004B1000 /* APIManager.swift in Sources */,
 				B3C6C58E1BDE148C004B1000 /* ViewController.swift in Sources */,
 				B3C6C58C1BDE148C004B1000 /* AppDelegate.swift in Sources */,
-				B3C6C5B31BDE2927004B1000 /* client_signature.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -387,7 +363,7 @@
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "FromScratch/FScratch-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				VALID_ARCHS = "armv7 armv7s arm64";
 			};
 			name = Debug;
@@ -405,7 +381,7 @@
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "FromScratch/FScratch-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				VALID_ARCHS = "armv7 armv7s arm64";
 			};
 			name = Release;
