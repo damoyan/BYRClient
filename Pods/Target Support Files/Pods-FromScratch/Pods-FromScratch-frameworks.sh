@@ -54,10 +54,12 @@ code_sign_if_enabled() {
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework 'Pods-FromScratch/Alamofire.framework'
   install_framework 'Pods-FromScratch/RxSwift.framework'
+  install_framework 'Pods-FromScratch/SSKeychain.framework'
   install_framework 'Pods-FromScratch/SwiftyJSON.framework'
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework 'Pods-FromScratch/Alamofire.framework'
   install_framework 'Pods-FromScratch/RxSwift.framework'
+  install_framework 'Pods-FromScratch/SSKeychain.framework'
   install_framework 'Pods-FromScratch/SwiftyJSON.framework'
 fi

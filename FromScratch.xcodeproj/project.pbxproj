@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B33B21FF1BE375780089A679 /* BaseTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33B21FE1BE375780089A679 /* BaseTableViewController.swift */; settings = {ASSET_TAGS = (); }; };
+		B33B21FF1BE375780089A679 /* BaseTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33B21FE1BE375780089A679 /* BaseTableViewController.swift */; };
 		B3C6C58C1BDE148C004B1000 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C6C58B1BDE148C004B1000 /* AppDelegate.swift */; };
 		B3C6C58E1BDE148C004B1000 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C6C58D1BDE148C004B1000 /* ViewController.swift */; };
 		B3C6C5911BDE148C004B1000 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B3C6C58F1BDE148C004B1000 /* Main.storyboard */; };
@@ -35,6 +35,7 @@
 		52D6896FB73703B69B65675C /* Pods-FromScratch.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FromScratch.release.xcconfig"; path = "Pods/Target Support Files/Pods-FromScratch/Pods-FromScratch.release.xcconfig"; sourceTree = "<group>"; };
 		74FF23AD0362C066F839CE8A /* Pods-FromScratch.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FromScratch.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FromScratch/Pods-FromScratch.debug.xcconfig"; sourceTree = "<group>"; };
 		B33B21FE1BE375780089A679 /* BaseTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTableViewController.swift; sourceTree = "<group>"; };
+		B3C600851BE73EF400F420F1 /* Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Header.h; sourceTree = "<group>"; };
 		B3C6C5861BDE148C004B1000 /* FromScratch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FromScratch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3C6C58A1BDE148C004B1000 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B3C6C58B1BDE148C004B1000 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -130,6 +131,7 @@
 			isa = PBXGroup;
 			children = (
 				B3C6C58A1BDE148C004B1000 /* Info.plist */,
+				B3C600851BE73EF400F420F1 /* Header.h */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -457,7 +459,7 @@
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = FromScratch/Header.h;
 				VALID_ARCHS = "armv7 armv7s arm64";
 			};
 			name = Debug;
@@ -476,7 +478,7 @@
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = FromScratch/Header.h;
 				VALID_ARCHS = "armv7 armv7s arm64";
 			};
 			name = Release;

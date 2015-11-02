@@ -19,6 +19,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>SSKeychain.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>SwiftyJSON.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -32,17 +37,22 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>3B8446E02F5E5F2D50B46CA1BBE72607</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>8F45FB2FCEF7E2E7528A2385AE2DBA55</key>
+		<key>ABF9E8AE1BE0CC18DED823ED09AF400F</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
 		<key>B9A04D3C9B208813656510FDA8ADAE02</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>C2814CF121DAF0BC8208C621CC869657</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>CC74E397EF59DB0EA5652D389C03AB1E</key>
 		<dict>
 			<key>primary</key>
 			<true/>

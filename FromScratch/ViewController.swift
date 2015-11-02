@@ -26,19 +26,32 @@ class ViewController: UIViewController, UIWebViewDelegate {
     
     func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
         if let url = request.URL, index = url.absoluteString.rangeOfString("?")?.startIndex where url.absoluteString.substringToIndex(index) == oauthRedirectUri {
-            if let res = parseRedirectURL(url)  {
+            if let res = parseRedirectURL(url) where res.state == state  {
                 print(res)
                 AppSharedInfo.sharedInstance.userToken = res.token
+                AppSharedInfo.sharedInstance.expires = res.expires
+                AppSharedInfo.sharedInstance.refreshToken = res.refreshToken
+                let main = UIStoryboard(name: "Main", bundle: nil)
+                let tab = main.instantiateViewControllerWithIdentifier("vcTabHome")
+                presentViewController(tab, animated: true, completion: nil)
+                return false
             } else {
                 // TODO: show error
             }
-            return false
         }
         return true
     }
     
     func webViewDidFinishLoad(webView: UIWebView) {
-        print(webView.scrollView.contentSize)
+        moveToCenter(webView.scrollView.contentSize)
+    }
+    
+    private func moveToCenter(contentSize: CGSize) {
+        let width = webView.frame.width
+        if contentSize.width > width {
+            let offsetX = (contentSize.width - width) / 2.0
+            webView.scrollView.contentOffset = CGPoint(x: offsetX, y: 0)
+        }
     }
     
     

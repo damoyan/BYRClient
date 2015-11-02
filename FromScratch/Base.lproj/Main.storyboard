@@ -79,11 +79,11 @@
             </objects>
             <point key="canvasLocation" x="-1385" y="-1243"/>
         </scene>
-        <!--Item-->
+        <!--个人-->
         <scene sceneID="s3R-xm-PzD">
             <objects>
                 <navigationController id="s4C-vM-7HK" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="2Wr-fN-s4Z"/>
+                    <tabBarItem key="tabBarItem" title="个人" id="2Wr-fN-s4Z"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Q5X-XJ-cJR">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -125,7 +125,7 @@
             </objects>
             <point key="canvasLocation" x="-1385" y="-2587"/>
         </scene>
-        <!--Root View Controller-->
+        <!--Table View Controller-->
         <scene sceneID="ze5-5A-rcP">
             <objects>
                 <tableViewController id="LFo-i3-br1" sceneMemberID="viewController">
@@ -148,17 +148,27 @@
                             <outlet property="delegate" destination="LFo-i3-br1" id="8RX-ls-d38"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Root View Controller" id="KAR-3B-jed"/>
+                    <navigationItem key="navigationItem" id="KAR-3B-jed">
+                        <nil key="title"/>
+                        <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="Zvs-Ek-Cwv">
+                            <rect key="frame" x="93.5" y="7" width="133" height="30"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <segments>
+                                <segment title="个人收藏"/>
+                                <segment title="版面目录"/>
+                            </segments>
+                        </segmentedControl>
+                    </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qwq-Sn-FWC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1385" y="-1899"/>
         </scene>
-        <!--Item-->
+        <!--导航-->
         <scene sceneID="NTZ-Uk-zmZ">
             <objects>
                 <navigationController id="mpP-N9-k2C" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="r0S-dn-HYw"/>
+                    <tabBarItem key="tabBarItem" title="导航" id="r0S-dn-HYw"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="0bN-1o-VO4">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -188,10 +198,10 @@
             </objects>
             <point key="canvasLocation" x="-1805" y="-2587"/>
         </scene>
-        <!--Tab Bar Controller-->
+        <!--vcTabHome-->
         <scene sceneID="Kpx-sM-2Vw">
             <objects>
-                <tabBarController id="usN-j1-Mx1" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="vcTabHome" title="vcTabHome" id="usN-j1-Mx1" sceneMemberID="viewController">
                     <nil key="simulatedBottomBarMetrics"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="9AJ-94-Gpy">
