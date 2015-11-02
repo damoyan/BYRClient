@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B3300BF21BE748EB00178909 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3300BF11BE748EB00178909 /* User.swift */; settings = {ASSET_TAGS = (); }; };
 		B33B21FF1BE375780089A679 /* BaseTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33B21FE1BE375780089A679 /* BaseTableViewController.swift */; };
 		B3C6C58C1BDE148C004B1000 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C6C58B1BDE148C004B1000 /* AppDelegate.swift */; };
 		B3C6C58E1BDE148C004B1000 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C6C58D1BDE148C004B1000 /* ViewController.swift */; };
@@ -34,6 +35,7 @@
 /* Begin PBXFileReference section */
 		52D6896FB73703B69B65675C /* Pods-FromScratch.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FromScratch.release.xcconfig"; path = "Pods/Target Support Files/Pods-FromScratch/Pods-FromScratch.release.xcconfig"; sourceTree = "<group>"; };
 		74FF23AD0362C066F839CE8A /* Pods-FromScratch.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FromScratch.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FromScratch/Pods-FromScratch.debug.xcconfig"; sourceTree = "<group>"; };
+		B3300BF11BE748EB00178909 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		B33B21FE1BE375780089A679 /* BaseTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTableViewController.swift; sourceTree = "<group>"; };
 		B3C600851BE73EF400F420F1 /* Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Header.h; sourceTree = "<group>"; };
 		B3C6C5861BDE148C004B1000 /* FromScratch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FromScratch.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -157,6 +159,7 @@
 			isa = PBXGroup;
 			children = (
 				B3C6C5B51BDE2B9A004B1000 /* APIManager.swift */,
+				B3300BF11BE748EB00178909 /* User.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -318,6 +321,7 @@
 				B3C6C58E1BDE148C004B1000 /* ViewController.swift in Sources */,
 				B3C6C58C1BDE148C004B1000 /* AppDelegate.swift in Sources */,
 				B33B21FF1BE375780089A679 /* BaseTableViewController.swift in Sources */,
+				B3300BF21BE748EB00178909 /* User.swift in Sources */,
 				B3D1F5D41BDF7D4F00E2E296 /* Common.swift in Sources */,
 				B3D1F5D61BE07BFC00E2E296 /* AppSharedInfo.swift in Sources */,
 				B3C6C5BA1BDF215E004B1000 /* Constants.swift in Sources */,

@@ -20,3 +20,13 @@ enum RequestGenerator: URLRequestConvertible {
         return Alamofire.ParameterEncoding.URL.encode(request, parameters: params).0
     }
 }
+
+typealias RequestCallback = (Response<AnyObject, NSError>) -> ()
+
+class Board {
+    class func sections(callback: RequestCallback) -> Request {
+        return request(.GET, baseURLString + "/section.json").responseJSON { (response) -> Void in
+            callback(response)
+        }
+    }
+}
