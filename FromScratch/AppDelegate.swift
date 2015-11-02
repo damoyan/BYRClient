@@ -25,8 +25,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidEnterBackground(application: UIApplication) {
+        let local = UILocalNotification()
+        local.userInfo = ["type": "news"]
+        local.fireDate = NSDate(timeIntervalSinceNow: 3)
+        application.scheduleLocalNotification(local)
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    }
+    
+    func application(application: UIApplication, didReceiveLocalNotification notification: UILocalNotification) {
+//        if let tab = application.keyWindow?.rootViewController as? UITabBarController, navi = tab.selectedViewController as? UINavigationController {
+////            navi.popToRootViewControllerAnimated(<#animated: Bool#>)
+//        }
+        //        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(NSEC_PER_MSEC * 10)), dispatch_get_main_queue()) {
+//        dispatch_async(dispatch_get_main_queue()) {
+//            println("tabbar")
+//            tabbar.selectedIndex = 0
+//        }
     }
 
     func applicationWillEnterForeground(application: UIApplication) {
