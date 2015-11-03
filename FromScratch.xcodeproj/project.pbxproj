@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B3300BF21BE748EB00178909 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3300BF11BE748EB00178909 /* User.swift */; settings = {ASSET_TAGS = (); }; };
+		B3300BF21BE748EB00178909 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3300BF11BE748EB00178909 /* User.swift */; };
 		B33B21FF1BE375780089A679 /* BaseTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33B21FE1BE375780089A679 /* BaseTableViewController.swift */; };
 		B3C6C58C1BDE148C004B1000 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C6C58B1BDE148C004B1000 /* AppDelegate.swift */; };
 		B3C6C58E1BDE148C004B1000 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C6C58D1BDE148C004B1000 /* ViewController.swift */; };
@@ -19,7 +19,7 @@
 		B3C6C5BA1BDF215E004B1000 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C6C5B91BDF215E004B1000 /* Constants.swift */; };
 		B3D1F5D41BDF7D4F00E2E296 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D1F5D31BDF7D4F00E2E296 /* Common.swift */; };
 		B3D1F5D61BE07BFC00E2E296 /* AppSharedInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D1F5D51BE07BFC00E2E296 /* AppSharedInfo.swift */; };
-		F3737BD9C57FBC385C4E7EDF /* Pods_FromScratch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E057D3E5DA288EE2701B16B6 /* Pods_FromScratch.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		F3737BD9C57FBC385C4E7EDF /* Pods_FromScratch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E057D3E5DA288EE2701B16B6 /* Pods_FromScratch.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */

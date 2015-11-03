@@ -1,6 +1,0 @@
-framework module Pods_FromScratch {
-  umbrella header "Pods-FromScratch-umbrella.h"
-
-  export *
-  module * { export * }
-}
