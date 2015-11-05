@@ -10,23 +10,31 @@ import Foundation
 import Alamofire
 import SwiftyJSON
 
-enum RequestGenerator: URLRequestConvertible {
-    case Default
+enum Router: URLRequestConvertible {
+    case Sections
     var URLRequest: NSMutableURLRequest {
-        var params = [String: AnyObject]()
-        params["oauth_token"] = AppSharedInfo.sharedInstance.userToken
+        var v: (method: Alamofire.Method, path: String, params: [String: AnyObject]?) = {
+            switch self {
+            case Sections:
+                return (.GET, "/section", nil)
+            }
+        }()
+        if v.params == nil {
+            v.params = [String: AnyObject]()
+        }
+        v.params!["oauth_token"] = AppSharedInfo.sharedInstance.userToken
         let request = NSMutableURLRequest(URL: baseURL.URLByAppendingPathComponent("/section.json"))
         request.HTTPMethod = Alamofire.Method.GET.rawValue
-        return Alamofire.ParameterEncoding.URL.encode(request, parameters: params).0
+        return Alamofire.ParameterEncoding.URL.encode(request, parameters: v.params!).0
     }
 }
 
 typealias RequestCallback = (Response<AnyObject, NSError>) -> ()
 
-class Board {
+class API {
     class func sections(callback: RequestCallback) -> Request {
-        return request(.GET, baseURLString + "/section.json").responseJSON { (response) -> Void in
-            callback(response)
+        return request(.GET, baseURLString + "/section.json").response { (request, Response, data, error) in
+            
         }
     }
 }
