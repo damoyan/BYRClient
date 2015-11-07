@@ -14,14 +14,29 @@ class ViewController: UIViewController, UIWebViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let urlComponents = NSURLComponents(string: oauth2URLString)!
-        urlComponents.queryItems = [NSURLQueryItem(name: "client_id", value: appKey), NSURLQueryItem(name: "state", value: "\(state)"), NSURLQueryItem(name: "redirect_uri", value: oauthRedirectUri), NSURLQueryItem(name: "response_type", value: oauthResponseType), NSURLQueryItem(name: "appleid", value: appSecret), NSURLQueryItem(name: "bundleid", value: bundleID)]
-        webView.loadRequest(NSURLRequest(URL: urlComponents.URL!))
+        if AppSharedInfo.sharedInstance.userToken == nil {
+            let urlComponents = NSURLComponents(string: oauth2URLString)!
+            urlComponents.queryItems = [NSURLQueryItem(name: "client_id", value: appKey), NSURLQueryItem(name: "state", value: "\(state)"), NSURLQueryItem(name: "redirect_uri", value: oauthRedirectUri), NSURLQueryItem(name: "response_type", value: oauthResponseType), NSURLQueryItem(name: "appleid", value: appSecret), NSURLQueryItem(name: "bundleid", value: bundleID)]
+            webView.loadRequest(NSURLRequest(URL: urlComponents.URL!))
+        }
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        if AppSharedInfo.sharedInstance.userToken != nil {
+                presentHome()
+        }
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    private func presentHome() {
+        let main = UIStoryboard(name: "Main", bundle: nil)
+        let tab = main.instantiateViewControllerWithIdentifier("vcTabHome")
+        presentViewController(tab, animated: true, completion: nil)
     }
     
     func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
@@ -31,9 +46,7 @@ class ViewController: UIViewController, UIWebViewDelegate {
                 AppSharedInfo.sharedInstance.userToken = res.token
                 AppSharedInfo.sharedInstance.expires = res.expires
                 AppSharedInfo.sharedInstance.refreshToken = res.refreshToken
-                let main = UIStoryboard(name: "Main", bundle: nil)
-                let tab = main.instantiateViewControllerWithIdentifier("vcTabHome")
-                presentViewController(tab, animated: true, completion: nil)
+                presentHome()
                 return false
             } else {
                 // TODO: show error

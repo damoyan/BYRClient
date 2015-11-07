@@ -32,7 +32,11 @@ class AppSharedInfo: NSObject {
         if userToken != nil {
             // update user info
         } else {
-            // show login
+            if refreshToken != nil {
+                // refresh token
+                
+            }
+            // if refresh fail, show login
         }
     }
     
