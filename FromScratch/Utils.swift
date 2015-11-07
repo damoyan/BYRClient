@@ -9,9 +9,17 @@
 import UIKit
 
 class Utils: NSObject {
-
+    static var defaultDateFormatter: NSDateFormatter = {
+        let formatter = NSDateFormatter()
+        formatter.dateStyle = .LongStyle
+        formatter.timeStyle = .LongStyle
+        return formatter
+    }()
 }
 
+extension NSDate {
+    
+}
 
 extension UIImage {
     class func imageWithColor(color: UIColor, side: CGFloat) -> UIImage {

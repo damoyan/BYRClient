@@ -12,6 +12,7 @@ import SwiftyJSON
 
 // Known BYR Errors
 //let needParameter = (code: "1701", msg: "请求参数错误或丢失")
+// code: 1702, msg: "非法的 oauth_token"
 
 let BYRErrorDomain = "BYRErrorDomain"
 
@@ -24,7 +25,7 @@ enum API: URLRequestConvertible {
         if v.params == nil {
             v.params = [String: AnyObject]()
         }
-        v.params!["oauth_token"] = AppSharedInfo.sharedInstance.userToken
+        v.params!["oauth_token"] = "s\(AppSharedInfo.sharedInstance.userToken)"
         let request = NSMutableURLRequest(URL: baseURL.URLByAppendingPathComponent(v.path))
         request.HTTPMethod = v.method.rawValue
         return Alamofire.ParameterEncoding.URL.encode(request, parameters: v.params!).0
