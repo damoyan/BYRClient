@@ -10,19 +10,33 @@ import UIKit
 import SwiftyJSON
 
 class Section: NSObject {
-    let id: String
     let name: String?
-    let isRoot: Bool
+    let desc: String?
+    let isRoot: Bool?
     let parent: String?
+    let subSections: [Section]?
+    let boards: [Board]?
     
     init(data: JSON) {
-        id = data[_keys.id].stringValue
         name = data[_keys.name].string
-        isRoot = data[_keys.isRoot].boolValue
+        desc = data[_keys.desc].string
+        isRoot = data[_keys.isRoot].bool
         parent = data[_keys.parent].string
+        if let subsectionNames = data[_keys.subSections].arrayObject as? [String] {
+            subSections = subsectionNames.map { JSON(["name": $0]) }.map { Section(data: $0) }
+        } else {
+            subSections = nil
+        }
+        if let jsons = data[_keys.boards].array {
+            boards = jsons.map { Board(data: $0) }
+        } else {
+            boards = nil
+        }
     }
     
-    let _keys = (id: "name", name: "description", isRoot: "is_root", parent: "parent")
+    struct _keys {
+        static let name = "name", desc = "description", isRoot = "is_root", parent = "parent", subSections = "sub_section", boards = "board"
+    }
     
     class func generateArray(data: JSON) -> [Section] {
         guard let array = data.array else {

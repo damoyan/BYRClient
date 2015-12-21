@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9059" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="usN-j1-Mx1">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="egK-fZ-bAL">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
     </dependencies>
     <scenes>
         <!--授权登录-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="FromScratch" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="vcLogin" id="BYZ-38-t0r" customClass="ViewController" customModule="FromScratch" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -78,7 +78,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Mcz-oC-ZUk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1385" y="-1243"/>
+            <point key="canvasLocation" x="-1440" y="-452"/>
         </scene>
         <!--个人-->
         <scene sceneID="s3R-xm-PzD">
@@ -95,7 +95,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="61Y-KM-T9I" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1805" y="-1243"/>
+            <point key="canvasLocation" x="-1870" y="-452"/>
         </scene>
         <!--热点话题-->
         <scene sceneID="kRT-gx-38p">
@@ -118,10 +118,48 @@
             </objects>
             <point key="canvasLocation" x="-1385" y="-2587"/>
         </scene>
-        <!--Board Navigation View Controller-->
+        <!--收藏夹-->
+        <scene sceneID="vQI-c9-zc4">
+            <objects>
+                <tableViewController storyboardIdentifier="vcFavorite" id="5o8-r9-O7G" customClass="FavoriteViewController" customModule="FromScratch" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="sZR-vJ-kOb">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <connections>
+                            <outlet property="dataSource" destination="5o8-r9-O7G" id="DPw-Ns-TMV"/>
+                            <outlet property="delegate" destination="5o8-r9-O7G" id="Ako-8l-cG0"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="收藏夹" id="YzA-5T-zEk">
+                        <barButtonItem key="backBarButtonItem" title=" " id="V9b-yY-q4b"/>
+                    </navigationItem>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ugx-ec-VSc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1385" y="-1214"/>
+        </scene>
+        <!--收藏-->
+        <scene sceneID="5OR-tT-zIu">
+            <objects>
+                <navigationController id="G0L-Tj-yu3" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="收藏" id="g3k-CD-93d"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="1jL-hO-pZN">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="5o8-r9-O7G" kind="relationship" relationship="rootViewController" id="6QO-GX-3yC"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cqO-sv-fPA" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1805" y="-1214"/>
+        </scene>
+        <!--版面导航-->
         <scene sceneID="ze5-5A-rcP">
             <objects>
-                <tableViewController id="LFo-i3-br1" customClass="BoardNavigationViewController" customModule="FromScratch" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="vcSection" id="LFo-i3-br1" customClass="SectionViewController" customModule="FromScratch" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="KgI-MR-tzW">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -131,25 +169,9 @@
                             <outlet property="delegate" destination="LFo-i3-br1" id="8RX-ls-d38"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="KAR-3B-jed">
-                        <nil key="title"/>
+                    <navigationItem key="navigationItem" title="版面导航" id="KAR-3B-jed">
                         <barButtonItem key="backBarButtonItem" title=" " id="Fjf-ph-Xkt"/>
-                        <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="Zvs-Ek-Cwv">
-                            <rect key="frame" x="93.5" y="7" width="133" height="30"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <segments>
-                                <segment title="个人收藏"/>
-                                <segment title="版面目录"/>
-                            </segments>
-                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <connections>
-                                <action selector="switchTitle:" destination="LFo-i3-br1" eventType="valueChanged" id="AF0-jC-AOS"/>
-                            </connections>
-                        </segmentedControl>
                     </navigationItem>
-                    <connections>
-                        <outlet property="titleControl" destination="Zvs-Ek-Cwv" id="hIY-i0-nXa"/>
-                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qwq-Sn-FWC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -203,6 +225,7 @@
                     <connections>
                         <segue destination="ogX-mC-9mc" kind="relationship" relationship="viewControllers" id="pfK-5j-9zu"/>
                         <segue destination="mpP-N9-k2C" kind="relationship" relationship="viewControllers" id="s9N-Oi-ikI"/>
+                        <segue destination="G0L-Tj-yu3" kind="relationship" relationship="viewControllers" id="vim-WV-J9W"/>
                         <segue destination="s4C-vM-7HK" kind="relationship" relationship="viewControllers" id="Zhd-rq-A2s"/>
                     </connections>
                 </tabBarController>

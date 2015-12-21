@@ -15,6 +15,23 @@ class Utils: NSObject {
         formatter.timeStyle = .LongStyle
         return formatter
     }()
+    
+    static var main: UIStoryboard = {
+        return UIStoryboard.init(name: "Main", bundle: nil)
+    }()
+}
+
+extension UIViewController {
+    
+    func navigateToLogin() {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func navigateToSectionDetail(section: Section) {
+        let vc = Utils.main.instantiateViewControllerWithIdentifier("vcSection") as! SectionViewController
+        vc.section = section
+        navigationController?.pushViewController(vc, animated: true)
+    }
 }
 
 extension NSDate {

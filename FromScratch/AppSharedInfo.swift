@@ -11,6 +11,9 @@ import SSKeychain
 
 class AppSharedInfo: NSObject {
     static let sharedInstance = AppSharedInfo()
+    
+    var currentTheme = Light()
+    
     var userToken: String? {
         didSet {
             persistToken()
@@ -48,9 +51,8 @@ class AppSharedInfo: NSObject {
     var tokenExpired: Bool {
         if let e = expiresDateString, date = Utils.defaultDateFormatter.dateFromString(e) {
             if date.compare(NSDate()) == NSComparisonResult.OrderedDescending {
-                return true
+                return false
             }
-            return false
         }
         return true
     }
@@ -65,13 +67,16 @@ class AppSharedInfo: NSObject {
         super.init()
         if userToken != nil && !tokenExpired {
             // update user info
+            print("token is good", userToken, expiresDateString)
         } else {
+            print("token is expired.")
             if refreshToken != nil {
-                // refresh token
-                
+                // FIXME: refresh token
+                print("need refresh: ", refreshToken)
             }
             // if refresh fail, show login
         }
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "onInvalidToken:", name: Notifications.InvalidToken, object: nil)
     }
     
     private func persistToken() {
@@ -96,5 +101,25 @@ class AppSharedInfo: NSObject {
         } else {
             SSKeychain.deletePasswordForService(service, account: account.refreshToken)
         }
+    }
+    
+    @objc private func onInvalidToken(noti: NSNotification) {
+        // FIXME: clear token info
+        if userToken != nil {
+            userToken = nil
+        }
+        navigateToLogin()
+    }
+    
+    private func navigateToLogin() {
+        if let root = UIApplication.sharedApplication().keyWindow?.rootViewController {
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                root.navigateToLogin()
+            })
+        }
+    }
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
 }

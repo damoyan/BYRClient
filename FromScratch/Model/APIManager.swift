@@ -15,17 +15,20 @@ import SwiftyJSON
 // code: 1702, msg: "非法的 oauth_token"
 
 let BYRErrorDomain = "BYRErrorDomain"
+let ErrorInvalidToken = 1702
 
 enum API: URLRequestConvertible {
     
     case Sections
+    case Section(name: String)
+    case Favorite(level: String)
     
     var URLRequest: NSMutableURLRequest {
         var v = generateURLComponents()
         if v.params == nil {
             v.params = [String: AnyObject]()
         }
-        v.params!["oauth_token"] = "s\(AppSharedInfo.sharedInstance.userToken)"
+        v.params!["oauth_token"] = "\(AppSharedInfo.sharedInstance.userToken!)"
         let request = NSMutableURLRequest(URL: baseURL.URLByAppendingPathComponent(v.path))
         request.HTTPMethod = v.method.rawValue
         return Alamofire.ParameterEncoding.URL.encode(request, parameters: v.params!).0
@@ -43,7 +46,11 @@ enum API: URLRequestConvertible {
             // when we access 'code' or 'msg' key, there should be an error,
             // so sj["code"].error & sj["msg"].error are not `nil`
             guard sj["code"].error != nil && sj["msg"].error != nil else {
-                callback(res.request, res.response, nil, NSError(domain: BYRErrorDomain, code: sj["code"].intValue, userInfo: [NSLocalizedDescriptionKey: sj["msg"].stringValue]))
+                if sj["code"].intValue == ErrorInvalidToken {
+                    NSNotificationCenter.defaultCenter().postNotificationName(Notifications.InvalidToken, object: nil)
+                } else {
+                    callback(res.request, res.response, nil, NSError(domain: BYRErrorDomain, code: sj["code"].intValue, userInfo: [NSLocalizedDescriptionKey: sj["msg"].stringValue]))
+                }
                 return
             }
             callback(res.request, res.response, sj, nil)
@@ -54,6 +61,10 @@ enum API: URLRequestConvertible {
         switch self {
         case Sections:
             return (.GET, "/section.json", nil)
+        case Section(let name):
+            return (.GET, "/section/\(name).json", nil)
+        case .Favorite(let level):
+            return (.GET, "/favorite/\(level).json", nil)
         }
     }
 }

@@ -7,15 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B3163D5F1C27E31400C0F831 /* SectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3163D5E1C27E31400C0F831 /* SectionViewController.swift */; };
+		B3163D611C27EED000C0F831 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3163D601C27EED000C0F831 /* Board.swift */; };
+		B3163D631C27F87A00C0F831 /* ColorTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3163D621C27F87A00C0F831 /* ColorTheme.swift */; };
+		B3163D651C27FF8300C0F831 /* Favorite.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3163D641C27FF8300C0F831 /* Favorite.swift */; };
+		B3163D671C2810D400C0F831 /* FavoriteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3163D661C2810D400C0F831 /* FavoriteViewController.swift */; };
 		B3300BF21BE748EB00178909 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3300BF11BE748EB00178909 /* User.swift */; };
 		B33B21FF1BE375780089A679 /* BaseTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33B21FE1BE375780089A679 /* BaseTableViewController.swift */; };
 		B38299FB1BEE350E00826B25 /* ArticleInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B38299F91BEE350E00826B25 /* ArticleInfoCell.swift */; };
 		B38299FC1BEE350E00826B25 /* ArticleInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B38299FA1BEE350E00826B25 /* ArticleInfoCell.xib */; };
-		B38299FE1BEE355F00826B25 /* BoardNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B38299FD1BEE355F00826B25 /* BoardNavigationViewController.swift */; };
 		B3829A001BEE375600826B25 /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = B38299FF1BEE375600826B25 /* Section.swift */; };
 		B3829A021BEE454800826B25 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3829A011BEE454800826B25 /* Utils.swift */; };
 		B3C6C58C1BDE148C004B1000 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C6C58B1BDE148C004B1000 /* AppDelegate.swift */; };
-		B3C6C58E1BDE148C004B1000 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C6C58D1BDE148C004B1000 /* ViewController.swift */; };
+		B3C6C58E1BDE148C004B1000 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3C6C58D1BDE148C004B1000 /* LoginViewController.swift */; };
 		B3C6C5911BDE148C004B1000 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B3C6C58F1BDE148C004B1000 /* Main.storyboard */; };
 		B3C6C5931BDE148C004B1000 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B3C6C5921BDE148C004B1000 /* Images.xcassets */; };
 		B3C6C5961BDE148C004B1000 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = B3C6C5941BDE148C004B1000 /* LaunchScreen.xib */; };
@@ -40,18 +44,22 @@
 /* Begin PBXFileReference section */
 		52D6896FB73703B69B65675C /* Pods-FromScratch.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FromScratch.release.xcconfig"; path = "Pods/Target Support Files/Pods-FromScratch/Pods-FromScratch.release.xcconfig"; sourceTree = "<group>"; };
 		74FF23AD0362C066F839CE8A /* Pods-FromScratch.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FromScratch.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FromScratch/Pods-FromScratch.debug.xcconfig"; sourceTree = "<group>"; };
+		B3163D5E1C27E31400C0F831 /* SectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionViewController.swift; sourceTree = "<group>"; };
+		B3163D601C27EED000C0F831 /* Board.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
+		B3163D621C27F87A00C0F831 /* ColorTheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorTheme.swift; sourceTree = "<group>"; };
+		B3163D641C27FF8300C0F831 /* Favorite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Favorite.swift; sourceTree = "<group>"; };
+		B3163D661C2810D400C0F831 /* FavoriteViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteViewController.swift; sourceTree = "<group>"; };
 		B3300BF11BE748EB00178909 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		B33B21FE1BE375780089A679 /* BaseTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseTableViewController.swift; sourceTree = "<group>"; };
+		B33B21FE1BE375780089A679 /* BaseTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseTableViewController.swift; path = ../BaseTableViewController.swift; sourceTree = "<group>"; };
 		B38299F91BEE350E00826B25 /* ArticleInfoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleInfoCell.swift; sourceTree = "<group>"; };
 		B38299FA1BEE350E00826B25 /* ArticleInfoCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ArticleInfoCell.xib; sourceTree = "<group>"; };
-		B38299FD1BEE355F00826B25 /* BoardNavigationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardNavigationViewController.swift; sourceTree = "<group>"; };
 		B38299FF1BEE375600826B25 /* Section.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Section.swift; sourceTree = "<group>"; };
 		B3829A011BEE454800826B25 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		B3C600851BE73EF400F420F1 /* Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Header.h; sourceTree = "<group>"; };
 		B3C6C5861BDE148C004B1000 /* FromScratch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FromScratch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3C6C58A1BDE148C004B1000 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B3C6C58B1BDE148C004B1000 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		B3C6C58D1BDE148C004B1000 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		B3C6C58D1BDE148C004B1000 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LoginViewController.swift; path = ../LoginViewController.swift; sourceTree = "<group>"; };
 		B3C6C5901BDE148C004B1000 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B3C6C5921BDE148C004B1000 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		B3C6C5951BDE148C004B1000 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -101,6 +109,18 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		B3163D5A1C27B19400C0F831 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				B3D1F5D51BE07BFC00E2E296 /* AppSharedInfo.swift */,
+				B3C6C5B91BDF215E004B1000 /* Constants.swift */,
+				B3D1F5D31BDF7D4F00E2E296 /* Common.swift */,
+				B3829A011BEE454800826B25 /* Utils.swift */,
+				B3163D621C27F87A00C0F831 /* ColorTheme.swift */,
+			);
+			name = Utils;
+			sourceTree = "<group>";
+		};
 		B38299F71BEE34A800826B25 /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -113,7 +133,10 @@
 		B38299F81BEE34B100826B25 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				B38299FD1BEE355F00826B25 /* BoardNavigationViewController.swift */,
+				B33B21FE1BE375780089A679 /* BaseTableViewController.swift */,
+				B3C6C58D1BDE148C004B1000 /* LoginViewController.swift */,
+				B3163D5E1C27E31400C0F831 /* SectionViewController.swift */,
+				B3163D661C2810D400C0F831 /* FavoriteViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -141,20 +164,15 @@
 		B3C6C5881BDE148C004B1000 /* FromScratch */ = {
 			isa = PBXGroup;
 			children = (
+				B3163D5A1C27B19400C0F831 /* Utils */,
 				B3C6C5B41BDE2B84004B1000 /* Model */,
 				B38299F71BEE34A800826B25 /* View */,
 				B38299F81BEE34B100826B25 /* Controller */,
 				B3C6C58B1BDE148C004B1000 /* AppDelegate.swift */,
-				B3C6C58D1BDE148C004B1000 /* ViewController.swift */,
 				B3C6C58F1BDE148C004B1000 /* Main.storyboard */,
 				B3C6C5921BDE148C004B1000 /* Images.xcassets */,
 				B3C6C5941BDE148C004B1000 /* LaunchScreen.xib */,
 				B3C6C5891BDE148C004B1000 /* Supporting Files */,
-				B3C6C5B91BDF215E004B1000 /* Constants.swift */,
-				B3D1F5D31BDF7D4F00E2E296 /* Common.swift */,
-				B3D1F5D51BE07BFC00E2E296 /* AppSharedInfo.swift */,
-				B33B21FE1BE375780089A679 /* BaseTableViewController.swift */,
-				B3829A011BEE454800826B25 /* Utils.swift */,
 			);
 			path = FromScratch;
 			sourceTree = "<group>";
@@ -191,6 +209,8 @@
 				B3C6C5B51BDE2B9A004B1000 /* APIManager.swift */,
 				B3300BF11BE748EB00178909 /* User.swift */,
 				B38299FF1BEE375600826B25 /* Section.swift */,
+				B3163D601C27EED000C0F831 /* Board.swift */,
+				B3163D641C27FF8300C0F831 /* Favorite.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -351,15 +371,19 @@
 			files = (
 				B38299FB1BEE350E00826B25 /* ArticleInfoCell.swift in Sources */,
 				B3C6C5B61BDE2B9A004B1000 /* APIManager.swift in Sources */,
-				B3C6C58E1BDE148C004B1000 /* ViewController.swift in Sources */,
+				B3C6C58E1BDE148C004B1000 /* LoginViewController.swift in Sources */,
 				B3C6C58C1BDE148C004B1000 /* AppDelegate.swift in Sources */,
+				B3163D611C27EED000C0F831 /* Board.swift in Sources */,
 				B3829A001BEE375600826B25 /* Section.swift in Sources */,
+				B3163D631C27F87A00C0F831 /* ColorTheme.swift in Sources */,
 				B33B21FF1BE375780089A679 /* BaseTableViewController.swift in Sources */,
-				B38299FE1BEE355F00826B25 /* BoardNavigationViewController.swift in Sources */,
+				B3163D651C27FF8300C0F831 /* Favorite.swift in Sources */,
 				B3300BF21BE748EB00178909 /* User.swift in Sources */,
 				B3D1F5D41BDF7D4F00E2E296 /* Common.swift in Sources */,
+				B3163D671C2810D400C0F831 /* FavoriteViewController.swift in Sources */,
 				B3D1F5D61BE07BFC00E2E296 /* AppSharedInfo.swift in Sources */,
 				B3C6C5BA1BDF215E004B1000 /* Constants.swift in Sources */,
+				B3163D5F1C27E31400C0F831 /* SectionViewController.swift in Sources */,
 				B3829A021BEE454800826B25 /* Utils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

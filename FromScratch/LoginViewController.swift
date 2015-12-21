@@ -8,48 +8,54 @@
 
 import UIKit
 
+// Login OAuth
 class ViewController: UIViewController, UIWebViewDelegate {
 
     @IBOutlet weak var webView: UIWebView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
         if AppSharedInfo.sharedInstance.userToken == nil {
             let urlComponents = NSURLComponents(string: oauth2URLString)!
             urlComponents.queryItems = [NSURLQueryItem(name: "client_id", value: appKey), NSURLQueryItem(name: "state", value: "\(state)"), NSURLQueryItem(name: "redirect_uri", value: oauthRedirectUri), NSURLQueryItem(name: "response_type", value: oauthResponseType), NSURLQueryItem(name: "appleid", value: appSecret), NSURLQueryItem(name: "bundleid", value: bundleID)]
             webView.loadRequest(NSURLRequest(URL: urlComponents.URL!))
         }
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
+        // 1. present vc in viewWillAppear: will lead to warning: Presenting view controllers on detached view controllers is discourage
+        // 2. when you try and display a new viewcontroller before the current view controller is finished displaying(such as viewWillAppear), you will got the Warning: "The unbalanced calls to begin/end appearance transitions"
         if AppSharedInfo.sharedInstance.userToken != nil {
-                presentHome()
+            presentHome()
         }
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     private func presentHome() {
-        let main = UIStoryboard(name: "Main", bundle: nil)
-        let tab = main.instantiateViewControllerWithIdentifier("vcTabHome")
-        presentViewController(tab, animated: true, completion: nil)
+        let tab = Utils.main.instantiateViewControllerWithIdentifier("vcTabHome")
+        navigationController?.presentViewController(tab, animated: true, completion: nil)
     }
     
     func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
         if let url = request.URL, index = url.absoluteString.rangeOfString("?")?.startIndex where url.absoluteString.substringToIndex(index) == oauthRedirectUri {
             if let res = parseRedirectURL(url) where res.state == state  {
-                print(res)
+                print("授权成功", res)
                 AppSharedInfo.sharedInstance.userToken = res.token
                 AppSharedInfo.sharedInstance.expires = res.expires
                 AppSharedInfo.sharedInstance.refreshToken = res.refreshToken
                 presentHome()
                 return false
             } else {
-                // TODO: show error
+                print("授权失败")
             }
         }
         return true

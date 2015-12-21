@@ -17,6 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         setupUI()
+        AppSharedInfo.sharedInstance
         return true
     }
 
@@ -56,6 +57,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private func setupUI() {
         UINavigationBar.appearance().setBackgroundImage(UIImage.imageWithColor(UIColor(rgb: 0x3b8ede), side: 1), forBarMetrics: .Default)
         UINavigationBar.appearance().tintColor = UIColor.whiteColor()
+        UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor(), NSFontAttributeName: UIFont.systemFontOfSize(18)]
         UIApplication.sharedApplication().statusBarStyle = .LightContent
     }
 }
