@@ -1,8 +1,8 @@
 PODS:
-  - Alamofire (3.1.1)
-  - RxSwift (2.0.0-beta.1)
+  - Alamofire (3.1.3)
+  - RxSwift (2.0.0-beta.4)
   - SSKeychain (1.2.3)
-  - SwiftyJSON (2.3.1)
+  - SwiftyJSON (2.3.2)
 
 DEPENDENCIES:
   - Alamofire (~> 3.0)
@@ -11,9 +11,9 @@ DEPENDENCIES:
   - SwiftyJSON (~> 2.3)
 
 SPEC CHECKSUMS:
-  Alamofire: 9b0a7188b961a03914a99304488bd226b0e46c0e
-  RxSwift: a9b0f4d876eac130cda0ae2f3fba627be3baf3ef
+  Alamofire: 9f93b56389e48def9220dd57d1f44b1927229a5a
+  RxSwift: 191c6b06da783a8671433cf35a54d2ad2fd2d9de
   SSKeychain: 3f42991739c6c60a9cf1bbd4dff6c0d3694bcf3d
-  SwiftyJSON: 592b53bee5ef3dd9b3bebc6b9cb7ee35426ae8c3
+  SwiftyJSON: 04ccea08915aa0109039157c7974cf0298da292a
 
 COCOAPODS: 0.39.0
