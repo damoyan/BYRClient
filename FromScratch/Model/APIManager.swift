@@ -15,13 +15,13 @@ import SwiftyJSON
 // code: 1702, msg: "非法的 oauth_token"
 
 let BYRErrorDomain = "BYRErrorDomain"
-let ErrorInvalidToken = 1702
+let ErrorInvalidToken = 1702 //msg: "非法的 oauth_token"
 
 enum API: URLRequestConvertible {
     
     case Sections
     case Section(name: String)
-    case Favorite(level: String)
+    case Favorite(level: Int)
     
     var URLRequest: NSMutableURLRequest {
         var v = generateURLComponents()

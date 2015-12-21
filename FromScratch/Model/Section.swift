@@ -42,10 +42,6 @@ class Section: NSObject {
         guard let array = data.array else {
             return []
         }
-        var res = [Section]()
-        for j in array {
-            res.append(Section(data: j))
-        }
-        return res
+        return array.map { Section(data: $0) }
     }
 }
