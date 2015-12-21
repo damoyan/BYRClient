@@ -32,6 +32,12 @@ extension UIViewController {
         vc.section = section
         navigationController?.pushViewController(vc, animated: true)
     }
+    
+    func navigateToFavorite(level: Int) {
+        let vc = Utils.main.instantiateViewControllerWithIdentifier("vcFavorite") as! FavoriteViewController
+        vc.level = level
+        navigationController?.pushViewController(vc, animated: true)
+    }
 }
 
 extension NSDate {

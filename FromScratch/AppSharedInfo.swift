@@ -61,9 +61,9 @@ class AppSharedInfo: NSObject {
     let account = (token: "token", refreshToken: "refreshToken", expires: "expires")
     
     override init() {
-        userToken = try? SSKeychain.passwordForService(service, account: account.token, error: ())
-        expiresDateString = try? SSKeychain.passwordForService(service, account: account.expires, error: ())
-        refreshToken = try? SSKeychain.passwordForService(service, account: account.refreshToken, error: ())
+        userToken = SSKeychain.passwordForService(service, account: account.token)
+        expiresDateString = SSKeychain.passwordForService(service, account: account.expires)
+        refreshToken = SSKeychain.passwordForService(service, account: account.refreshToken)
         super.init()
         if userToken != nil && !tokenExpired {
             // update user info
