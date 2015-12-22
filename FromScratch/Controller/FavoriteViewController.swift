@@ -94,8 +94,9 @@ class FavoriteViewController: BaseTableViewController {
         case let sec as Section:
             navigateToSectionDetail(sec)
         case let b as Board:
-            // FIXME:
-            print("to board", b)
+            if let name = b.name {
+                navigateToBoard(name)
+            }
         default:
             break
         }

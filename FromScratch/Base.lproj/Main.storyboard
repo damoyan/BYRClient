@@ -78,7 +78,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Mcz-oC-ZUk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1440" y="-452"/>
+            <point key="canvasLocation" x="-628" y="-452"/>
         </scene>
         <!--个人-->
         <scene sceneID="s3R-xm-PzD">
@@ -95,12 +95,45 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="61Y-KM-T9I" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1870" y="-452"/>
+            <point key="canvasLocation" x="-1058" y="-452"/>
+        </scene>
+        <!--Board View Controller-->
+        <scene sceneID="8JW-r2-YaN">
+            <objects>
+                <tableViewController storyboardIdentifier="vcBoard" id="9Rt-2v-U7f" customClass="BoardViewController" customModule="FromScratch" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="Da0-qd-OzC">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <connections>
+                            <outlet property="dataSource" destination="9Rt-2v-U7f" id="Kev-qp-hjf"/>
+                            <outlet property="delegate" destination="9Rt-2v-U7f" id="xq1-ZU-372"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="hkq-Rl-Us4">
+                        <barButtonItem key="backBarButtonItem" title=" " id="nyy-vo-0Wh"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="2Dv-Md-fBv">
+                            <connections>
+                                <action selector="onAction:" destination="9Rt-2v-U7f" id="5Ye-Zn-rfo"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                    <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="7yQ-qH-cgT">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <connections>
+                            <action selector="onRefresh:" destination="9Rt-2v-U7f" eventType="valueChanged" id="IVk-Lr-QFD"/>
+                        </connections>
+                    </refreshControl>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QFC-qD-VWS" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1706" y="23"/>
         </scene>
         <!--热点话题-->
         <scene sceneID="kRT-gx-38p">
             <objects>
-                <tableViewController id="fX0-rq-ecL" customClass="BaseTableViewController" customModule="FromScratch" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="fX0-rq-ecL" customClass="TopTenViewController" customModule="FromScratch" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="Mm8-Ht-vff">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -251,6 +284,25 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="emq-NU-neU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-3286" y="-1243"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="h1g-e3-cAr">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="P55-iw-oN5" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="yPe-Pg-KBY">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="9Rt-2v-U7f" kind="relationship" relationship="rootViewController" id="mVD-xk-fkW"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cmv-Mm-djZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2098" y="23"/>
         </scene>
     </scenes>
 </document>

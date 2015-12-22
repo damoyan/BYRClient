@@ -23,6 +23,10 @@ enum API: URLRequestConvertible {
     case Section(name: String)
     case Favorite(level: Int)
     
+    case Board(name: String, mode: BoardMode?, perPage: Int?, page: Int?)
+    
+    case TopTen
+    
     var URLRequest: NSMutableURLRequest {
         var v = generateURLComponents()
         if v.params == nil {
@@ -65,6 +69,20 @@ enum API: URLRequestConvertible {
             return (.GET, "/section/\(name).json", nil)
         case .Favorite(let level):
             return (.GET, "/favorite/\(level).json", nil)
+        case .TopTen:
+            return (.GET, "/widget/topten.json", nil)
+        case .Board(let name, let mode, let perPage, let page):
+            return (.GET, "/board/\(name).json", API.filterParams(["mode": mode?.rawValue, "count": perPage, "page": page]))
         }
+    }
+    
+    static func filterParams(input: [String: AnyObject?]) -> [String: AnyObject] {
+        var ret = [String: AnyObject]()
+        input.forEach {
+            if $0.1 != nil {
+                ret[$0.0] = $0.1!
+            }
+        }
+        return ret
     }
 }

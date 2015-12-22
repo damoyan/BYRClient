@@ -19,6 +19,13 @@ class Utils: NSObject {
     static var main: UIStoryboard = {
         return UIStoryboard.init(name: "Main", bundle: nil)
     }()
+    
+    static func dateFromUnixTimestamp(ts: Int?) -> NSDate? {
+        guard let ts = ts else {
+            return nil
+        }
+        return NSDate(timeIntervalSince1970: NSTimeInterval(ts))
+    }
 }
 
 extension UIViewController {
@@ -36,6 +43,12 @@ extension UIViewController {
     func navigateToFavorite(level: Int) {
         let vc = Utils.main.instantiateViewControllerWithIdentifier("vcFavorite") as! FavoriteViewController
         vc.level = level
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func navigateToBoard(name: String) {
+        let vc = Utils.main.instantiateViewControllerWithIdentifier("vcBoard") as! BoardViewController
+        vc.boardName = name
         navigationController?.pushViewController(vc, animated: true)
     }
 }

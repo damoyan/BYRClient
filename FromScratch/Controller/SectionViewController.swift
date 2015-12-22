@@ -109,6 +109,9 @@ class SectionViewController: BaseTableViewController {
         case let s as Section:
             navigateToSectionDetail(s)
         case let b as Board:
+            if let name = b.name {
+                navigateToBoard(name)
+            }
             break
         default:
             break
