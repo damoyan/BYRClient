@@ -85,12 +85,17 @@ class BoardViewController: BaseTableViewController {
         loadData()
     }
     
-    @IBAction func onAction(sender: UIBarButtonItem) {
-        let alert = UIAlertController(title: "", message: "", preferredStyle: UIAlertControllerStyle.ActionSheet)
+    @objc @IBAction private func onAction(sender: UIBarButtonItem) {
+        let alert = UIAlertController(title: "更多操作", message: "", preferredStyle: UIAlertControllerStyle.ActionSheet)
         alert.addAction(UIAlertAction(title: "查看版面信息", style: UIAlertActionStyle.Default, handler: { (_) -> Void in
             print("info")
         }))
+        alert.addAction(UIAlertAction(title: "取消", style: UIAlertActionStyle.Cancel, handler: nil))
         presentViewController(alert, animated: true, completion: nil)
+    }
+    
+    @objc @IBAction private func onCompose(sender: UIBarButtonItem) {
+        print("compose")
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -133,5 +138,8 @@ class BoardViewController: BaseTableViewController {
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        guard indexPath.row < content.count else { return }
+        let data = content[indexPath.row]
+        navigateToThread(data)
     }
 }

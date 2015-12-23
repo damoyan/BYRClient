@@ -27,6 +27,8 @@ enum API: URLRequestConvertible {
     
     case TopTen
     
+    case Thread(name: String, id: Int, uid: String?, perPage: Int?, page: Int?)
+    
     var URLRequest: NSMutableURLRequest {
         var v = generateURLComponents()
         if v.params == nil {
@@ -73,16 +75,16 @@ enum API: URLRequestConvertible {
             return (.GET, "/widget/topten.json", nil)
         case .Board(let name, let mode, let perPage, let page):
             return (.GET, "/board/\(name).json", API.filterParams(["mode": mode?.rawValue, "count": perPage, "page": page]))
+        case .Thread(let name, let id, let uid, let perPage, let page):
+            return (.GET, "/threads/\(name)/\(id).json", API.filterParams(["au": uid, "count": perPage, "page": page]))
         }
     }
     
     static func filterParams(input: [String: AnyObject?]) -> [String: AnyObject] {
-        var ret = [String: AnyObject]()
-        input.forEach {
-            if $0.1 != nil {
-                ret[$0.0] = $0.1!
-            }
+        return input.flatMap { $0.1 == nil ? nil : ($0.0, $0.1!)}.reduce([String: AnyObject]()) {
+            var ret = $0
+            ret[$1.0] = $1.1
+            return ret
         }
-        return ret
     }
 }

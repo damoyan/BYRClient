@@ -51,6 +51,12 @@ extension UIViewController {
         vc.boardName = name
         navigationController?.pushViewController(vc, animated: true)
     }
+    
+    func navigateToThread(article: Article) {
+        let vc = Utils.main.instantiateViewControllerWithIdentifier("vcThread") as! ThreadViewController
+        vc.topic = article
+        navigationController?.pushViewController(vc, animated: true)
+    }
 }
 
 extension NSDate {

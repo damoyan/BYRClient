@@ -24,7 +24,6 @@ class TopTenViewController: BaseTableViewController {
         guard !isLoading else { return }
         isLoading = true
         API.TopTen.handleResponse { [weak self] (_, _, d, e) -> () in
-            print(d)
             guard let this = self else { return }
             guard let data = d?["article"].array else {
                 print(e?.localizedDescription)
@@ -58,5 +57,7 @@ class TopTenViewController: BaseTableViewController {
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        let data = content[indexPath.row]
+        navigateToThread(data)
     }
 }

@@ -25,7 +25,7 @@ class Article: NSObject {
     let boardName: String?
     let content: String?
     // FIXME: - 
-    let attachment: Int?
+    let attachment: Int? = nil
     let previousID: Int?
     let nextID: Int?
     let previousIDInThread: Int?
@@ -34,6 +34,12 @@ class Article: NSObject {
     let lastReplyUserID: String?
     let lastReplyTime: NSDate?
     let idCount: Int?
+    let isLiked: Bool?
+    let collect: Bool?
+    let likeSum: String?
+    let likedReplys: [Article]?
+    let replys: [Article]?
+    let pagination: Pagination?
     
     init(data: JSON) {
         id                  = data[_keys.id].int
@@ -50,7 +56,8 @@ class Article: NSObject {
         postTime            = Utils.dateFromUnixTimestamp(data[_keys.postTime].int)
         boardName           = data[_keys.boardName].string
         content             = data[_keys.content].string
-        attachment          = data[_keys.attachment].int
+        //
+//        attachment          = data[_keys.attachment].int
         previousID          = data[_keys.previousID].int
         nextID              = data[_keys.nextID].int
         previousIDInThread  = data[_keys.previousIDInThread].int
@@ -59,9 +66,23 @@ class Article: NSObject {
         lastReplyUserID     = data[_keys.lastReplyUserID].string
         lastReplyTime       = Utils.dateFromUnixTimestamp(data[_keys.lastReplyTime].int)
         idCount             = data[_keys.idCount].int
+        isLiked             = data[_keys.isLiked].bool
+        collect             = data[_keys.collect].bool
+        likeSum             = data[_keys.likeSum].string
+        if let articles = data[_keys.likedReplys].array {
+            self.likedReplys = articles.map { Article(data: $0) }
+        } else { likedReplys = nil }
+        if let articles = data[_keys.replys].array {
+            self.replys = articles.map { Article(data: $0) }
+        } else { replys = nil }
+        if let _ = data[_keys.pagination].error {
+            pagination = nil
+        } else {
+            pagination = Pagination(data: data[_keys.pagination])
+        }
     }
     
     struct _keys {
-        static let id = "id", groupID = "group_id", replyID = "reply_id", flag = "flag", position = "position", isTop = "is_top", isSubject = "is_subject", hasAttachment = "has_attachment", isAdmin = "is_admin", title = "title", user = "user", postTime = "post_time", boardName = "board_name", content = "content", attachment = "attachment", previousID = "previous_id", nextID = "next_id", previousIDInThread = "threads_previous_id", nextIDInThread = "threads_next_id", replyCount = "reply_count", lastReplyUserID = "last_reply_user_id", lastReplyTime = "last_reply_time", idCount = "id_count"
+        static let id = "id", groupID = "group_id", replyID = "reply_id", flag = "flag", position = "position", isTop = "is_top", isSubject = "is_subject", hasAttachment = "has_attachment", isAdmin = "is_admin", title = "title", user = "user", postTime = "post_time", boardName = "board_name", content = "content", attachment = "attachment", previousID = "previous_id", nextID = "next_id", previousIDInThread = "threads_previous_id", nextIDInThread = "threads_next_id", replyCount = "reply_count", lastReplyUserID = "last_reply_user_id", lastReplyTime = "last_reply_time", idCount = "id_count", isLiked = "is_liked", collect = "collect", likeSum = "like_sum", likedReplys = "like_articles", replys = "article", pagination = "pagination"
     }
 }
