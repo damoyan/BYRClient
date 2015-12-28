@@ -55,7 +55,7 @@ class Article: NSObject {
         user                = data[_keys.user] == nil ? nil : User(data: data[_keys.user])
         postTime            = Utils.dateFromUnixTimestamp(data[_keys.postTime].int)
         boardName           = data[_keys.boardName].string
-        content             = data[_keys.content].string
+        content             = Article.removeANSICode(data[_keys.content].string)
         //
 //        attachment          = data[_keys.attachment].int
         previousID          = data[_keys.previousID].int
@@ -70,10 +70,10 @@ class Article: NSObject {
         collect             = data[_keys.collect].bool
         likeSum             = data[_keys.likeSum].string
         if let articles = data[_keys.likedReplys].array {
-            self.likedReplys = articles.map { Article(data: $0) }
+            self.likedReplys = articles.map (Article.init)//{ Article(data: $0) }
         } else { likedReplys = nil }
         if let articles = data[_keys.replys].array {
-            self.replys = articles.map { Article(data: $0) }
+            self.replys = articles.map (Article.init)// { Article(data: $0) }
         } else { replys = nil }
         if let _ = data[_keys.pagination].error {
             pagination = nil
@@ -84,5 +84,15 @@ class Article: NSObject {
     
     struct _keys {
         static let id = "id", groupID = "group_id", replyID = "reply_id", flag = "flag", position = "position", isTop = "is_top", isSubject = "is_subject", hasAttachment = "has_attachment", isAdmin = "is_admin", title = "title", user = "user", postTime = "post_time", boardName = "board_name", content = "content", attachment = "attachment", previousID = "previous_id", nextID = "next_id", previousIDInThread = "threads_previous_id", nextIDInThread = "threads_next_id", replyCount = "reply_count", lastReplyUserID = "last_reply_user_id", lastReplyTime = "last_reply_time", idCount = "id_count", isLiked = "is_liked", collect = "collect", likeSum = "like_sum", likedReplys = "like_articles", replys = "article", pagination = "pagination"
+    }
+    
+    
+    class func removeANSICode(string: String?) -> String? {
+        guard let content = string else { return nil }
+        let regex = try? NSRegularExpression(pattern: "\\u001b\\[[^m]*?m", options: [])
+        if let ret = regex?.stringByReplacingMatchesInString(content, options: [], range: NSMakeRange(0, content.utf16.count), withTemplate: "") {
+            return ret
+        }
+        return nil
     }
 }

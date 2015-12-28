@@ -50,7 +50,7 @@ class TopTenViewController: BaseTableViewController {
         }
         let data = content[indexPath.row]
         cell?.textLabel?.text = data.title
-        cell?.detailTextLabel?.text = data.user?.id
+        cell?.detailTextLabel?.text = "[\(data.boardName ?? "")] \(data.user?.id ?? "")"
         cell?.detailTextLabel?.textColor = AppSharedInfo.sharedInstance.currentTheme.BoardNaviCellSubtitleColor
         return cell!
     }

@@ -55,10 +55,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     private func setupUI() {
-//        UINavigationBar.appearance().setBackgroundImage(UIImage.imageWithColor(UIColor(rgb: 0x3b8ede), side: 1), forBarMetrics: .Default)
-        // FIXME: -
-        UINavigationBar.appearance().barTintColor = UIColor(rgb: 0x3b8ede, alpha: 0.3)
-//        UINavigationBar.appearance().tintColor = UIColor.whiteColor()
+        UINavigationBar.appearance().setBackgroundImage(UIImage.imageWithColor(UIColor(rgb: 0x3b8ede), side: 1), forBarMetrics: .Default)
+        UINavigationBar.appearance().tintColor = UIColor.whiteColor()
+        UINavigationBar.appearance().backIndicatorImage = UIImage(named: "navi_back")
+        UINavigationBar.appearance().backIndicatorTransitionMaskImage = UIImage(named: "navi_back")
         UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor(), NSFontAttributeName: UIFont.systemFontOfSize(18)]
         UIApplication.sharedApplication().statusBarStyle = .LightContent
     }

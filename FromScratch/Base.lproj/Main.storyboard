@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="egK-fZ-bAL">
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
         <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
     </dependencies>
@@ -101,17 +100,16 @@
         <!--Thread View Controller-->
         <scene sceneID="vFS-Ji-sKO">
             <objects>
-                <tableViewController storyboardIdentifier="vcThread" automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" id="7ln-dd-7un" customClass="ThreadViewController" customModule="FromScratch" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="vcThread" hidesBottomBarWhenPushed="YES" id="7ln-dd-7un" customClass="ThreadViewController" customModule="FromScratch" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="tqQ-jY-tT7">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                         <connections>
                             <outlet property="dataSource" destination="7ln-dd-7un" id="w0c-QC-KKJ"/>
                             <outlet property="delegate" destination="7ln-dd-7un" id="Y6E-6Z-iuO"/>
                         </connections>
                     </tableView>
-                    <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3Pk-2m-nXZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

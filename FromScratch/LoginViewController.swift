@@ -92,7 +92,7 @@ class ViewController: UIViewController, UIWebViewDelegate {
                 let res = fragment.componentsSeparatedByString("&").map {
                     $0.componentsSeparatedByString("=")
                 }
-                for kvp in res {
+                res.forEach { kvp in
                     if kvp.count == 2 {
                         switch kvp[0] {
                         case "access_token":
