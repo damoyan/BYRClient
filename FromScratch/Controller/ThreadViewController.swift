@@ -71,7 +71,7 @@ class ThreadViewController: BaseTableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(ids.cell, forIndexPath: indexPath) as! ArticleCell
         let data = content[indexPath.section]
-        cell.label.text = data.content
+        cell.update(data)
         return cell
     }
     

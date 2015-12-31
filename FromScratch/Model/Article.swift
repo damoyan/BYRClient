@@ -40,6 +40,14 @@ class Article: NSObject {
     let likedReplys: [Article]?
     let replys: [Article]?
     let pagination: Pagination?
+    lazy var displayContent: NSAttributedString? = {
+        if let content = self.content {
+            let parser = BYRUBBParser()
+            parser.parse(content)
+            return parser.result
+        }
+        return nil
+    }()
     
     init(data: JSON) {
         id                  = data[_keys.id].int
@@ -89,7 +97,7 @@ class Article: NSObject {
     
     class func removeANSICode(string: String?) -> String? {
         guard let content = string else { return nil }
-        let regex = try? NSRegularExpression(pattern: "\\u001b\\[[^m]*?m", options: [])
+        let regex = try? NSRegularExpression(pattern: "\\u001b\\[[^m]*?[mABCDsuHJK]", options: [])
         if let ret = regex?.stringByReplacingMatchesInString(content, options: [], range: NSMakeRange(0, content.utf16.count), withTemplate: "") {
             return ret
         }

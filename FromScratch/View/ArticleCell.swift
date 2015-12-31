@@ -17,10 +17,10 @@ class ArticleCell: UITableViewCell {
     @IBOutlet weak var label: UITextView!
     
     class func calculateHeight(article: Article, boundingWidth width: CGFloat) -> CGFloat {
-        guard let content = article.content else {
+        guard let content = article.displayContent else {
             return 0
         }
-        let rect = (content as NSString).boundingRectWithSize(CGSize(width: width - 24, height: CGFloat.max), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName: ArticleConfig.font], context: nil)
+        let rect = content.boundingRectWithSize(CGSize(width: width - 24, height: CGFloat.max), options: NSStringDrawingOptions.UsesLineFragmentOrigin, context: nil)
         return ceil(rect.size.height) + 9
     }
     
@@ -30,12 +30,25 @@ class ArticleCell: UITableViewCell {
         label.textContainerInset = UIEdgeInsetsZero
         label.textContainer.lineFragmentPadding = 0
         label.scrollsToTop = false
+        label.layoutManager.delegate = self
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
         label.text = nil
     }
+    
+    deinit {
+        label.layoutManager.delegate = nil
+    }
+    
+    func update(article: Article) {
+        label.attributedText = article.displayContent
+    }
+}
+
+extension ArticleCell: NSLayoutManagerDelegate {
+    
 }
 
 extension UITextView {

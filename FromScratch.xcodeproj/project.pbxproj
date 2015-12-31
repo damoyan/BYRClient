@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B305ED921C34DDE600AC2858 /* BYRUBBParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B305ED911C34DDE600AC2858 /* BYRUBBParser.swift */; };
+		B305ED941C34DE3900AC2858 /* BYRAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = B305ED931C34DE3900AC2858 /* BYRAttachment.swift */; };
 		B3163D5F1C27E31400C0F831 /* SectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3163D5E1C27E31400C0F831 /* SectionViewController.swift */; };
 		B3163D611C27EED000C0F831 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3163D601C27EED000C0F831 /* Board.swift */; };
 		B3163D631C27F87A00C0F831 /* ColorTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3163D621C27F87A00C0F831 /* ColorTheme.swift */; };
@@ -56,6 +58,8 @@
 /* Begin PBXFileReference section */
 		52D6896FB73703B69B65675C /* Pods-FromScratch.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FromScratch.release.xcconfig"; path = "Pods/Target Support Files/Pods-FromScratch/Pods-FromScratch.release.xcconfig"; sourceTree = "<group>"; };
 		74FF23AD0362C066F839CE8A /* Pods-FromScratch.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FromScratch.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FromScratch/Pods-FromScratch.debug.xcconfig"; sourceTree = "<group>"; };
+		B305ED911C34DDE600AC2858 /* BYRUBBParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BYRUBBParser.swift; sourceTree = "<group>"; };
+		B305ED931C34DE3900AC2858 /* BYRAttachment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BYRAttachment.swift; sourceTree = "<group>"; };
 		B3163D5E1C27E31400C0F831 /* SectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionViewController.swift; sourceTree = "<group>"; };
 		B3163D601C27EED000C0F831 /* Board.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
 		B3163D621C27F87A00C0F831 /* ColorTheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorTheme.swift; sourceTree = "<group>"; };
@@ -141,6 +145,8 @@
 				B3D1F5D31BDF7D4F00E2E296 /* Common.swift */,
 				B3829A011BEE454800826B25 /* Utils.swift */,
 				B3163D621C27F87A00C0F831 /* ColorTheme.swift */,
+				B305ED911C34DDE600AC2858 /* BYRUBBParser.swift */,
+				B305ED931C34DE3900AC2858 /* BYRAttachment.swift */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -408,8 +414,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B305ED941C34DE3900AC2858 /* BYRAttachment.swift in Sources */,
 				B38299FB1BEE350E00826B25 /* ArticleInfoCell.swift in Sources */,
 				B3C6C5B61BDE2B9A004B1000 /* APIManager.swift in Sources */,
+				B305ED921C34DDE600AC2858 /* BYRUBBParser.swift in Sources */,
 				B3C6C58E1BDE148C004B1000 /* LoginViewController.swift in Sources */,
 				B3C6C58C1BDE148C004B1000 /* AppDelegate.swift in Sources */,
 				B3163D6B1C2900A000C0F831 /* TopTenViewController.swift in Sources */,

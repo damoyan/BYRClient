@@ -83,4 +83,55 @@ extension UIColor {
             blue: CGFloat(rgb & 0x0000ff) / 255.0,
             alpha: CGFloat(alpha))
     }
+    
+    convenience init(rgbString: String) {
+        var r: UInt32 = 0
+        var g: UInt32 = 0
+        var b: UInt32 = 0
+        
+        let str = rgbString.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()).uppercaseString
+        var start = -1
+        if str.hasPrefix("#") && str.characters.count == 7 {
+            start = 1
+        } else if str.hasPrefix("0X") && str.characters.count == 9 {
+            start = 2
+        }
+        
+        if (start >= 0) {
+            let rStr = str[start..<start+2]
+            let gStr = str[start+2..<start+4]
+            let bStr = str[start+4..<start+6]
+            NSScanner(string: rStr).scanHexInt(&r)
+            NSScanner(string: gStr).scanHexInt(&g)
+            NSScanner(string: bStr).scanHexInt(&b)
+        }
+        
+        self.init(red: CGFloat(r) / 255.0, green: CGFloat(g) / 255.0,
+            blue: CGFloat(b) / 255.0, alpha: CGFloat(1))
+    }
+}
+
+extension String {
+    subscript (r: Range<Int>) -> String {
+        get {
+            let startIndex = self.startIndex.advancedBy(r.startIndex)
+            let endIndex = startIndex.advancedBy(r.endIndex - r.startIndex)
+            return self[Range(start: startIndex, end: endIndex)]
+        }
+    }
+    
+    var floatValue: Float {
+        return (self as NSString).floatValue
+    }
+    
+    var integerValue: Int {
+        return (self as NSString).integerValue
+    }
+    
+    var trimString: String {
+        get {
+            let strArray: NSArray = self.componentsSeparatedByCharactersInSet(NSCharacterSet.newlineCharacterSet())
+            return strArray.componentsJoinedByString(" ")
+        }
+    }
 }
