@@ -9,24 +9,44 @@
 import UIKit
 
 struct ArticleConfig {
-    static let font = UIFont.systemFontOfSize(12)
+    var font = UIFont.systemFontOfSize(defaultArticleFontSize)
+    var color = UIColor.darkTextColor()
+}
+
+class ArticleCellData {
+    let article: Article
+    let displayContent: NSAttributedString?
+    var contentHeight: CGFloat?
+    
+    init(article: Article) {
+        self.article = article
+        self.displayContent = ArticleCellData.getDisplayContent(article.content)
+    }
+    
+    static func getDisplayContent(content: String?) -> NSAttributedString? {
+        guard let content = content else { return nil }
+        let parser = BYRUBBParser(font: ArticleCell.articleConfig.font, color: ArticleCell.articleConfig.color)
+        parser.parse(content)
+        return parser.result
+    }
 }
 
 class ArticleCell: UITableViewCell {
 
     @IBOutlet weak var label: UITextView!
     
-    class func calculateHeight(article: Article, boundingWidth width: CGFloat) -> CGFloat {
-        guard let content = article.displayContent else {
-            return 0
-        }
+    static var articleConfig = { ArticleConfig() }()
+    
+    class func calculateHeight(article: ArticleCellData, boundingWidth width: CGFloat) -> CGFloat {
+        guard article.contentHeight == nil else { return article.contentHeight! }
+        guard let content = article.displayContent else { return 0 }
         let rect = content.boundingRectWithSize(CGSize(width: width - 24, height: CGFloat.max), options: NSStringDrawingOptions.UsesLineFragmentOrigin, context: nil)
-        return ceil(rect.size.height) + 9
+        article.contentHeight = ceil(rect.size.height) + 9
+        return article.contentHeight!
     }
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        label.config()
         label.textContainerInset = UIEdgeInsetsZero
         label.textContainer.lineFragmentPadding = 0
         label.scrollsToTop = false
@@ -42,7 +62,7 @@ class ArticleCell: UITableViewCell {
         label.layoutManager.delegate = nil
     }
     
-    func update(article: Article) {
+    func update(article: ArticleCellData) {
         label.attributedText = article.displayContent
     }
 }
@@ -52,7 +72,7 @@ extension ArticleCell: NSLayoutManagerDelegate {
 }
 
 extension UITextView {
-    func config() {
-        font = ArticleConfig.font
+    func config(config: ArticleConfig) {
+        font = config.font
     }
 }

@@ -40,14 +40,6 @@ class Article: NSObject {
     let likedReplys: [Article]?
     let replys: [Article]?
     let pagination: Pagination?
-    lazy var displayContent: NSAttributedString? = {
-        if let content = self.content {
-            let parser = BYRUBBParser()
-            parser.parse(content)
-            return parser.result
-        }
-        return nil
-    }()
     
     init(data: JSON) {
         id                  = data[_keys.id].int
@@ -78,10 +70,10 @@ class Article: NSObject {
         collect             = data[_keys.collect].bool
         likeSum             = data[_keys.likeSum].string
         if let articles = data[_keys.likedReplys].array {
-            self.likedReplys = articles.map (Article.init)//{ Article(data: $0) }
+            self.likedReplys = articles.map (Article.init)
         } else { likedReplys = nil }
         if let articles = data[_keys.replys].array {
-            self.replys = articles.map (Article.init)// { Article(data: $0) }
+            self.replys = articles.map (Article.init)
         } else { replys = nil }
         if let _ = data[_keys.pagination].error {
             pagination = nil

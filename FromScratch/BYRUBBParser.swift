@@ -8,6 +8,8 @@
 
 import UIKit
 
+let defaultArticleFontSize: CGFloat = 12
+
 struct Tag {
     var tagName: String
     var attributes: [String: AnyObject]?
@@ -17,7 +19,7 @@ private let NormalTagKey = "normal"
 private let NoContentTagKey = "noContent"
 private let NoContentButAttribute = "noContentButAttribute"
 private let NoEndTagKey = "noEnd"
-private let defaultFontSize: CGFloat = 12
+
 public protocol UBBParserDelegate: class {
     func parser(parser: BYRUBBParser, didStartParsingString string: String)
     func parser(parser: BYRUBBParser, foundCharacter char: String)
@@ -47,7 +49,7 @@ public class BYRUBBParser {
     private var currentTags = [Tag]()
     public private(set) var result = NSMutableAttributedString()
     
-    public init(font: UIFont = UIFont.systemFontOfSize(defaultFontSize), color: UIColor = UIColor.darkTextColor()) {
+    public init(font: UIFont = UIFont.systemFontOfSize(defaultArticleFontSize), color: UIColor = UIColor.darkTextColor()) {
         self.defaultAttributes[NSFontAttributeName] = font
         self.defaultAttributes[NSForegroundColorAttributeName] = color
     }
@@ -161,7 +163,7 @@ public class BYRUBBParser {
     }
     
     private func parseStartForTag(tagString: String) {
-        let tag/*(tagName, attributes)*/ = getStartTagInfo(tagString)
+        let tag = getStartTagInfo(tagString)
         currentTags.append(tag)
         delegate?.parser(self, didStartParsingTag: tag.tagName, withAttributes: tag.attributes)
     }
@@ -178,7 +180,7 @@ public class BYRUBBParser {
         delegate?.parser(self, didFinishParsingTag: tagName)
     }
     
-    private func getStartTagInfo(tag: String) -> Tag { //(name: String, attributes: [String: String]?) {
+    private func getStartTagInfo(tag: String) -> Tag {
         let components = tag.componentsSeparatedByCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
         var name = components[0]
         let nameComponents = name.componentsSeparatedByString("=")
@@ -206,30 +208,44 @@ public class BYRUBBParser {
     private func tagsToStringAttributes() -> [String: AnyObject]? {
         guard currentTags.count > 0 else { return defaultAttributes }
         var ret = [String: AnyObject]()
-        ret[NSFontAttributeName] = (defaultAttributes[NSFontAttributeName] as? UIFont) ?? UIFont.systemFontOfSize(defaultFontSize)
+        ret[NSFontAttributeName] = (defaultAttributes[NSFontAttributeName] as? UIFont) ?? UIFont.systemFontOfSize(defaultArticleFontSize)
         ret[NSForegroundColorAttributeName] = (defaultAttributes[NSForegroundColorAttributeName] as? UIColor) ?? UIColor.darkTextColor()
         currentTags.forEach { tag in
             switch tag.tagName {
             case "face":
                 let font = ret[NSFontAttributeName] as! UIFont
-                let newFont = UIFont(name: ((tag.attributes?["face"] as? String) ?? ""), size: font.pointSize) ?? font
-                ret[NSFontAttributeName] = newFont
+                let symbolicTraints = font.fontDescriptor().symbolicTraits
+                var st: UIFontDescriptorSymbolicTraits = []
+                if symbolicTraints.contains(.TraitBold) {
+                    st.insert(.TraitBold)
+                }
+                if symbolicTraints.contains(.TraitItalic) {
+                    st.insert(.TraitItalic)
+                }
+                if let newFont = UIFont(name: ((tag.attributes?["face"] as? String) ?? ""), size: font.pointSize) {
+                    let des = newFont.fontDescriptor()
+                    let d = des.fontDescriptorWithSymbolicTraits(st)
+                    let f = UIFont(descriptor: d, size: newFont.pointSize)
+                    ret[NSFontAttributeName] = f
+                } else {
+                    ret[NSFontAttributeName] = font
+                }
             case "b":
                 let font = ret[NSFontAttributeName] as! UIFont
                 var descriptor = font.fontDescriptor()
-                descriptor = descriptor.fontDescriptorWithSymbolicTraits(.TraitBold)
+                descriptor = descriptor.fontDescriptorWithSymbolicTraits([descriptor.symbolicTraits, .TraitBold])
                 ret[NSFontAttributeName] = UIFont(descriptor: descriptor, size: font.pointSize)
             case "i":
                 let font = ret[NSFontAttributeName] as! UIFont
                 var descriptor = font.fontDescriptor()
-                descriptor = descriptor.fontDescriptorWithSymbolicTraits(.TraitItalic)
+                descriptor = descriptor.fontDescriptorWithSymbolicTraits([descriptor.symbolicTraits, .TraitItalic])
                 ret[NSFontAttributeName] = UIFont(descriptor: descriptor, size: font.pointSize)
             case "u":
                 ret[NSUnderlineStyleAttributeName] = NSUnderlineStyle.StyleSingle.rawValue
             case "size":
-                if let size = tag.attributes?["size"] as? NSString where size.floatValue > 0 {
+                if let size = tag.attributes?["size"] as? NSString {
                     var font = ret[NSFontAttributeName] as! UIFont
-                    font = font.fontWithSize(CGFloat(size.floatValue) + defaultFontSize)
+                    font = font.fontWithSize(CGFloat(size.floatValue) + defaultArticleFontSize)
                     ret[NSFontAttributeName] = font
                 }
             case "color":

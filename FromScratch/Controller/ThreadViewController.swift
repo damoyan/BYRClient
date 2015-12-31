@@ -12,7 +12,7 @@ import SwiftyJSON
 class ThreadViewController: BaseTableViewController {
     
     var topic: Article?
-    var content = [Article]()
+    var content = [ArticleCellData]()
     
     let ids = (cell: "cell", header: "header", loading: "loading")
     override func viewDidLoad() {
@@ -48,7 +48,7 @@ class ThreadViewController: BaseTableViewController {
     private func display() {
         clearStatus()
         title = topic?.title
-        content += topic?.replys ?? []
+        content += (topic?.replys ?? []).map(ArticleCellData.init)
         tableView.reloadData()
     }
     
