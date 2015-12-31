@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B30484E01C359FC300150580 /* Attachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30484DF1C359FC300150580 /* Attachment.swift */; };
 		B305ED921C34DDE600AC2858 /* BYRUBBParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B305ED911C34DDE600AC2858 /* BYRUBBParser.swift */; };
 		B305ED941C34DE3900AC2858 /* BYRAttachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = B305ED931C34DE3900AC2858 /* BYRAttachment.swift */; };
 		B3163D5F1C27E31400C0F831 /* SectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3163D5E1C27E31400C0F831 /* SectionViewController.swift */; };
@@ -58,6 +59,7 @@
 /* Begin PBXFileReference section */
 		52D6896FB73703B69B65675C /* Pods-FromScratch.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FromScratch.release.xcconfig"; path = "Pods/Target Support Files/Pods-FromScratch/Pods-FromScratch.release.xcconfig"; sourceTree = "<group>"; };
 		74FF23AD0362C066F839CE8A /* Pods-FromScratch.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FromScratch.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FromScratch/Pods-FromScratch.debug.xcconfig"; sourceTree = "<group>"; };
+		B30484DF1C359FC300150580 /* Attachment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attachment.swift; sourceTree = "<group>"; };
 		B305ED911C34DDE600AC2858 /* BYRUBBParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BYRUBBParser.swift; sourceTree = "<group>"; };
 		B305ED931C34DE3900AC2858 /* BYRAttachment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BYRAttachment.swift; sourceTree = "<group>"; };
 		B3163D5E1C27E31400C0F831 /* SectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SectionViewController.swift; sourceTree = "<group>"; };
@@ -253,6 +255,7 @@
 				B3163D641C27FF8300C0F831 /* Favorite.swift */,
 				B3163D681C28F0B400C0F831 /* Article.swift */,
 				B3163D6E1C292F4A00C0F831 /* Pagination.swift */,
+				B30484DF1C359FC300150580 /* Attachment.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -422,6 +425,7 @@
 				B3C6C58C1BDE148C004B1000 /* AppDelegate.swift in Sources */,
 				B3163D6B1C2900A000C0F831 /* TopTenViewController.swift in Sources */,
 				B3163D611C27EED000C0F831 /* Board.swift in Sources */,
+				B30484E01C359FC300150580 /* Attachment.swift in Sources */,
 				B3829A001BEE375600826B25 /* Section.swift in Sources */,
 				B3163D781C2A78E900C0F831 /* ArticleCell.swift in Sources */,
 				B3163D631C27F87A00C0F831 /* ColorTheme.swift in Sources */,

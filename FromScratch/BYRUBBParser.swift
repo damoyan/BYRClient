@@ -8,6 +8,14 @@
 
 import UIKit
 
+public protocol UBBParserDelegate: class {
+    func parser(parser: BYRUBBParser, didStartParsingString string: String)
+    func parser(parser: BYRUBBParser, foundCharacter char: String)
+    func parser(parser: BYRUBBParser, didStartParsingTag tag: String, withAttributes attributes: [String: AnyObject]?)
+    func parser(parser: BYRUBBParser, didFinishParsingTag tag: String)
+    func parser(parser: BYRUBBParser, didFinishParsingString string: String)
+}
+
 let defaultArticleFontSize: CGFloat = 12
 
 struct Tag {
@@ -19,14 +27,6 @@ private let NormalTagKey = "normal"
 private let NoContentTagKey = "noContent"
 private let NoContentButAttribute = "noContentButAttribute"
 private let NoEndTagKey = "noEnd"
-
-public protocol UBBParserDelegate: class {
-    func parser(parser: BYRUBBParser, didStartParsingString string: String)
-    func parser(parser: BYRUBBParser, foundCharacter char: String)
-    func parser(parser: BYRUBBParser, didStartParsingTag tag: String, withAttributes attributes: [String: AnyObject]?)
-    func parser(parser: BYRUBBParser, didFinishParsingTag tag: String)
-    func parser(parser: BYRUBBParser, didFinishParsingString string: String)
-}
 
 public class BYRUBBParser {
     
@@ -159,6 +159,8 @@ public class BYRUBBParser {
         // TODO:
         let attachment = BYRAttachment()
         attachment.text = tag
+        attachment.image = UIImage(named: "default_avatar")
+        attachment.bounds = CGRect(x: 0, y: 0, width: 20, height: 20)
         result.appendAttributedString(NSAttributedString(attachment: attachment))
     }
     

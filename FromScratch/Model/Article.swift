@@ -24,8 +24,7 @@ class Article: NSObject {
     let postTime: NSDate?
     let boardName: String?
     let content: String?
-    // FIXME: - 
-    let attachment: Int? = nil
+    let attachment: Attachment?
     let previousID: Int?
     let nextID: Int?
     let previousIDInThread: Int?
@@ -56,8 +55,7 @@ class Article: NSObject {
         postTime            = Utils.dateFromUnixTimestamp(data[_keys.postTime].int)
         boardName           = data[_keys.boardName].string
         content             = Article.removeANSICode(data[_keys.content].string)
-        //
-//        attachment          = data[_keys.attachment].int
+        attachment          = Attachment(data: data[_keys.attachment])
         previousID          = data[_keys.previousID].int
         nextID              = data[_keys.nextID].int
         previousIDInThread  = data[_keys.previousIDInThread].int
