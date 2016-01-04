@@ -47,7 +47,15 @@ public class BYRUBBParser {
     
     private var defaultAttributes = [String: AnyObject]()
     private var currentTags = [Tag]()
-    public private(set) var result = NSMutableAttributedString()
+    
+    public var resultAttributedString: NSAttributedString {
+        get {
+            return result.copy() as! NSAttributedString
+        }
+    }
+    
+    private var result = NSMutableAttributedString()
+    public var uploadTagNo = [Int]() // upload tag numerical order
     
     public init(font: UIFont = UIFont.systemFontOfSize(defaultArticleFontSize), color: UIColor = UIColor.darkTextColor()) {
         self.defaultAttributes[NSFontAttributeName] = font
@@ -161,7 +169,7 @@ public class BYRUBBParser {
         let attachment = BYRAttachment()
         attachment.text = tag
         attachment.type = .AnimatedImage
-        attachment.image = UIImage(named: "default_avatar")
+        attachment.image = UIImage(named: "test")
         attachment.bounds = CGRect(x: 0, y: 0, width: 20, height: 20)
         result.appendAttributedString(NSAttributedString(attachment: attachment))
     }
@@ -177,9 +185,13 @@ public class BYRUBBParser {
         assert(tag.tagName == tagName)
         if isNoContent {
             let attachment = BYRAttachment()
+            attachment.image = UIImage(named: "big")
             attachment.text = tag.tagName
-            result.appendAttributedString(NSAttributedString(attachment: attachment))
+            if tag.tagName == "upload", let no = tag.attributes?[tagName] as? NSString {
+                uploadTagNo.append(no.integerValue)
+            }
             // TODO: add attachment
+            result.appendAttributedString(NSAttributedString(attachment: attachment))
         }
         delegate?.parser(self, didFinishParsingTag: tagName)
     }

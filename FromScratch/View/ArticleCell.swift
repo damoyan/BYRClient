@@ -9,33 +9,43 @@
 import UIKit
 
 struct ArticleConfig {
-    var font = UIFont.systemFontOfSize(defaultArticleFontSize)
-    var color = UIColor.darkTextColor()
+    static var font = UIFont.systemFontOfSize(defaultArticleFontSize)
+    static var color = UIColor.darkTextColor()
 }
 
 class ArticleCellData {
     let article: Article
-    let displayContent: NSAttributedString?
+    var displayContent: NSAttributedString?
     var contentHeight: CGFloat?
     
     init(article: Article) {
         self.article = article
-        self.displayContent = ArticleCellData.getDisplayContent(article.content)
+        self.displayContent = getDisplayContent()
     }
     
-    static func getDisplayContent(content: String?) -> NSAttributedString? {
-        guard let content = content else { return nil }
-        let parser = BYRUBBParser(font: ArticleCell.articleConfig.font, color: ArticleCell.articleConfig.color)
+    func getDisplayContent() -> NSAttributedString? {
+        guard let content = article.content else { return nil }
+        let parser = BYRUBBParser(font: ArticleConfig.font, color: ArticleConfig.color)
         parser.parse(content)
-        return parser.result
+        let result = NSMutableAttributedString(attributedString: parser.resultAttributedString)
+        article.attachment?.file?.enumerate().filter { (i, f) in
+            return !parser.uploadTagNo.contains(i + 1)
+        }.map { (i, f) -> NSAttributedString in
+            let attachment = BYRAttachment()
+            attachment.image = UIImage(named: "big")
+            // TODO: - add attachment info
+            return NSAttributedString(attachment: attachment)
+        }.forEach {
+            result.appendAttributedString($0)
+        }
+        return result
     }
 }
 
 class ArticleCell: UITableViewCell {
 
     @IBOutlet weak var label: UITextView!
-    
-    static var articleConfig = { ArticleConfig() }()
+    var views = [String: UIView]()
     
     class func calculateHeight(article: ArticleCellData, boundingWidth width: CGFloat) -> CGFloat {
         guard article.contentHeight == nil else { return article.contentHeight! }
@@ -47,39 +57,54 @@ class ArticleCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        label.attributedText = nil
         label.textContainerInset = UIEdgeInsetsZero
         label.textContainer.lineFragmentPadding = 0
         label.scrollsToTop = false
-        label.layoutManager.delegate = self
     }
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        label.text = nil
+        views.forEach { $0.1.removeFromSuperview() }
+        views = [:]
+        label.attributedText = nil
     }
     
-    deinit {
-        label.layoutManager.delegate = nil
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        print("layout", unsafeAddressOf(self))
+        print("views", views)
+        let layoutManager = label.layoutManager
+        if let attriString = layoutManager.textStorage {
+            attriString.enumerateAttribute(NSAttachmentAttributeName, inRange: NSMakeRange(0, attriString.length), options: [], usingBlock: { (v, range, _) -> Void in
+                guard let attachment = v as? BYRAttachment where attachment.type == .AnimatedImage else { return }
+                let glyphRange = layoutManager.glyphRangeForCharacterRange(range, actualCharacterRange: nil)
+                let size = layoutManager.attachmentSizeForGlyphAtIndex(glyphRange.location)
+                let lineFrag = layoutManager.lineFragmentRectForGlyphAtIndex(glyphRange.location, effectiveRange: nil)
+                let location = layoutManager.locationForGlyphAtIndex(glyphRange.location)
+                var rect = CGRectZero
+                rect.origin.x = lineFrag.origin.x + location.x
+                rect.origin.y = lineFrag.origin.y + location.y - size.height
+                rect.size = size
+                // TODO
+                if let v = self.views["\(unsafeAddressOf(attachment))"] {
+                    v.frame = rect
+                } else {
+                    let v = UIImageView(frame: rect)
+                    v.image = attachment.image
+                    self.views["\(unsafeAddressOf(attachment))"] = v
+                    self.label.addSubview(v)
+                }
+            })
+        }
     }
     
     func update(article: ArticleCellData) {
         label.attributedText = article.displayContent
     }
-}
-
-extension ArticleCell: NSLayoutManagerDelegate {
     
-    func layoutManager(layoutManager: NSLayoutManager, didCompleteLayoutForTextContainer textContainer: NSTextContainer?, atEnd layoutFinishedFlag: Bool) {
-        if let attriString = layoutManager.textStorage {
-            attriString.enumerateAttribute(NSAttachmentAttributeName, inRange: NSMakeRange(0, attriString.length), options: [], usingBlock: { (v, range, _) -> Void in
-                
-            })
-        }
-    }
-}
-
-extension UITextView {
-    func config(config: ArticleConfig) {
-        font = config.font
+    deinit {
+        views.forEach { $0.1.removeFromSuperview() }
+        views = [:]
     }
 }
