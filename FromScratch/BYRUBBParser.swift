@@ -106,6 +106,7 @@ public class BYRUBBParser {
                 }
             }
         }
+        parseQuote()
         result.fixAttributesInRange(NSMakeRange(0, result.length))
         delegate?.parser(self, didFinishParsingString: string)
     }
@@ -159,6 +160,7 @@ public class BYRUBBParser {
         // TODO:
         let attachment = BYRAttachment()
         attachment.text = tag
+        attachment.type = .AnimatedImage
         attachment.image = UIImage(named: "default_avatar")
         attachment.bounds = CGRect(x: 0, y: 0, width: 20, height: 20)
         result.appendAttributedString(NSAttributedString(attachment: attachment))
@@ -180,6 +182,14 @@ public class BYRUBBParser {
             // TODO: add attachment
         }
         delegate?.parser(self, didFinishParsingTag: tagName)
+    }
+    
+    private func parseQuote() {
+        let regex = try? NSRegularExpression(pattern: "\n: [^\n]*+", options: [])
+        regex?.enumerateMatchesInString(result.string, options: [], range: NSMakeRange(0, result.length), usingBlock: { (match, _, _) -> Void in
+            guard let match = match where match.range.length > 1 else { return }
+            self.result.addAttribute(NSForegroundColorAttributeName, value: UIColor(rgb: 0x00b4af), range: NSMakeRange(match.range.location + 1, match.range.length - 1))
+        })
     }
     
     private func getStartTagInfo(tag: String) -> Tag {

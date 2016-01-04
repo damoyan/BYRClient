@@ -9,5 +9,11 @@
 import UIKit
 
 class BYRAttachment: NSTextAttachment {
+    
+    enum AttachmentType {
+        case AnimatedImage, NormalImage, Audio, Video, OtherFile
+    }
+    
     var text: String?
+    var type: AttachmentType = .NormalImage
 }
