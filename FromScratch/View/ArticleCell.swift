@@ -69,6 +69,13 @@ class ArticleCell: UITableViewCell {
 
 extension ArticleCell: NSLayoutManagerDelegate {
     
+    func layoutManager(layoutManager: NSLayoutManager, didCompleteLayoutForTextContainer textContainer: NSTextContainer?, atEnd layoutFinishedFlag: Bool) {
+        if let attriString = layoutManager.textStorage {
+            attriString.enumerateAttribute(NSAttachmentAttributeName, inRange: NSMakeRange(0, attriString.length), options: [], usingBlock: { (v, range, _) -> Void in
+                
+            })
+        }
+    }
 }
 
 extension UITextView {
