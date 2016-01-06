@@ -9,19 +9,19 @@
 import UIKit
 import ImageIO
 
-public typealias BYRResourceDownloadCompletionHandler = (NSData?, NSError?) -> ()
+typealias BYRResourceDownloadCompletionHandler = (NSData?, NSError?) -> ()
 
-public class ArticleNetResourceHelper {
+class ArticleNetResourceHelper {
     
-    public static let defaultHelper: ArticleNetResourceHelper = {
+    static let defaultHelper: ArticleNetResourceHelper = {
        return ArticleNetResourceHelper()
     }()
     
     let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration(), delegate: DataDelegate(), delegateQueue: nil)
     var imageDownloadCompletionHandler: BYRResourceDownloadCompletionHandler?
 
-    /// `handler` is called on Main thread after task is completed.
-    public func getResourceWithURLString(urlString: String, completionHandler handler: BYRResourceDownloadCompletionHandler) {
+    /// `handler` is called on background thread after task is completed.
+    func getResourceWithURLString(urlString: String, completionHandler handler: BYRResourceDownloadCompletionHandler) {
         guard let url = NSURL(string: urlString) else { return }
         let task = session.dataTaskWithURL(url)
         (session.delegate as? DataDelegate)?.imageDownloadCompletionHandlers[task] = handler
