@@ -46,9 +46,9 @@ class ThreadViewController: BaseTableViewController {
     }
     
     private func display() {
-        clearStatus()
         title = topic?.title
         content += (topic?.replys ?? []).map(ArticleCellData.init)
+        clearStatus()
         tableView.reloadData()
     }
     

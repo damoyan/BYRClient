@@ -32,7 +32,11 @@ class ArticleCellData {
             return !parser.uploadTagNo.contains(i + 1)
         }.map { (i, f) -> NSAttributedString in
             let attachment = BYRAttachment()
-            attachment.image = UIImage(named: "big")
+            if f.isImage {
+                attachment.tag = Tag(tagName: "img", attributes: ["img": f.middle ?? f.small ?? f.url ?? ""])
+            } else {
+                attachment.type = .OtherFile
+            }
             // TODO: - add attachment info
             return NSAttributedString(attachment: attachment)
         }.forEach {
@@ -46,6 +50,7 @@ class ArticleCell: UITableViewCell {
 
     @IBOutlet weak var label: UITextView!
     var views = [String: UIView]()
+    var articleData: ArticleCellData?
     
     class func calculateHeight(article: ArticleCellData, boundingWidth width: CGFloat) -> CGFloat {
         guard article.contentHeight == nil else { return article.contentHeight! }
@@ -68,16 +73,16 @@ class ArticleCell: UITableViewCell {
         views.forEach { $0.1.removeFromSuperview() }
         views = [:]
         label.attributedText = nil
+        articleData = nil
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        print("layout", unsafeAddressOf(self))
-        print("views", views)
         let layoutManager = label.layoutManager
         if let attriString = layoutManager.textStorage {
             attriString.enumerateAttribute(NSAttachmentAttributeName, inRange: NSMakeRange(0, attriString.length), options: [], usingBlock: { (v, range, _) -> Void in
-                guard let attachment = v as? BYRAttachment where attachment.type == .AnimatedImage else { return }
+                guard let attachment = v as? BYRAttachment else { return }
+                guard let articleAtt = self.articleData?.article.attachment else { return }
                 let glyphRange = layoutManager.glyphRangeForCharacterRange(range, actualCharacterRange: nil)
                 let size = layoutManager.attachmentSizeForGlyphAtIndex(glyphRange.location)
                 let lineFrag = layoutManager.lineFragmentRectForGlyphAtIndex(glyphRange.location, effectiveRange: nil)
@@ -100,6 +105,7 @@ class ArticleCell: UITableViewCell {
     }
     
     func update(article: ArticleCellData) {
+        articleData = article
         label.attributedText = article.displayContent
     }
     

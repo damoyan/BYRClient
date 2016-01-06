@@ -26,7 +26,11 @@ class ArticleHeader: UITableViewHeaderFooterView {
     }
     
     func update(article: ArticleCellData) {
-//        avatar.image = UIImage(named: article.user?.faceURL ?? "AppIcon")
+        if let url = article.article.user?.faceURL {
+            avatar.byr_setImageWithURLString(url)
+        } else {
+            avatar.image = UIImage(named: "")
+        }
         idLabel.text = article.article.user?.id
         nameLabel.text = article.article.user?.userName
     }

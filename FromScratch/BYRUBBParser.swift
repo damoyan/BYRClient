@@ -28,6 +28,7 @@ private let NoContentTagKey = "noContent"
 private let NoContentButAttribute = "noContentButAttribute"
 private let NoEndTagKey = "noEnd"
 
+/// the parser is not common UBB parser. Just used for http://bbs.byr.cn
 public class BYRUBBParser {
     
     private var tags: [String: [String]] = {
@@ -53,9 +54,10 @@ public class BYRUBBParser {
             return result.copy() as! NSAttributedString
         }
     }
+    public var uploadTagNo = [Int]() // upload tag numerical order
+    public var attachments = [NSTextAttachment]()
     
     private var result = NSMutableAttributedString()
-    public var uploadTagNo = [Int]() // upload tag numerical order
     
     public init(font: UIFont = UIFont.systemFontOfSize(defaultArticleFontSize), color: UIColor = UIColor.darkTextColor()) {
         self.defaultAttributes[NSFontAttributeName] = font
@@ -167,10 +169,8 @@ public class BYRUBBParser {
     private func parseEmotionTag(tag: String) {
         // TODO:
         let attachment = BYRAttachment()
-        attachment.text = tag
-        attachment.type = .AnimatedImage
-        attachment.image = UIImage(named: "test")
-        attachment.bounds = CGRect(x: 0, y: 0, width: 20, height: 20)
+        attachment.type = .Emotion(tag)
+        attachments.append(attachment)
         result.appendAttributedString(NSAttributedString(attachment: attachment))
     }
     
@@ -186,11 +186,13 @@ public class BYRUBBParser {
         if isNoContent {
             let attachment = BYRAttachment()
             attachment.image = UIImage(named: "big")
-            attachment.text = tag.tagName
+            attachment.tag = tag
+            // 当内容中没有[upload]而实际文章包含附件的时候, 论坛会把附件放到文章最后, 这里记录文章中出现过的附件的序号
             if tag.tagName == "upload", let no = tag.attributes?[tagName] as? NSString {
                 uploadTagNo.append(no.integerValue)
             }
             // TODO: add attachment
+            attachments.append(attachment)
             result.appendAttributedString(NSAttributedString(attachment: attachment))
         }
         delegate?.parser(self, didFinishParsingTag: tagName)

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ImageIO
 
 class Utils: NSObject {
     static var defaultDateFormatter: NSDateFormatter = {
@@ -25,6 +26,22 @@ class Utils: NSObject {
             return nil
         }
         return NSDate(timeIntervalSince1970: NSTimeInterval(ts))
+    }
+    
+    static func getImagesFromData(data: NSData) throws -> [UIImage] {
+        guard let source = CGImageSourceCreateWithData(data, nil) else {
+            throw BYRError.CreateImageSourceFailed
+        }
+        let frameCount = CGImageSourceGetCount(source)
+        let type = CGImageSourceGetType(source)
+        print("image type: ", type)
+        var images = [UIImage]()
+        for var i = 0; i < frameCount; i++ {
+            if let cgimage = CGImageSourceCreateImageAtIndex(source, i, nil) {
+                images.append(UIImage(CGImage: cgimage))
+            }
+        }
+        return images
     }
 }
 
@@ -61,6 +78,30 @@ extension UIViewController {
 
 extension NSDate {
     
+}
+
+extension UIImageView {
+    func byr_setImageWithURLString(urlString: String) {
+        ImageHelper.getImageWithURLString(urlString) { (images, error) -> () in
+            guard let images = images where images.count > 0 else { return }
+            if images.count > 1 {
+                self.animationImages = images
+                self.startAnimating()
+            } else {
+                self.image = images[0]
+            }
+        }
+    }
+    
+    func byr_setImages(images: [UIImage]) {
+        guard images.count > 0 else { return }
+        if images.count > 1 {
+            self.animationImages = images
+            self.startAnimating()
+        } else {
+            self.image = images[0]
+        }
+    }
 }
 
 extension UIImage {
@@ -126,12 +167,5 @@ extension String {
     
     var integerValue: Int {
         return (self as NSString).integerValue
-    }
-    
-    var trimString: String {
-        get {
-            let strArray: NSArray = self.componentsSeparatedByCharactersInSet(NSCharacterSet.newlineCharacterSet())
-            return strArray.componentsJoinedByString(" ")
-        }
     }
 }

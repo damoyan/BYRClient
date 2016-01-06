@@ -8,6 +8,8 @@
 
 import Foundation
 
-class Common: NSObject {
-
+enum BYRError: ErrorType {
+    case CreateImageSourceFailed
 }
+
+let imageExtensions = ["tiff", "ico", "gif", "jpg", "png", "bmp", "jfif", "iptc"]

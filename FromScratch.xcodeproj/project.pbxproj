@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		99F37FB21C3C10C400DF0CB5 /* ImageHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99F37FB11C3C10C400DF0CB5 /* ImageHelper.swift */; };
+		99F37FB21C3C10C400DF0CB5 /* ArticleNetResourceHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99F37FB11C3C10C400DF0CB5 /* ArticleNetResourceHelper.swift */; };
 		99F37FB41C3C257200DF0CB5 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99F37FB31C3C257200DF0CB5 /* ImageIO.framework */; };
 		B30484E01C359FC300150580 /* Attachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30484DF1C359FC300150580 /* Attachment.swift */; };
 		B305ED921C34DDE600AC2858 /* BYRUBBParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B305ED911C34DDE600AC2858 /* BYRUBBParser.swift */; };
@@ -61,7 +61,7 @@
 /* Begin PBXFileReference section */
 		52D6896FB73703B69B65675C /* Pods-FromScratch.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FromScratch.release.xcconfig"; path = "Pods/Target Support Files/Pods-FromScratch/Pods-FromScratch.release.xcconfig"; sourceTree = "<group>"; };
 		74FF23AD0362C066F839CE8A /* Pods-FromScratch.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FromScratch.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FromScratch/Pods-FromScratch.debug.xcconfig"; sourceTree = "<group>"; };
-		99F37FB11C3C10C400DF0CB5 /* ImageHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageHelper.swift; sourceTree = "<group>"; };
+		99F37FB11C3C10C400DF0CB5 /* ArticleNetResourceHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleNetResourceHelper.swift; sourceTree = "<group>"; };
 		99F37FB31C3C257200DF0CB5 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		B30484DF1C359FC300150580 /* Attachment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attachment.swift; sourceTree = "<group>"; };
 		B305ED911C34DDE600AC2858 /* BYRUBBParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BYRUBBParser.swift; sourceTree = "<group>"; };
@@ -155,7 +155,7 @@
 				B3163D621C27F87A00C0F831 /* ColorTheme.swift */,
 				B305ED911C34DDE600AC2858 /* BYRUBBParser.swift */,
 				B305ED931C34DE3900AC2858 /* BYRAttachment.swift */,
-				99F37FB11C3C10C400DF0CB5 /* ImageHelper.swift */,
+				99F37FB11C3C10C400DF0CB5 /* ArticleNetResourceHelper.swift */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -316,7 +316,7 @@
 			attributes = {
 				LastSwiftMigration = 0700;
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0640;
+				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = "Yu Pengyang";
 				TargetAttributes = {
 					B3C6C5851BDE148C004B1000 = {
@@ -449,7 +449,7 @@
 				B3163D7B1C2A79C400C0F831 /* ArticleHeader.swift in Sources */,
 				B3163D7F1C2A7CE500C0F831 /* UIViewExtension.swift in Sources */,
 				B3163D6F1C292F4A00C0F831 /* Pagination.swift in Sources */,
-				99F37FB21C3C10C400DF0CB5 /* ImageHelper.swift in Sources */,
+				99F37FB21C3C10C400DF0CB5 /* ArticleNetResourceHelper.swift in Sources */,
 				B3163D721C29503600C0F831 /* LoadingCell.swift in Sources */,
 				B3163D5F1C27E31400C0F831 /* SectionViewController.swift in Sources */,
 				B3829A021BEE454800826B25 /* Utils.swift in Sources */,
@@ -515,6 +515,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -581,7 +582,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 74FF23AD0362C066F839CE8A /* Pods-FromScratch.debug.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = FromScratch/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -591,6 +591,7 @@
 					"$(PROJECT_DIR)/libSMTH",
 				);
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.caishuo.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = FromScratch/Header.h;
 				VALID_ARCHS = "armv7 armv7s arm64";
@@ -601,7 +602,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 52D6896FB73703B69B65675C /* Pods-FromScratch.release.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = FromScratch/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -611,6 +611,7 @@
 					"$(PROJECT_DIR)/libSMTH",
 				);
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.caishuo.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = FromScratch/Header.h;
 				VALID_ARCHS = "armv7 armv7s arm64";
@@ -631,6 +632,7 @@
 				);
 				INFOPLIST_FILE = FromScratchTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.caishuo.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FromScratch.app/FromScratch";
 			};
@@ -646,6 +648,7 @@
 				);
 				INFOPLIST_FILE = FromScratchTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.caishuo.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FromScratch.app/FromScratch";
 			};

@@ -30,6 +30,13 @@ class Attachment: NSObject {
         let size: String?
         let small: String?
         let middle: String?
+        var isImage: Bool {
+            guard let name = self.name else { return false }
+            if imageExtensions.contains((name as NSString).pathExtension) {
+                return true
+            }
+            return false
+        }
         
         init(data: JSON) {
             name = data[_keys.name].string
