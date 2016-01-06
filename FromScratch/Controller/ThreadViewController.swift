@@ -9,7 +9,7 @@
 import UIKit
 import SwiftyJSON
 
-class ThreadViewController: BaseTableViewController {
+class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
     
     var topic: Article?
     var content = [ArticleCellData]()
@@ -47,7 +47,11 @@ class ThreadViewController: BaseTableViewController {
     
     private func display() {
         title = topic?.title
-        content += (topic?.replys ?? []).map(ArticleCellData.init)
+        content += (topic?.replys ?? []).map {
+            let ar = ArticleCellData(article: $0)
+            ar.delegate = self
+            return ar
+        }
         clearStatus()
         tableView.reloadData()
     }
@@ -92,5 +96,10 @@ class ThreadViewController: BaseTableViewController {
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    }
+    
+    func dataDidChanged(data: ArticleCellData) {
+        data.contentHeight = nil
+        tableView.reloadData()
     }
 }

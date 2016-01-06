@@ -55,7 +55,7 @@ public class BYRUBBParser {
         }
     }
     public var uploadTagNo = [Int]() // upload tag numerical order
-    public var attachments = [NSTextAttachment]()
+    public var attachments = [BYRAttachment]()
     
     private var result = NSMutableAttributedString()
     
@@ -185,7 +185,7 @@ public class BYRUBBParser {
         assert(tag.tagName == tagName)
         if isNoContent {
             let attachment = BYRAttachment()
-            attachment.image = UIImage(named: "big")
+//            attachment.image = UIImage(named: "big")
             attachment.tag = tag
             // 当内容中没有[upload]而实际文章包含附件的时候, 论坛会把附件放到文章最后, 这里记录文章中出现过的附件的序号
             if tag.tagName == "upload", let no = tag.attributes?[tagName] as? NSString {

@@ -22,7 +22,7 @@ class ArticleNetResourceHelper {
 
     /// `handler` is called on background thread after task is completed.
     func getResourceWithURLString(urlString: String, completionHandler handler: BYRResourceDownloadCompletionHandler) {
-        guard let url = NSURL(string: urlString) else { return }
+        guard let url = NSURL(string: urlString + "?oauth_token=0839f1051bdd06f8e52f9c83fdc26b9a") else { return }
         let task = session.dataTaskWithURL(url)
         (session.delegate as? DataDelegate)?.imageDownloadCompletionHandlers[task] = handler
         task.resume()
