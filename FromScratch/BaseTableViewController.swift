@@ -7,18 +7,18 @@
 //
 
 import UIKit
-import Alamofire
-import SwiftyJSON
 
 class BaseTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        request(RequestGenerator.Default).responseJSON { res -> () in
-            if let e = res.result.error {
-                print(e)
-            }
-            print(JSON(res.result.value!))
-        }
+//        API.Sections.handleResponse { (_, _, d, e) -> () in
+//            if let d = d {
+//                print(d)
+//            }
+//            if let e = e {
+//                print(e)
+//            }
+//        }
     }
 }

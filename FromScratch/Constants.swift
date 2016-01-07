@@ -19,3 +19,7 @@ let baseURL = NSURL(string: baseURLString)!
 let oauth2URLString = "http://bbs.byr.cn/oauth2/authorize"
 let oauthResponseType = "token"
 let oauthRedirectUri = "http://bbs.byr.cn/oauth2/callback"
+
+struct Notifications {
+    static let InvalidToken = "cn.ypy.notifications.InvalidToken"
+}
