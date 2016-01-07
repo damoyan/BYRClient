@@ -32,7 +32,7 @@ class Attachment: NSObject {
         let middle: String?
         var isImage: Bool {
             guard let name = self.name else { return false }
-            if imageExtensions.contains((name as NSString).pathExtension) {
+            if imageExtensions.contains((name as NSString).pathExtension.lowercaseString) {
                 return true
             }
             return false

@@ -33,8 +33,8 @@ class Utils: NSObject {
             throw BYRError.CreateImageSourceFailed
         }
         let frameCount = CGImageSourceGetCount(source)
-        let type = CGImageSourceGetType(source)
-        print("image type: ", type)
+//        let type = CGImageSourceGetType(source)
+//        print("image type: ", type)
         var images = [UIImage]()
         for var i = 0; i < frameCount; i++ {
             if let cgimage = CGImageSourceCreateImageAtIndex(source, i, nil) {

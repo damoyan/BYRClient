@@ -288,4 +288,10 @@ public class BYRUBBParser {
         }
         return ret.count > 0 ? ret : nil
     }
+    
+    deinit {
+        attachments.removeAll()
+        result = NSMutableAttributedString()
+        print("deinit parser")
+    }
 }

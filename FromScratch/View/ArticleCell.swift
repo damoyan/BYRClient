@@ -42,7 +42,7 @@ class ArticleCellData {
                 guard no > 0 && files.count > 0 && no <= files.count else { return false }
                 let file = files[no - 1]
                 if file.isImage {
-                    att.imageUrl = file.middle ?? file.small ?? file.url
+                    att.imageUrl = file.url ?? file.middle ?? file.small
                     return true
                 }
                 return false
@@ -59,7 +59,7 @@ class ArticleCellData {
         }.map { (i, f) -> NSAttributedString in
             let attachment = BYRAttachment()
             if f.isImage {
-                attachment.tag = Tag(tagName: "img", attributes: ["img": f.middle ?? f.small ?? f.url ?? ""])
+                attachment.tag = Tag(tagName: "img", attributes: ["img": f.url ?? f.middle ?? f.small ?? ""])
             } else {
                 attachment.type = .OtherFile
             }
@@ -68,7 +68,7 @@ class ArticleCellData {
         }.forEach {
             result.appendAttributedString($0)
         }
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { () -> Void in
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { [unowned self] () -> Void in
             // get images
             attachments.map { (a) -> Observable<([UIImage]?, BYRAttachment)> in
                 Observable.create { (observer) -> Disposable in
@@ -86,19 +86,28 @@ class ArticleCellData {
                     if case .Upload = a.type, let url = a.imageUrl {
                         ImageHelper.getImageWithURLString(url, completionHandler: handler)
                     } else if case .Emotion(let name) = a.type {
-                        var imagePath: String
+                        var imageName: String, imageFolder: String
+                        let folderPrefix = "emotions/"
                         if name.hasPrefix("emc") {
-                            imagePath = "emc" + (name as NSString).substringFromIndex(3)
+                            imageFolder = folderPrefix + "emc"
+                            imageName = (name as NSString).substringFromIndex(3)
                         } else if name.hasPrefix("emb") {
-                            imagePath = "emb" + (name as NSString).substringFromIndex(3)
+                            imageFolder = folderPrefix + "emb"
+                            imageName = (name as NSString).substringFromIndex(3)
                         } else if name.hasPrefix("ema") {
-                            imagePath = "ema" + (name as NSString).substringFromIndex(3)
+                            imageFolder = folderPrefix + "ema"
+                            imageName = (name as NSString).substringFromIndex(3)
                         } else {
-                            imagePath = "em" + (name as NSString).substringFromIndex(2)
+                            imageFolder = folderPrefix + "em"
+                            imageName = (name as NSString).substringFromIndex(2)
                         }
-                        if let path = NSBundle.mainBundle().pathForResource(imagePath, ofType: "gif"), data = NSData(contentsOfFile: path) {
+                        let path = NSBundle.mainBundle().pathForResource(imageName, ofType: "gif", inDirectory: imageFolder)
+                        print(imageName, imageFolder, "emotion path: ", path)
+                        if let path = path, data = NSData(contentsOfFile: path) {
                             let images = try? Utils.getImagesFromData(data)
                             handler(images, nil)
+                        } else {
+                            handler(nil, nil)
                         }
                     } else if case .Img(let url) = a.type {
                         ImageHelper.getImageWithURLString(url, completionHandler: handler)
@@ -106,17 +115,18 @@ class ArticleCellData {
                         observer.onNext((nil, a))
                         observer.onCompleted()
                     }
-                    return AnonymousDisposable {}
+                    return AnonymousDisposable {
+                        print("disposable")
+                    }
                 }
             }.zip { (x) -> [([UIImage]?, BYRAttachment)] in
                 return x
-            }.subscribeNext { (res) -> Void in
+            }.subscribeOn(MainScheduler.instance)
+            .subscribeNext { (res) -> Void in
                 guard res.count > 0 else { return }
                 for r in res {
                     if let images = r.0 where images.count > 0 {
-                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                            self.delegate?.dataDidChanged(self)
-                        })
+                        self.delegate?.dataDidChanged(self)
                         return
                     }
                 }
@@ -124,19 +134,27 @@ class ArticleCellData {
         }
         return result
     }
+    
+    deinit {
+        print("deinit cell data")
+    }
 }
 
 class ArticleCell: UITableViewCell {
 
     @IBOutlet weak var label: UITextView!
     var views = [String: UIView]()
-    var articleData: ArticleCellData?
+    weak var articleData: ArticleCellData?
     
     class func calculateHeight(article: ArticleCellData, boundingWidth width: CGFloat) -> CGFloat {
+        
         guard article.contentHeight == nil else { return article.contentHeight! }
         guard let content = article.displayContent else { return 0 }
-        let rect = content.boundingRectWithSize(CGSize(width: width - 24, height: CGFloat.max), options: NSStringDrawingOptions.UsesLineFragmentOrigin, context: nil)
-        article.contentHeight = ceil(rect.size.height) + 9
+        // 不用boundingRect的原因是, 这个方法会导致string里的attachment不会被释放, 具体原因未知
+//        let rect = content.boundingRectWithSize(CGSize(width: width - 24, height: CGFloat.max), options: NSStringDrawingOptions.UsesLineFragmentOrigin, context: nil)
+        let height = getHeight(content, boundingWidth: width)
+        article.contentHeight = height + 9
+//        article.contentHeight = ceil(rect.height) + 9
         return article.contentHeight!
     }
     
@@ -150,8 +168,7 @@ class ArticleCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        views.forEach { $0.1.removeFromSuperview() }
-        views = [:]
+        cleanViews()
         label.attributedText = nil
         articleData = nil
     }
@@ -161,7 +178,22 @@ class ArticleCell: UITableViewCell {
         let layoutManager = label.layoutManager
         if let attriString = layoutManager.textStorage {
             attriString.enumerateAttribute(NSAttachmentAttributeName, inRange: NSMakeRange(0, attriString.length), options: [], usingBlock: { (v, range, _) -> Void in
+                print("v: ", v)
+                // 只处理指定类型的attachment
                 guard let attachment = v as? BYRAttachment else { return }
+                // attachment的image不为空或者images数量不够的时候, 直接展示image, 不添加imageView
+                guard let images = attachment.images where attachment.image == nil && images.count > 1 else {
+                    if let v = self.views["\(unsafeAddressOf(attachment))"] {
+                        v.removeFromSuperview()
+                        self.views.removeValueForKey("\(unsafeAddressOf(attachment))")
+                    }
+                    return
+                }
+                print("attachment", attachment)
+                print("imageurl:", attachment.imageUrl)
+                print("images: ", attachment.images)
+                print("type: ", attachment.type)
+                print("=======================================================================================")
                 let glyphRange = layoutManager.glyphRangeForCharacterRange(range, actualCharacterRange: nil)
                 let size = layoutManager.attachmentSizeForGlyphAtIndex(glyphRange.location)
                 let lineFrag = layoutManager.lineFragmentRectForGlyphAtIndex(glyphRange.location, effectiveRange: nil)
@@ -188,8 +220,34 @@ class ArticleCell: UITableViewCell {
         label.attributedText = article.displayContent
     }
     
-    deinit {
-        views.forEach { $0.1.removeFromSuperview() }
-        views = [:]
+    private func cleanViews() {
+        views.forEach {
+            if let view = $0.1 as? UIImageView {
+                view.stopAnimating()
+                view.animationImages = nil
+            }
+            $0.1.removeFromSuperview()
+        }
+        views.removeAll()
     }
+    
+    deinit {
+        label.attributedText = nil
+        cleanViews()
+        print("cell deinit")
+    }
+}
+
+func getHeight(attriString: NSAttributedString, boundingWidth width: CGFloat) -> CGFloat {
+    let textStorage: NSTextStorage = NSTextStorage(attributedString: attriString)
+    let layoutManager: NSLayoutManager = NSLayoutManager()
+    let textContainer: NSTextContainer = NSTextContainer(size: CGSize(width: width, height: CGFloat.max))
+    textContainer.lineFragmentPadding = 0
+    textStorage.addLayoutManager(layoutManager)
+    layoutManager.addTextContainer(textContainer)
+    layoutManager.ensureLayoutForTextContainer(textContainer)
+    let rect = layoutManager.usedRectForTextContainer(textContainer)
+    textStorage.removeLayoutManager(layoutManager)
+    layoutManager.removeTextContainerAtIndex(0)
+    return ceil(rect.height)
 }

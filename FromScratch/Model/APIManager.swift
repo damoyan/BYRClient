@@ -16,6 +16,7 @@ import SwiftyJSON
 
 let BYRErrorDomain = "BYRErrorDomain"
 let ErrorInvalidToken = 1702 //msg: "非法的 oauth_token"
+let ErrorTokenExpired = 1703
 
 enum API: URLRequestConvertible {
     
@@ -52,7 +53,7 @@ enum API: URLRequestConvertible {
             // when we access 'code' or 'msg' key, there should be an error,
             // so sj["code"].error & sj["msg"].error are not `nil`
             guard sj["code"].error != nil && sj["msg"].error != nil else {
-                if sj["code"].intValue == ErrorInvalidToken {
+                if sj["code"].intValue == ErrorInvalidToken || sj["code"].intValue == ErrorTokenExpired {
                     NSNotificationCenter.defaultCenter().postNotificationName(Notifications.InvalidToken, object: nil)
                 } else {
                     callback(res.request, res.response, nil, NSError(domain: BYRErrorDomain, code: sj["code"].intValue, userInfo: [NSLocalizedDescriptionKey: sj["msg"].stringValue]))

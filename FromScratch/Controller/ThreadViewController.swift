@@ -102,4 +102,9 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
         data.contentHeight = nil
         tableView.reloadData()
     }
+    
+    deinit {
+        content.removeAll()
+        print("thread deinit")
+    }
 }
