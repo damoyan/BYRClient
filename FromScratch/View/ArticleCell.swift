@@ -152,7 +152,7 @@ class ArticleCell: UITableViewCell {
         guard let content = article.displayContent else { return 0 }
         // 不用boundingRect的原因是, 这个方法会导致string里的attachment不会被释放, 具体原因未知
 //        let rect = content.boundingRectWithSize(CGSize(width: width - 24, height: CGFloat.max), options: NSStringDrawingOptions.UsesLineFragmentOrigin, context: nil)
-        let height = getHeight(content, boundingWidth: width)
+        let height = getHeight(content, boundingWidth: width - 24)
         article.contentHeight = height + 9
 //        article.contentHeight = ceil(rect.height) + 9
         return article.contentHeight!
@@ -243,11 +243,9 @@ func getHeight(attriString: NSAttributedString, boundingWidth width: CGFloat) ->
     let layoutManager: NSLayoutManager = NSLayoutManager()
     let textContainer: NSTextContainer = NSTextContainer(size: CGSize(width: width, height: CGFloat.max))
     textContainer.lineFragmentPadding = 0
-    textStorage.addLayoutManager(layoutManager)
     layoutManager.addTextContainer(textContainer)
+    textStorage.addLayoutManager(layoutManager)
     layoutManager.ensureLayoutForTextContainer(textContainer)
     let rect = layoutManager.usedRectForTextContainer(textContainer)
-    textStorage.removeLayoutManager(layoutManager)
-    layoutManager.removeTextContainerAtIndex(0)
     return ceil(rect.height)
 }

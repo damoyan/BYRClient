@@ -29,6 +29,7 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
     var isLoaded = false
     let perPage = 20
     var page = 1
+    var loadingCell: LoadingCell?
     private func loadData() {
         guard !isLoading else { return }
         guard let name = topic?.boardName, id = topic?.groupID ?? topic?.id else { return }
@@ -46,6 +47,7 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
     }
     
     private func display() {
+        renewPageInfo()
         title = topic?.title
         content += (topic?.replys ?? []).map {
             let ar = ArticleCellData(article: $0)
@@ -56,8 +58,28 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
         tableView.reloadData()
     }
     
+    private func renewPageInfo() {
+        guard let topic = self.topic, p = topic.pagination, cp = p.currentPage, ap = p.pageCount else {
+            return
+        }
+        if cp == ap {
+            isLoaded = true
+        } else {
+            isLoaded = false
+            page = cp + 1
+        }
+    }
+    
     private func clearStatus() {
+        loadingCell?.stop()
+        refreshControl?.endRefreshing()
         isLoading = false
+    }
+    
+    @objc @IBAction private func actionRefresh(sender: UIRefreshControl) {
+        page = 1
+        content = []
+        loadData()
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -65,7 +87,7 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return 1 + ((section == content.count - 1) ? (isLoaded ? 0 : 1) : 0)
     }
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -73,6 +95,18 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        guard indexPath.row == 0 else {
+            var cell: LoadingCell
+            if let c = loadingCell {
+                cell = c
+            } else {
+                cell = tableView.dequeueReusableCellWithIdentifier(ids.loading, forIndexPath: indexPath) as! LoadingCell
+                loadingCell = cell
+            }
+            cell.spin()
+            loadData()
+            return cell
+        }
         let cell = tableView.dequeueReusableCellWithIdentifier(ids.cell, forIndexPath: indexPath) as! ArticleCell
         let data = content[indexPath.section]
         cell.update(data)
