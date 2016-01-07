@@ -20,7 +20,7 @@ class ArticleHeader: UITableViewHeaderFooterView {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-//        avatar.image = nil
+        avatar.image = nil
         idLabel.text = nil
         nameLabel.text = nil
     }
