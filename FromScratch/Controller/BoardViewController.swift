@@ -54,10 +54,10 @@ class BoardViewController: BaseTableViewController {
     }
     
     private func display() {
-        clearStatus()
         renewPageInfo()
         title = board?.desc ?? board?.name ?? "版  面"
         content += board?.articles ?? []
+        clearStatus()
         tableView.reloadData()
     }
     
