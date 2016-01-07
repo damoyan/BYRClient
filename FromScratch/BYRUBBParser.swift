@@ -16,7 +16,7 @@ public protocol UBBParserDelegate: class {
     func parser(parser: BYRUBBParser, didFinishParsingString string: String)
 }
 
-let defaultArticleFontSize: CGFloat = 12
+let defaultArticleFontSize: CGFloat = 14
 
 struct Tag {
     var tagName: String
@@ -181,7 +181,7 @@ public class BYRUBBParser {
     }
     
     private func parseEndForTag(tagName: String, isNoContent: Bool = false) {
-        let tag = currentTags.removeLast()
+        guard let tag = removeLatestTag(tagName) else { return }
         assert(tag.tagName == tagName)
         if isNoContent {
             let attachment = BYRAttachment()
@@ -196,6 +196,15 @@ public class BYRUBBParser {
             result.appendAttributedString(NSAttributedString(attachment: attachment))
         }
         delegate?.parser(self, didFinishParsingTag: tagName)
+    }
+    
+    private func removeLatestTag(tagName: String) -> Tag? {
+        for var i = (currentTags.count - 1); i >= 0; i-- {
+            if currentTags[i].tagName == tagName {
+                return currentTags.removeAtIndex(i)
+            }
+        }
+        return nil
     }
     
     private func parseQuote() {
