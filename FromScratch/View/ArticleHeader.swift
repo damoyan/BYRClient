@@ -10,7 +10,7 @@ import UIKit
 
 class ArticleHeader: UITableViewHeaderFooterView {
 
-    @IBOutlet weak var avatar: UIImageView!
+    @IBOutlet weak var avatar: BYRImageView!
     @IBOutlet weak var idLabel: UILabel!
     @IBOutlet weak var nameLabel: UILabel!
     
@@ -21,6 +21,8 @@ class ArticleHeader: UITableViewHeaderFooterView {
     override func prepareForReuse() {
         super.prepareForReuse()
         avatar.image = nil
+        avatar.stopAnimating()
+        avatar.animationImages = nil
         idLabel.text = nil
         nameLabel.text = nil
     }

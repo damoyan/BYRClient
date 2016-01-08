@@ -80,29 +80,30 @@ extension NSDate {
     
 }
 
-extension UIImageView {
-    func byr_setImageWithURLString(urlString: String) {
-        ImageHelper.getImageWithURLString(urlString) { (images, error) -> () in
-            guard let images = images where images.count > 0 else { return }
-            if images.count > 1 {
-                self.animationImages = images
-                self.startAnimating()
-            } else {
-                self.image = images[0]
-            }
-        }
-    }
-    
-    func byr_setImages(images: [UIImage]) {
-        guard images.count > 0 else { return }
-        if images.count > 1 {
-            self.animationImages = images
-            self.startAnimating()
-        } else {
-            self.image = images[0]
-        }
-    }
-}
+//extension UIImageView {
+//    // 要保证顺序, 先发先回, 后发后回, 只要最新
+//    func byr_setImageWithURLString(urlString: String) {
+//        ImageHelper.getImageWithURLString(urlString) { (images, error) -> () in
+//            guard let images = images where images.count > 0 else { return }
+//            if images.count > 1 {
+//                self.animationImages = images
+//                self.startAnimating()
+//            } else {
+//                self.image = images[0]
+//            }
+//        }
+//    }
+//    
+//    func byr_setImages(images: [UIImage]) {
+//        guard images.count > 0 else { return }
+//        if images.count > 1 {
+//            self.animationImages = images
+//            self.startAnimating()
+//        } else {
+//            self.image = images[0]
+//        }
+//    }
+//}
 
 extension UIImage {
     class func imageWithColor(color: UIColor, side: CGFloat) -> UIImage {

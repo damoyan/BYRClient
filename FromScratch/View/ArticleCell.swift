@@ -206,7 +206,7 @@ class ArticleCell: UITableViewCell {
                 if let v = self.views["\(unsafeAddressOf(attachment))"] {
                     v.frame = rect
                 } else if let images = attachment.images {
-                    let v = UIImageView(frame: rect)
+                    let v = BYRImageView(frame: rect)
                     v.byr_setImages(images)
                     self.views["\(unsafeAddressOf(attachment))"] = v
                     self.label.addSubview(v)
