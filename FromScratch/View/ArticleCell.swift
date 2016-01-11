@@ -22,6 +22,7 @@ class ArticleCellData {
     let article: Article
     var displayContent: NSAttributedString?
     var contentHeight: CGFloat?
+    var hasAttachment = false
     weak var delegate: ArticleCellDataDelegate?
     var disposeBag = DisposeBag()
     
@@ -55,19 +56,16 @@ class ArticleCellData {
             }
         }
         article.attachment?.file?.enumerate().filter { (i, f) in
-            return !parser.uploadTagNo.contains(i + 1)
+            return (!parser.uploadTagNo.contains(i + 1)) && f.isImage // TODO: - 只处理image类型
         }.map { (i, f) -> NSAttributedString in
             let attachment = BYRAttachment()
-            if f.isImage {
-                attachment.tag = Tag(tagName: "img", attributes: ["img": f.url ?? f.middle ?? f.small ?? ""])
-            } else {
-                attachment.type = .OtherFile
-            }
+            attachment.tag = Tag(tagName: "img", attributes: ["img": f.url ?? f.middle ?? f.small ?? ""])
             attachments.append(attachment)
             return NSAttributedString(attachment: attachment)
         }.forEach {
             result.appendAttributedString($0)
         }
+        hasAttachment = attachments.count > 0 ? true : false
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { [unowned self] () -> Void in
             // get images
             attachments.map { (a) -> Observable<([UIImage]?, BYRAttachment)> in
@@ -78,7 +76,6 @@ class ArticleCellData {
                             observer.onCompleted()
                             return
                         }
-                        a.bounds = CGRect(origin: CGPointZero, size: images[0].size)
                         a.images = images
                         observer.onNext((images, a))
                         observer.onCompleted()
@@ -122,11 +119,12 @@ class ArticleCellData {
             }.zip { (x) -> [([UIImage]?, BYRAttachment)] in
                 return x
             }.subscribeOn(MainScheduler.instance)
-            .subscribeNext { (res) -> Void in
+            .subscribeNext { [weak self] (res) -> Void in
                 guard res.count > 0 else { return }
+                guard let this = self else { return }
                 for r in res {
                     if let images = r.0 where images.count > 0 {
-                        self.delegate?.dataDidChanged(self)
+                        this.delegate?.dataDidChanged(this)
                         return
                     }
                 }
@@ -164,6 +162,7 @@ class ArticleCell: UITableViewCell {
         label.textContainerInset = UIEdgeInsetsZero
         label.textContainer.lineFragmentPadding = 0
         label.scrollsToTop = false
+        label.layoutManager.delegate = self
     }
     
     override func prepareForReuse() {
@@ -173,27 +172,46 @@ class ArticleCell: UITableViewCell {
         articleData = nil
     }
     
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        let layoutManager = label.layoutManager
+    func update(article: ArticleCellData) {
+        articleData = article
+        label.attributedText = article.displayContent
+    }
+    
+    private func cleanViews() {
+        views.forEach {
+            if let view = $0.1 as? UIImageView {
+                view.stopAnimating()
+                view.animationImages = nil
+                view.image = nil
+            }
+            $0.1.removeFromSuperview()
+        }
+        views.removeAll()
+    }
+    
+    deinit {
+        label.layoutManager.delegate = nil
+        label.attributedText = nil
+        cleanViews()
+        print("cell deinit")
+    }
+}
+
+extension ArticleCell: NSLayoutManagerDelegate {
+    func layoutManager(layoutManager: NSLayoutManager, didCompleteLayoutForTextContainer textContainer: NSTextContainer?, atEnd layoutFinishedFlag: Bool) {
+        guard let d = articleData where d.hasAttachment else { return }
         if let attriString = layoutManager.textStorage {
             attriString.enumerateAttribute(NSAttachmentAttributeName, inRange: NSMakeRange(0, attriString.length), options: [], usingBlock: { (v, range, _) -> Void in
-                print("v: ", v)
                 // 只处理指定类型的attachment
                 guard let attachment = v as? BYRAttachment else { return }
                 // attachment的image不为空或者images数量不够的时候, 直接展示image, 不添加imageView
-                guard let images = attachment.images where attachment.image == nil && images.count > 1 else {
+                guard let images = attachment.images where images.count > 1 else {
                     if let v = self.views["\(unsafeAddressOf(attachment))"] {
                         v.removeFromSuperview()
                         self.views.removeValueForKey("\(unsafeAddressOf(attachment))")
                     }
                     return
                 }
-                print("attachment", attachment)
-                print("imageurl:", attachment.imageUrl)
-                print("images: ", attachment.images)
-                print("type: ", attachment.type)
-                print("=======================================================================================")
                 let glyphRange = layoutManager.glyphRangeForCharacterRange(range, actualCharacterRange: nil)
                 let size = layoutManager.attachmentSizeForGlyphAtIndex(glyphRange.location)
                 let lineFrag = layoutManager.lineFragmentRectForGlyphAtIndex(glyphRange.location, effectiveRange: nil)
@@ -213,28 +231,6 @@ class ArticleCell: UITableViewCell {
                 }
             })
         }
-    }
-    
-    func update(article: ArticleCellData) {
-        articleData = article
-        label.attributedText = article.displayContent
-    }
-    
-    private func cleanViews() {
-        views.forEach {
-            if let view = $0.1 as? UIImageView {
-                view.stopAnimating()
-                view.animationImages = nil
-            }
-            $0.1.removeFromSuperview()
-        }
-        views.removeAll()
-    }
-    
-    deinit {
-        label.attributedText = nil
-        cleanViews()
-        print("cell deinit")
     }
 }
 

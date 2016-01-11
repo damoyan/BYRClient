@@ -47,6 +47,9 @@
 		B3D1F5D61BE07BFC00E2E296 /* AppSharedInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D1F5D51BE07BFC00E2E296 /* AppSharedInfo.swift */; };
 		B3EFA9391C3E46660011043B /* emotions in Resources */ = {isa = PBXBuildFile; fileRef = B3EFA9381C3E46660011043B /* emotions */; };
 		B3EFA93B1C3F60390011043B /* BYRImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3EFA93A1C3F60390011043B /* BYRImageView.swift */; };
+		B3EFA93D1C3F6BAA0011043B /* UIImageViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3EFA93C1C3F6BAA0011043B /* UIImageViewExtension.swift */; };
+		B3EFA93F1C438D930011043B /* WeakReferenceProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3EFA93E1C438D930011043B /* WeakReferenceProxy.swift */; };
+		B3EFA9411C43C1CA0011043B /* ImageInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3EFA9401C43C1CA0011043B /* ImageInfo.swift */; };
 		F3737BD9C57FBC385C4E7EDF /* Pods_FromScratch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E057D3E5DA288EE2701B16B6 /* Pods_FromScratch.framework */; };
 /* End PBXBuildFile section */
 
@@ -108,6 +111,9 @@
 		B3D1F5D51BE07BFC00E2E296 /* AppSharedInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSharedInfo.swift; sourceTree = "<group>"; };
 		B3EFA9381C3E46660011043B /* emotions */ = {isa = PBXFileReference; lastKnownFileType = folder; path = emotions; sourceTree = "<group>"; };
 		B3EFA93A1C3F60390011043B /* BYRImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BYRImageView.swift; sourceTree = "<group>"; };
+		B3EFA93C1C3F6BAA0011043B /* UIImageViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageViewExtension.swift; sourceTree = "<group>"; };
+		B3EFA93E1C438D930011043B /* WeakReferenceProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeakReferenceProxy.swift; sourceTree = "<group>"; };
+		B3EFA9401C43C1CA0011043B /* ImageInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageInfo.swift; sourceTree = "<group>"; };
 		E057D3E5DA288EE2701B16B6 /* Pods_FromScratch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FromScratch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -160,6 +166,8 @@
 				B305ED911C34DDE600AC2858 /* BYRUBBParser.swift */,
 				B305ED931C34DE3900AC2858 /* BYRAttachment.swift */,
 				99F37FB11C3C10C400DF0CB5 /* ArticleNetResourceHelper.swift */,
+				B3EFA93E1C438D930011043B /* WeakReferenceProxy.swift */,
+				B3EFA9401C43C1CA0011043B /* ImageInfo.swift */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -177,6 +185,7 @@
 				B3163D7C1C2A7A9800C0F831 /* ArticleHeader.xib */,
 				B3163D7E1C2A7CE500C0F831 /* UIViewExtension.swift */,
 				B3EFA93A1C3F60390011043B /* BYRImageView.swift */,
+				B3EFA93C1C3F6BAA0011043B /* UIImageViewExtension.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -437,6 +446,7 @@
 				B305ED921C34DDE600AC2858 /* BYRUBBParser.swift in Sources */,
 				B3C6C58E1BDE148C004B1000 /* LoginViewController.swift in Sources */,
 				B3C6C58C1BDE148C004B1000 /* AppDelegate.swift in Sources */,
+				B3EFA9411C43C1CA0011043B /* ImageInfo.swift in Sources */,
 				B3163D6B1C2900A000C0F831 /* TopTenViewController.swift in Sources */,
 				B3163D611C27EED000C0F831 /* Board.swift in Sources */,
 				B30484E01C359FC300150580 /* Attachment.swift in Sources */,
@@ -451,6 +461,8 @@
 				B3D1F5D41BDF7D4F00E2E296 /* Common.swift in Sources */,
 				B3163D671C2810D400C0F831 /* FavoriteViewController.swift in Sources */,
 				B3D1F5D61BE07BFC00E2E296 /* AppSharedInfo.swift in Sources */,
+				B3EFA93F1C438D930011043B /* WeakReferenceProxy.swift in Sources */,
+				B3EFA93D1C3F6BAA0011043B /* UIImageViewExtension.swift in Sources */,
 				B3C6C5BA1BDF215E004B1000 /* Constants.swift in Sources */,
 				B3163D691C28F0B400C0F831 /* Article.swift in Sources */,
 				B3EFA93B1C3F60390011043B /* BYRImageView.swift in Sources */,

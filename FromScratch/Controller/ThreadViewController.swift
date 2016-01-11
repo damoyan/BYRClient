@@ -134,7 +134,11 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
     
     func dataDidChanged(data: ArticleCellData) {
         data.contentHeight = nil
-        tableView.reloadData()
+        content.enumerate().filter { (index, d) -> Bool in
+            d === data
+        }.forEach { (index, d) -> () in
+            tableView.reloadSections(NSIndexSet(index: index), withRowAnimation: UITableViewRowAnimation.Automatic)
+        }
     }
     
     deinit {

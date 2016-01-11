@@ -36,4 +36,11 @@ class ArticleHeader: UITableViewHeaderFooterView {
         idLabel.text = article.article.user?.id
         nameLabel.text = article.article.user?.userName
     }
+    
+    deinit {
+        avatar.stopAnimating()
+        avatar.animationImages = nil
+        avatar.image = nil
+        print("deinit header")
+    }
 }

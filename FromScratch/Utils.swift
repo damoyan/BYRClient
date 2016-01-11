@@ -43,6 +43,23 @@ class Utils: NSObject {
         }
         return images
     }
+    
+    static func getImageInfoFromData(data: NSData) throws -> ImageInfo {
+        guard let source = CGImageSourceCreateWithData(data, nil) else {
+            throw BYRError.CreateImageSourceFailed
+        }
+        let frameCount = CGImageSourceGetCount(source)
+        //        let type = CGImageSourceGetType(source)
+        //        print("image type: ", type)
+        var images = [UIImage]()
+        for var i = 0; i < frameCount; i++ {
+            if let cgimage = CGImageSourceCreateImageAtIndex(source, i, nil) {
+                let image = UIImage(CGImage: cgimage)
+                NSFileManager.defaultManager()
+            }
+        }
+        return ImageInfo(baseFileName: "", frameCount: frameCount)
+    }
 }
 
 extension UIViewController {
@@ -79,31 +96,6 @@ extension UIViewController {
 extension NSDate {
     
 }
-
-//extension UIImageView {
-//    // 要保证顺序, 先发先回, 后发后回, 只要最新
-//    func byr_setImageWithURLString(urlString: String) {
-//        ImageHelper.getImageWithURLString(urlString) { (images, error) -> () in
-//            guard let images = images where images.count > 0 else { return }
-//            if images.count > 1 {
-//                self.animationImages = images
-//                self.startAnimating()
-//            } else {
-//                self.image = images[0]
-//            }
-//        }
-//    }
-//    
-//    func byr_setImages(images: [UIImage]) {
-//        guard images.count > 0 else { return }
-//        if images.count > 1 {
-//            self.animationImages = images
-//            self.startAnimating()
-//        } else {
-//            self.image = images[0]
-//        }
-//    }
-//}
 
 extension UIImage {
     class func imageWithColor(color: UIColor, side: CGFloat) -> UIImage {
@@ -168,5 +160,13 @@ extension String {
     
     var integerValue: Int {
         return (self as NSString).integerValue
+    }
+    
+    var sha1: String {
+        let data = self.dataUsingEncoding(NSUTF8StringEncoding)!
+        var digest = [UInt8](count:Int(CC_SHA1_DIGEST_LENGTH), repeatedValue: 0)
+        CC_SHA1(data.bytes, CC_LONG(data.length), &digest)
+        let hexBytes = digest.map { String(format: "%02hhx", $0) }
+        return hexBytes.joinWithSeparator("")
     }
 }

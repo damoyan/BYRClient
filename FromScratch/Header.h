@@ -10,5 +10,6 @@
 #define FromScratch_Header_h
 
 #import "SSKeychain/SSKeychain.h"
+#import <CommonCrypto/CommonCrypto.h>
 
 #endif

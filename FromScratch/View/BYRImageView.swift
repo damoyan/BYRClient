@@ -10,63 +10,59 @@ import UIKit
 import RxSwift
 
 class BYRImageView: UIImageView {
-    let subject = PublishSubject<String>()
-    let disposeBag = DisposeBag()
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setup()
-    }
+    private var displayLink: CADisplayLink?
+    private var byr_images: [UIImage] = []
+    private var currentIndex: Int = 0
     
-    override init(image: UIImage?) {
-        super.init(image: image)
-        setup()
-    }
-    
-    override init(image: UIImage?, highlightedImage: UIImage?) {
-        super.init(image: image, highlightedImage: highlightedImage)
-        setup()
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        setup()
-    }
-    
-    private func setup() {
-        subject
-            .map { urlString -> Observable<([UIImage]?, NSError?)> in
-                return Observable.create { observer in
-                    ImageHelper.getImageWithURLString(urlString, completionHandler: { (images, error) -> () in
-                        observer.onNext((images, error))
-                        observer.onCompleted()
-                    })
-                    return AnonymousDisposable {
-                        print("dispose")
-                    }
-                }
-            }
-            .switchLatest()
-            .observeOn(MainScheduler.instance)
-            .subscribeNext { res in
-                guard let images = res.0 else { return }
-                self.byr_setImages(images)
-            }
-            .addDisposableTo(disposeBag)
-        
-    }
-    
-    func byr_setImages(images: [UIImage]) {
-        guard images.count > 0 else { return }
-        if images.count > 1 {
-            self.animationImages = images
-            self.startAnimating()
-        } else {
-            self.image = images[0]
+    override var animationImages: [UIImage]? {
+        get {
+            return byr_images
+        }
+        set {
+            byr_setImages(newValue)
         }
     }
     
-    func byr_setImageWithURLString(urlString: String) {
-        subject.onNext(urlString)
+    private func resetStatus() {
+        displayLink?.invalidate()
+        displayLink = nil
+        currentIndex = 0
+    }
+    
+    private func clearContent() {
+        resetStatus()
+        byr_images = []
+    }
+    
+    /// 这个子类实际上不需要调用这两个方法.
+    override func startAnimating() {
+        displayLink = CADisplayLink(target: WeakReferenceProxy(target: self), selector: "handle:")
+        displayLink?.frameInterval = 2
+        displayLink?.addToRunLoop(NSRunLoop.mainRunLoop(), forMode: NSDefaultRunLoopMode)
+    }
+    override func stopAnimating() {
+        resetStatus()
+    }
+    
+    override func byr_setImages(images: [UIImage]?) {
+        clearContent()
+        guard let images = images where images.count > 0 else { return }
+        if images.count == 1 {
+            image = images[0]
+        } else {
+            byr_images = images
+            startAnimating()
+        }
+    }
+    
+    @objc private func handle(dl: CADisplayLink) {
+        image = byr_images[currentIndex]
+        currentIndex = (currentIndex + 1) % byr_images.count
+    }
+    
+    deinit {
+        clearContent()
+        print("deinit imageview")
     }
 }
