@@ -65,7 +65,9 @@ public class BYRAttachment: NSTextAttachment {
             }
         }
         var size: CGSize
-        if let image = self.image {
+        if let images = self.images where images.count > 0 {
+            size = images[0].size
+        } else if let image = self.image {
             size = image.size
         } else {
             size = bounds.size
