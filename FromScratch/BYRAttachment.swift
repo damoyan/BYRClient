@@ -17,27 +17,6 @@ public class BYRAttachment: NSTextAttachment {
         case Upload(Int)
     }
     
-    var tag: Tag? {
-        didSet {
-            guard let tag = self.tag else { return }
-            switch tag.tagName.lowercaseString {
-            case "upload":
-                if let att = tag.attributes, no = (att["upload"] as? String)?.integerValue {
-                    type = .Upload(no)
-                }
-                image = UIImage(named: "loading_image") // loading
-            case "img":
-                if let att = tag.attributes, url = att["img"] as? String {
-                    type = .Img(url)
-                }
-                image = UIImage(named: "loading_image") // loading
-                // TODO: - add more type
-            default:
-                break
-            }
-        }
-    }
-    
     var type: AttachmentType = .OtherFile {
         didSet {
             switch type {
@@ -58,6 +37,8 @@ public class BYRAttachment: NSTextAttachment {
             }
             if let first = decoder.firstFrame where decoder.frameCount == 1 {
                 image = first
+            } else {
+                image = nil
             }
         }
     }

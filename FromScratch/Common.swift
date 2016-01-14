@@ -17,4 +17,4 @@ enum BYRFileHandleError: ErrorType {
 }
 
 // supported image type
-let imageExtensions = ["tiff", "ico", "gif", "jpg", "png", "bmp", "jfif", "iptc"]
+let imageExtensions = ["tiff", "ico", "gif", "jpg", "jpeg", "png", "bmp", "jfif", "iptc"]

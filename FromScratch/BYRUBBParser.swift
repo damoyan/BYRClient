@@ -8,203 +8,262 @@
 
 import UIKit
 
-let ignoreTagStringArray: [(regexString: String, replaceTemplate: String)] = [
-    // ignore all matches
-    ("\\[ATT=([^\\[\\]]*?) SIZE=([^\\[\\]]*?)\\](?:\\s*?)\\[/ATT\\]", ""),
-    ("\\[swf=((?:http|https)[^\\[\\]\"\\']*?)\\](?:\\s*?)\\[/swf\\]", ""),
-    ("\\[mp3=((?:http|https)[^\\[\\]\"\\']*?) auto=([01])\\](?:\\s*?)\\[/mp3\\]", ""),
-    ("\\[map=([0-9,.{}]*?) mark=([0-9,.{}]*?)\\](?:\\s*?)\\[/map\\]", ""),
-    // ignore tag part of matches
-    ("\\[move\\](.*?)\\[/move\\]", "$1"),
-    ("\\[fly\\](.*?)\\[/fly\\]", "$1"),
-    ("\\[glow=(?:[^,]*?),([^,]*?),([^,]*?)\\](.*?)\\[/glow\\]", "$3"),
-    ("\\[shadow=(?:[^,]*?),([^,]*?),([^,]*?)\\](.*?)\\[/shadow\\]", "$3"),
-    ("\\[code=(\\w*?)\\]([\\s\\S]*?)\\[/code\\]", "$2")
-]
-let replaceStringArray = [
-    ("\\[(em[abc]?)0?(\\d+)\\]", emotion),
-    ("\\[img=((?:http|https)[^\\[\\]\"\\']*?)\\](?:\\s*?)\\[/img\\]", img),
-    ("\\[upload=(\\d+)\\](?:\\s*?)\\[/upload\\]", upload)
-]
-let regexStringArray = [
-    ("\\[b\\](.*?)\\[/b\\]", bold),
-    ("\\[i\\](.*?)\\[/i\\]", italic),
-    ("\\[u\\](.*?)\\[/u\\]", underline),
-    ("\\[color=(#\\w*?)\\](.*?)\\[/color\\]", color),
-    ("\\[size=(\\d*?)\\](.*?)\\[/size\\]", size),
-    ("\\[url=((?:http|https|ftp|rtsp|mms)[^\\[\\]\"\\']*?)\\](.*?)\\[/url\\]", url),
-    ("\\[email=((?:[a-zA-Z0-9]+[_|\\-|\\.]?)*[a-zA-Z0-9]+@(?:[a-zA-Z0-9)]+[_|\\-|\\.]?)*[a-zA-Z0-9]+\\.[a-zA-Z]{2,3})\\](.*?)\\[/email\\]", url),
-    ("(?<!>|=|\")(?:http|https|ftp|rtsp|mms):(?://|\\\\\\)(&(?=amp;)|[A-Za-z0-9\\./=\\?%\\-#_~`@\\[\\]\\':;+!])+", urlNoTag)
-]
+let defaultArticleFontSize: CGFloat = 14
 
-/// `r1` should contains `r2`
-func rangesIn(r1: NSRange, notIn r2: NSRange) -> [NSRange] {
-    guard r1.location <= r2.location && r1.length >= r2.length else { return [] }
-    var ret = [NSRange]()
-    if r2.location - r1.location > 0 {
-        ret.append(NSMakeRange(r1.location, r2.location - r1.location))
-    }
-    let diff = NSMaxRange(r1) - NSMaxRange(r2)
-    if diff > 0 {
-        ret.append(NSMakeRange(NSMaxRange(r2), diff))
-    }
-    return ret
-}
-
-// 2. ---------------------------------------------------
-// TODO: - update logic
-func emotion(res: NSMutableAttributedString, match: NSTextCheckingResult?, flags: NSMatchingFlags) -> [(NSRange, NSAttributedString)] {
-    guard let match = match where match.numberOfRanges > 2 else { return [] }
-    let range = match.range
-    let e1r = match.rangeAtIndex(1) // range contains characterRange
-    let e2r = match.rangeAtIndex(2)
-    let emotionName = (res.string as NSString).substringWithRange(e1r) + (res.string as NSString).substringWithRange(e2r)
-    let attachment = BYRAttachment()
-    attachment.type = .Emotion(emotionName)
-    return [(range, NSAttributedString(attachment: attachment))]
-}
-
-func img(res: NSMutableAttributedString, match: NSTextCheckingResult?, flags: NSMatchingFlags) -> [(NSRange, NSAttributedString)] {
-    guard let match = match where match.numberOfRanges > 1 else { return [] }
-    let range = match.range
-    let imgURLr = match.rangeAtIndex(1) // range contains characterRange
-    let imgURL = (res.string as NSString).substringWithRange(imgURLr)
-    let attachment = BYRAttachment()
-    attachment.type = .Img(imgURL)
-    return [(range, NSAttributedString(attachment: attachment))]
-}
-
-func upload(res: NSMutableAttributedString, match: NSTextCheckingResult?, flags: NSMatchingFlags) -> [(NSRange, NSAttributedString)] {
-    guard let match = match where match.numberOfRanges > 1 else { return [] }
-    let range = match.range
-    let nor = match.rangeAtIndex(1) // range contains characterRange
-    let no = (res.string as NSString).substringWithRange(nor).integerValue
-    let attachment = BYRAttachment()
-    attachment.type = .Upload(no)
-    return [(range, NSAttributedString(attachment: attachment))]
-}
-
-// 3. -----------------------------------------------
-func bold(res: NSMutableAttributedString, match: NSTextCheckingResult?, flags: NSMatchingFlags) -> [NSRange] {
-    guard let match = match where match.numberOfRanges > 1 else { return [] }
-    let range = match.range
-    let characterRange = match.rangeAtIndex(1) // range contains characterRange
-    for var i = 0; i < characterRange.length; i++ {
-        let index = characterRange.location + i
-        if let font = res.attribute(NSFontAttributeName, atIndex: index, effectiveRange: nil) as? UIFont {
-            var fontDes = font.fontDescriptor()
-            fontDes = fontDes.fontDescriptorWithSymbolicTraits([fontDes.symbolicTraits, .TraitBold])
-            res.addAttribute(NSFontAttributeName, value: UIFont(descriptor: fontDes, size: font.pointSize), range: NSMakeRange(index, 1))
-        } else {
-            res.addAttribute(NSFontAttributeName, value: UIFont.boldSystemFontOfSize(defaultArticleFontSize), range: NSMakeRange(index, 1))
-        }
-    }
-    return rangesIn(range, notIn: characterRange)
-}
-
-func italic(res: NSMutableAttributedString, match: NSTextCheckingResult?, flags: NSMatchingFlags) -> [NSRange] {
-    guard let match = match where match.numberOfRanges > 1 else { return [] }
-    let range = match.range
-    let characterRange = match.rangeAtIndex(1) // range contains characterRange
-    for var i = 0; i < characterRange.length; i++ {
-        let index = characterRange.location + i
-        if let font = res.attribute(NSFontAttributeName, atIndex: index, effectiveRange: nil) as? UIFont {
-            var fontDes = font.fontDescriptor()
-            fontDes = fontDes.fontDescriptorWithSymbolicTraits([fontDes.symbolicTraits, .TraitItalic])
-            res.addAttribute(NSFontAttributeName, value: UIFont(descriptor: fontDes, size: font.pointSize), range: NSMakeRange(index, 1))
-        } else {
-            res.addAttribute(NSFontAttributeName, value: UIFont.italicSystemFontOfSize(defaultArticleFontSize), range: NSMakeRange(index, 1))
-        }
-    }
-    return rangesIn(range, notIn: characterRange)
-}
-
-func underline(res: NSMutableAttributedString, match: NSTextCheckingResult?, flags: NSMatchingFlags) -> [NSRange] {
-    guard let match = match where match.numberOfRanges > 1 else { return [] }
-    let range = match.range
-    let characterRange = match.rangeAtIndex(1) // range contains characterRange
-    res.addAttribute(NSUnderlineStyleAttributeName, value: NSUnderlineStyle.StyleSingle.rawValue, range: characterRange)
-    return rangesIn(range, notIn: characterRange)
-}
-
-func color(res: NSMutableAttributedString, match: NSTextCheckingResult?, flags: NSMatchingFlags) -> [NSRange] {
-    guard let match = match where match.numberOfRanges > 2 else { return [] }
-    let range = match.range
-    let colorRange = match.rangeAtIndex(1)
-    let colorString = (res.string as NSString).substringWithRange(colorRange)
-    let characterRange = match.rangeAtIndex(2) // range contains characterRange
-    res.addAttribute(NSForegroundColorAttributeName, value: UIColor(rgbString: colorString), range: characterRange)
-    return rangesIn(range, notIn: characterRange)
-}
-
-func size(res: NSMutableAttributedString, match: NSTextCheckingResult?, flags: NSMatchingFlags) -> [NSRange] {
-    guard let match = match where match.numberOfRanges > 1 else { return [] }
-    let range = match.range
-    let sizeRange = match.rangeAtIndex(1)
-    let size = (res.string as NSString).substringWithRange(sizeRange).floatValue
-    let characterRange = match.rangeAtIndex(2) // range contains characterRange
-    for var i = 0; i < characterRange.length; i++ {
-        let index = characterRange.location + i
-        if let font = res.attribute(NSFontAttributeName, atIndex: index, effectiveRange: nil) as? UIFont {
-            let newFont = font.fontWithSize(font.pointSize + CGFloat(size))
-            res.addAttribute(NSFontAttributeName, value: newFont, range: NSMakeRange(index, 1))
-        } else {
-            res.addAttribute(NSFontAttributeName, value: UIFont.systemFontOfSize(defaultArticleFontSize + CGFloat(size)), range: NSMakeRange(index, 1))
-        }
-    }
-    return rangesIn(range, notIn: characterRange)
-}
-
-func url(res: NSMutableAttributedString, match: NSTextCheckingResult?, flags: NSMatchingFlags) -> [NSRange] {
-    guard let match = match where match.numberOfRanges > 2 else { return [] }
-    let range = match.range
-    let urlRange = match.rangeAtIndex(1)
-    let url = (res.string as NSString).substringWithRange(urlRange)
-    let characterRange = match.rangeAtIndex(2) // range contains characterRange
-    res.addAttribute(NSLinkAttributeName, value: url, range: characterRange)
-    return rangesIn(range, notIn: characterRange)
-}
-
-func urlNoTag(res: NSMutableAttributedString, match: NSTextCheckingResult?, flags: NSMatchingFlags) -> [NSRange] {
-    guard let match = match where match.numberOfRanges > 2 else { return [] }
-    let range = match.range
-    let url = (res.string as NSString).substringWithRange(range)
-    res.addAttribute(NSLinkAttributeName, value: url, range: range)
-    return []
-}
-
-func parse(content: String) -> NSMutableAttributedString {
-    // 1. ingore
-    let str = ignoreTagStringArray.reduce(content) { (str, t) in
-        guard let regex = try? NSRegularExpression(pattern: t.regexString, options: [.CaseInsensitive]) else {
-            return str
-        }
-        return regex.stringByReplacingMatchesInString(str, options: [], range: NSMakeRange(0, str.utf16.count), withTemplate: t.replaceTemplate)
+class Parser {
+    
+    let uploadCount: Int
+    init(uploadCount: Int) {
+        self.uploadCount = uploadCount
     }
     
-    // 2. replace
-    let res = NSMutableAttributedString(string: str, attributes: [NSFontAttributeName: UIFont.systemFontOfSize(defaultArticleFontSize)])
-    var replaceRange = [(NSRange, NSAttributedString)]()
-    replaceStringArray.forEach { regexString, block in
-        guard let regex = try? NSRegularExpression(pattern: regexString, options: [.CaseInsensitive]) else { return }
-        regex.enumerateMatchesInString(res.string, options: [], range: NSMakeRange(0, res.length), usingBlock: { (match, flags, _) -> Void in
-            replaceRange += block(res, match: match, flags: flags)
+    let ignoreTagStringArray: [(regexString: String, replaceTemplate: String)] = [
+        // ignore all matches
+        ("\\[ATT=([^\\[\\]]*?) SIZE=([^\\[\\]]*?)\\](?:\\s*?)\\[/ATT\\]", ""),
+        ("\\[swf=((?:http|https)[^\\[\\]\"\\']*?)\\](?:\\s*?)\\[/swf\\]", ""),
+        ("\\[mp3=((?:http|https)[^\\[\\]\"\\']*?) auto=([01])\\](?:\\s*?)\\[/mp3\\]", ""),
+        ("\\[map=([0-9,.{}]*?) mark=([0-9,.{}]*?)\\](?:\\s*?)\\[/map\\]", ""),
+        // ignore tag part of matches
+        ("\\[move\\](.*?)\\[/move\\]", "$1"),
+        ("\\[fly\\](.*?)\\[/fly\\]", "$1"),
+        ("\\[glow=(?:[^,]*?),([^,]*?),([^,]*?)\\](.*?)\\[/glow\\]", "$3"),
+        ("\\[shadow=(?:[^,]*?),([^,]*?),([^,]*?)\\](.*?)\\[/shadow\\]", "$3"),
+        ("\\[code=(\\w*?)\\]([\\s\\S]*?)\\[/code\\]", "$2")
+    ]
+    let replaceStringArray = [
+        ("\\[(em[abc]?)0?(\\d+)\\]", emotion),
+        ("\\[img=((?:http|https)[^\\[\\]\"\\']*?)\\](?:\\s*?)\\[/img\\]", img),
+        ("\\[upload=(\\d+)\\](?:\\s*?)\\[/upload\\]", upload)
+    ]
+    let regexStringArray = [
+        ("\\[b\\](.*?)\\[/b\\]", bold),
+        ("\\[i\\](.*?)\\[/i\\]", italic),
+        ("\\[u\\](.*?)\\[/u\\]", underline),
+        ("\\[color=(#\\w*?)\\](.*?)\\[/color\\]", color),
+        ("\\[size=(\\d*?)\\](.*?)\\[/size\\]", size),
+        ("\\[face=([^\\[\\]<>\"]{1,16})\\](.*?)\\[/face\\]", face),
+        ("\\[url=((?:http|https|ftp|rtsp|mms)[^\\[\\]\"\\']*?)\\](.*?)\\[/url\\]", url),
+        ("\\[email=((?:[a-zA-Z0-9]+[_|\\-|\\.]?)*[a-zA-Z0-9]+@(?:[a-zA-Z0-9)]+[_|\\-|\\.]?)*[a-zA-Z0-9]+\\.[a-zA-Z]{2,3})\\](.*?)\\[/email\\]", url),
+        ("(?<!>|=|\")(?:http|https|ftp|rtsp|mms):(?://|\\\\\\)(&(?=amp;)|[A-Za-z0-9\\./=\\?%\\-#_~`@\\[\\]\\':;+!])+", urlNoTag)
+    ]
+
+    /// `r1` should contains `r2`
+    func rangesIn(r1: NSRange, notIn r2: NSRange) -> [NSRange] {
+        guard r1.location <= r2.location && r1.length >= r2.length else { return [] }
+        var ret = [NSRange]()
+        if r2.location - r1.location > 0 {
+            ret.append(NSMakeRange(r1.location, r2.location - r1.location))
+        }
+        let diff = NSMaxRange(r1) - NSMaxRange(r2)
+        if diff > 0 {
+            ret.append(NSMakeRange(NSMaxRange(r2), diff))
+        }
+        return ret
+    }
+
+    // 2. ---------------------------------------------------
+    // TODO: - update logic
+    func emotion(res: NSMutableAttributedString, match: NSTextCheckingResult?, flags: NSMatchingFlags) -> [(NSRange, NSAttributedString)] {
+        guard let match = match where match.numberOfRanges > 2 else { return [] }
+        let range = match.range
+        let e1r = match.rangeAtIndex(1) // range contains characterRange
+        let e2r = match.rangeAtIndex(2)
+        let emotionName = (res.string as NSString).substringWithRange(e1r) + (res.string as NSString).substringWithRange(e2r)
+        let attachment = BYRAttachment()
+        attachment.type = .Emotion(emotionName)
+        attachments.append(attachment)
+        return [(range, NSAttributedString(attachment: attachment))]
+    }
+
+    func img(res: NSMutableAttributedString, match: NSTextCheckingResult?, flags: NSMatchingFlags) -> [(NSRange, NSAttributedString)] {
+        guard let match = match where match.numberOfRanges > 1 else { return [] }
+        let range = match.range
+        let imgURLr = match.rangeAtIndex(1) // range contains characterRange
+        let imgURL = (res.string as NSString).substringWithRange(imgURLr)
+        let attachment = BYRAttachment()
+        attachment.type = .Img(imgURL)
+        attachments.append(attachment)
+        return [(range, NSAttributedString(attachment: attachment))]
+    }
+
+    func upload(res: NSMutableAttributedString, match: NSTextCheckingResult?, flags: NSMatchingFlags) -> [(NSRange, NSAttributedString)] {
+        guard let match = match where match.numberOfRanges > 1 && uploadCount > 0 else { return [] }
+        let range = match.range
+        let nor = match.rangeAtIndex(1) // range contains characterRange
+        let no = (res.string as NSString).substringWithRange(nor).integerValue
+        if no > uploadCount || uploadTagNo.contains(no) { return [] }
+        let attachment = BYRAttachment()
+        attachment.type = .Upload(no)
+        attachments.append(attachment)
+        uploadTagNo.append(no)
+        return [(range, NSAttributedString(attachment: attachment))]
+    }
+
+    // 3. -----------------------------------------------
+    func bold(res: NSMutableAttributedString, match: NSTextCheckingResult?, flags: NSMatchingFlags) -> [NSRange] {
+        guard let match = match where match.numberOfRanges > 1 else { return [] }
+        let range = match.range
+        let characterRange = match.rangeAtIndex(1) // range contains characterRange
+        for var i = 0; i < characterRange.length; i++ {
+            let index = characterRange.location + i
+            if let font = res.attribute(NSFontAttributeName, atIndex: index, effectiveRange: nil) as? UIFont {
+                var fontDes = font.fontDescriptor()
+                fontDes = fontDes.fontDescriptorWithSymbolicTraits([fontDes.symbolicTraits, .TraitBold])
+                res.addAttribute(NSFontAttributeName, value: UIFont(descriptor: fontDes, size: font.pointSize), range: NSMakeRange(index, 1))
+            } else {
+                res.addAttribute(NSFontAttributeName, value: UIFont.boldSystemFontOfSize(defaultArticleFontSize), range: NSMakeRange(index, 1))
+            }
+        }
+        return rangesIn(range, notIn: characterRange)
+    }
+
+    func italic(res: NSMutableAttributedString, match: NSTextCheckingResult?, flags: NSMatchingFlags) -> [NSRange] {
+        guard let match = match where match.numberOfRanges > 1 else { return [] }
+        let range = match.range
+        let characterRange = match.rangeAtIndex(1) // range contains characterRange
+        for var i = 0; i < characterRange.length; i++ {
+            let index = characterRange.location + i
+            if let font = res.attribute(NSFontAttributeName, atIndex: index, effectiveRange: nil) as? UIFont {
+                var fontDes = font.fontDescriptor()
+                fontDes = fontDes.fontDescriptorWithSymbolicTraits([fontDes.symbolicTraits, .TraitItalic])
+                res.addAttribute(NSFontAttributeName, value: UIFont(descriptor: fontDes, size: font.pointSize), range: NSMakeRange(index, 1))
+            } else {
+                res.addAttribute(NSFontAttributeName, value: UIFont.italicSystemFontOfSize(defaultArticleFontSize), range: NSMakeRange(index, 1))
+            }
+        }
+        return rangesIn(range, notIn: characterRange)
+    }
+
+    func underline(res: NSMutableAttributedString, match: NSTextCheckingResult?, flags: NSMatchingFlags) -> [NSRange] {
+        guard let match = match where match.numberOfRanges > 1 else { return [] }
+        let range = match.range
+        let characterRange = match.rangeAtIndex(1) // range contains characterRange
+        res.addAttribute(NSUnderlineStyleAttributeName, value: NSUnderlineStyle.StyleSingle.rawValue, range: characterRange)
+        return rangesIn(range, notIn: characterRange)
+    }
+
+    func color(res: NSMutableAttributedString, match: NSTextCheckingResult?, flags: NSMatchingFlags) -> [NSRange] {
+        guard let match = match where match.numberOfRanges > 2 else { return [] }
+        let range = match.range
+        let colorRange = match.rangeAtIndex(1)
+        let colorString = (res.string as NSString).substringWithRange(colorRange)
+        let characterRange = match.rangeAtIndex(2) // range contains characterRange
+        res.addAttribute(NSForegroundColorAttributeName, value: UIColor(rgbString: colorString), range: characterRange)
+        return rangesIn(range, notIn: characterRange)
+    }
+
+    func size(res: NSMutableAttributedString, match: NSTextCheckingResult?, flags: NSMatchingFlags) -> [NSRange] {
+        guard let match = match where match.numberOfRanges > 1 else { return [] }
+        let range = match.range
+        let sizeRange = match.rangeAtIndex(1)
+        let size = (res.string as NSString).substringWithRange(sizeRange).floatValue
+        let characterRange = match.rangeAtIndex(2) // range contains characterRange
+        for var i = 0; i < characterRange.length; i++ {
+            let index = characterRange.location + i
+            if let font = res.attribute(NSFontAttributeName, atIndex: index, effectiveRange: nil) as? UIFont {
+                let newFont = font.fontWithSize(font.pointSize + CGFloat(size))
+                res.addAttribute(NSFontAttributeName, value: newFont, range: NSMakeRange(index, 1))
+            } else {
+                res.addAttribute(NSFontAttributeName, value: UIFont.systemFontOfSize(defaultArticleFontSize + CGFloat(size)), range: NSMakeRange(index, 1))
+            }
+        }
+        return rangesIn(range, notIn: characterRange)
+    }
+    
+    func face(res: NSMutableAttributedString, match: NSTextCheckingResult?, flags: NSMatchingFlags) -> [NSRange] {
+        guard let match = match where match.numberOfRanges > 1 else { return [] }
+        let range = match.range
+        let facer = match.rangeAtIndex(1)
+        let face = (res.string as NSString).substringWithRange(facer)
+        let characterRange = match.rangeAtIndex(2) // range contains characterRange
+        for var i = 0; i < characterRange.length; i++ {
+            let index = characterRange.location + i
+            if let font = res.attribute(NSFontAttributeName, atIndex: index, effectiveRange: nil) as? UIFont {
+                let symbolicTraints = font.fontDescriptor().symbolicTraits
+                var st: UIFontDescriptorSymbolicTraits = []
+                if symbolicTraints.contains(.TraitBold) {
+                    st.insert(.TraitBold)
+                }
+                if symbolicTraints.contains(.TraitItalic) {
+                    st.insert(.TraitItalic)
+                }
+                if let newFont = UIFont(name: face, size: font.pointSize) {
+                    let des = newFont.fontDescriptor()
+                    let d = des.fontDescriptorWithSymbolicTraits(st)
+                    let f = UIFont(descriptor: d, size: newFont.pointSize)
+                    res.addAttribute(NSFontAttributeName, value: f, range: NSMakeRange(index, 1))
+                }
+            } else {
+                res.addAttribute(NSFontAttributeName, value: UIFont.systemFontOfSize(defaultArticleFontSize), range: NSMakeRange(index, 1))
+            }
+        }
+        return rangesIn(range, notIn: characterRange)
+    }
+
+    func url(res: NSMutableAttributedString, match: NSTextCheckingResult?, flags: NSMatchingFlags) -> [NSRange] {
+        guard let match = match where match.numberOfRanges > 2 else { return [] }
+        let range = match.range
+        let urlRange = match.rangeAtIndex(1)
+        let url = (res.string as NSString).substringWithRange(urlRange)
+        let characterRange = match.rangeAtIndex(2) // range contains characterRange
+        res.addAttribute(NSLinkAttributeName, value: url, range: characterRange)
+        return rangesIn(range, notIn: characterRange)
+    }
+
+    func urlNoTag(res: NSMutableAttributedString, match: NSTextCheckingResult?, flags: NSMatchingFlags) -> [NSRange] {
+        guard let match = match where match.numberOfRanges > 2 else { return [] }
+        let range = match.range
+        let url = (res.string as NSString).substringWithRange(range)
+        res.addAttribute(NSLinkAttributeName, value: url, range: range)
+        return []
+    }
+
+    var attachments = [BYRAttachment]()
+    var uploadTagNo = [Int]()
+    func parse(content: String) -> NSMutableAttributedString {
+        attachments.removeAll(keepCapacity: false)
+        uploadTagNo.removeAll(keepCapacity: false)
+        // 1. ingore
+        let str = ignoreTagStringArray.reduce(content) { (str, t) in
+            guard let regex = try? NSRegularExpression(pattern: t.regexString, options: [.DotMatchesLineSeparators, .CaseInsensitive]) else {
+                return str
+            }
+            return regex.stringByReplacingMatchesInString(str, options: [], range: NSMakeRange(0, str.utf16.count), withTemplate: t.replaceTemplate)
+        }
+        
+        // 2. replace
+        let res = NSMutableAttributedString(string: str, attributes: [NSFontAttributeName: UIFont.systemFontOfSize(defaultArticleFontSize)])
+        var replaceRange = [(NSRange, NSAttributedString)]()
+        replaceStringArray.forEach { regexString, block in
+            guard let regex = try? NSRegularExpression(pattern: regexString, options: [.DotMatchesLineSeparators, .CaseInsensitive]) else { return }
+            regex.enumerateMatchesInString(res.string, options: [], range: NSMakeRange(0, res.length), usingBlock: { (match, flags, _) -> Void in
+                replaceRange += block(self)(res, match: match, flags: flags)
+//                replaceRange += block(res, match: match, flags: flags)
+            })
+        }
+        replaceRange.sort { $0.0.0.location > $0.1.0.location }.forEach { res.replaceCharactersInRange($0.0, withAttributedString: $0.1) }
+        
+        // 3. delete
+        var rangesToDelete = [NSRange]()
+        regexStringArray.forEach { regexString, block in
+            guard let regex = try? NSRegularExpression(pattern: regexString, options: [.DotMatchesLineSeparators, .CaseInsensitive]) else { return }
+            regex.enumerateMatchesInString(res.string, options: [], range: NSMakeRange(0, res.length), usingBlock: { (match, flags, _) -> Void in
+                rangesToDelete += block(self)(res, match: match, flags: flags)
+            })
+        }
+        rangesToDelete.sort { $0.0.location > $0.1.location }.forEach { res.deleteCharactersInRange($0) }
+        parseQuote(res)
+        res.fixAttributesInRange(NSMakeRange(0, res.length))
+        return res
+    }
+    
+    private func parseQuote(result: NSMutableAttributedString) {
+        let regex = try? NSRegularExpression(pattern: "\n: [^\n]*+", options: [])
+        regex?.enumerateMatchesInString(result.string, options: [], range: NSMakeRange(0, result.length), usingBlock: { (match, _, _) -> Void in
+            guard let match = match where match.range.length > 1 else { return }
+            result.addAttribute(NSForegroundColorAttributeName, value: UIColor(rgb: 0x00b4af), range: NSMakeRange(match.range.location + 1, match.range.length - 1))
         })
     }
-    replaceRange.sort { $0.0.0.location > $0.1.0.location }.forEach { res.replaceCharactersInRange($0.0, withAttributedString: $0.1) }
-    
-    // 3. delete
-    var rangesToDelete = [NSRange]()
-    regexStringArray.forEach { regexString, block in
-        guard let regex = try? NSRegularExpression(pattern: regexString, options: [.CaseInsensitive]) else { return }
-        regex.enumerateMatchesInString(res.string, options: [], range: NSMakeRange(0, res.length), usingBlock: { (match, flags, _) -> Void in
-            rangesToDelete += block(res, match: match, flags: flags)
-        })
-    }
-    rangesToDelete.sort { $0.0.location > $0.1.location }.forEach { res.deleteCharactersInRange($0) }
-    
-    res.fixAttributesInRange(NSMakeRange(0, res.length))
-    return res
 }
 
 
@@ -256,8 +315,7 @@ func parse(content: String) -> NSMutableAttributedString {
 
 
 
-
-
+/*
 
 
 public protocol UBBParserDelegate: class {
@@ -268,7 +326,7 @@ public protocol UBBParserDelegate: class {
     func parser(parser: BYRUBBParser, didFinishParsingString string: String)
 }
 
-let defaultArticleFontSize: CGFloat = 14
+
 
 struct Tag {
     var tagName: String
@@ -556,3 +614,4 @@ public class BYRUBBParser {
         print("deinit parser")
     }
 }
+*/

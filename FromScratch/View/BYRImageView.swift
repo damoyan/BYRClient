@@ -57,7 +57,6 @@ class BYRImageView: UIImageView {
                         observer.onCompleted()
                     })
                     return AnonymousDisposable {
-                        print("dispose")
                     }
                 }
             }

@@ -137,7 +137,18 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
         content.enumerate().filter { (index, d) -> Bool in
             d === data
         }.forEach { (index, d) -> () in
-            tableView.reloadSections(NSIndexSet(index: index), withRowAnimation: UITableViewRowAnimation.Automatic)
+            var isVisible = false
+            if let visibles = tableView.indexPathsForVisibleRows {
+                for ip in visibles {
+                    if ip.section == index {
+                        isVisible = true
+                        break
+                    }
+                }
+            }
+            if isVisible {
+                tableView.reloadSections(NSIndexSet(index: index), withRowAnimation: UITableViewRowAnimation.Automatic)
+            }
         }
     }
     

@@ -33,9 +33,8 @@ class ArticleCellData {
     
     func getDisplayContent() -> NSAttributedString? {
         guard let content = article.content else { return nil }
-        let parser = BYRUBBParser(font: ArticleConfig.font, color: ArticleConfig.color)
-        parser.parse(content)
-        let result = NSMutableAttributedString(attributedString: parser.resultAttributedString)
+        let parser = Parser(uploadCount: article.attachment?.file?.count ?? 0)
+        let result = NSMutableAttributedString(attributedString: parser.parse(content))
         // 找出所有图片类型的附件
         var attachments = parser.attachments.filter { att in
             if case .Upload(let no) = att.type {
@@ -50,6 +49,7 @@ class ArticleCellData {
                     }
                     return true
                 }
+                print("not image")
                 return false
             } else if case .Emotion = att.type {
                 return true
@@ -63,23 +63,20 @@ class ArticleCellData {
             return (!parser.uploadTagNo.contains(i + 1)) && f.isImage // TODO: - 只处理image类型
         }.map { (i, f) -> NSAttributedString in
             let attachment = BYRAttachment()
-            attachment.tag = Tag(tagName: "img", attributes: ["img": f.middle ?? f.small ?? f.url ?? ""])
+            attachment.type = .Img(f.middle ?? f.small ?? f.url ?? "")
             attachments.append(attachment)
             return NSAttributedString(attachment: attachment)
         }.forEach {
             result.appendAttributedString($0)
         }
         hasAttachment = attachments.count > 0 ? true : false
+        attachments.forEach { print($0.imageUrl, $0.type) }
+        if !hasAttachment { return result }
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { [unowned self] () -> Void in
             // get images
             attachments.map { (a) -> Observable<(ImageDecoder?, BYRAttachment)> in
                 Observable.create { (observer) -> Disposable in
                     let handler: ImageHelper.Handler = { (urlString, info, error) -> () in
-                        guard let info = info where info.frameCount > 0 else {
-                            observer.onNext((nil, a))
-                            observer.onCompleted()
-                            return
-                        }
                         a.decoder = info
                         observer.onNext((info, a))
                         observer.onCompleted()
@@ -98,7 +95,6 @@ class ArticleCellData {
                         handler(nil, nil, nil)
                     }
                     return AnonymousDisposable {
-                        print("disposable")
                     }
                 }
             }.zip { (x) -> [(ImageDecoder?, BYRAttachment)] in
@@ -107,12 +103,8 @@ class ArticleCellData {
             .subscribeNext { [weak self] (res) -> Void in
                 guard res.count > 0 else { return }
                 guard let this = self else { return }
-                for r in res {
-                    if let info = r.0 where info.frameCount > 0 {
-                        this.delegate?.dataDidChanged(this)
-                        return
-                    }
-                }
+                print("finish download!", this.article.position)
+                this.delegate?.dataDidChanged(this)
             }.addDisposableTo(self.disposeBag)
         }
         return result

@@ -13,6 +13,7 @@ class ArticleHeader: UITableViewHeaderFooterView {
     @IBOutlet weak var avatar: BYRImageView!
     @IBOutlet weak var idLabel: UILabel!
     @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var positionLabel: UILabel!
     
     @IBAction func onReply(sender: UIButton) {
         print("reply")
@@ -33,6 +34,22 @@ class ArticleHeader: UITableViewHeaderFooterView {
         }
         idLabel.text = article.article.user?.id
         nameLabel.text = article.article.user?.userName
+        if let position = article.article.position {
+            positionLabel.text = {
+                switch position {
+                case 0:
+                    return "楼主"
+                case 1:
+                    return "沙发"
+                case 2:
+                    return "板凳"
+                default:
+                    return "\(position)楼"
+                }
+            }()
+        } else {
+            positionLabel.text = nil
+        }
     }
     
     deinit {
