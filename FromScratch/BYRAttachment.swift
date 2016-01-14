@@ -37,7 +37,18 @@ public class BYRAttachment: NSTextAttachment {
             }
         }
     }
-    var type: AttachmentType = .OtherFile
+    
+    var type: AttachmentType = .OtherFile {
+        didSet {
+            switch type {
+            case .Upload(_), .Img(_), .Emotion(_):
+                image = UIImage(named: "loading_image")
+            default:
+                break
+            }
+        }
+    }
+    
     var imageUrl: String?
     var decoder: ImageDecoder? {
         didSet {
