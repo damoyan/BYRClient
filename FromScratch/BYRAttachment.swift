@@ -25,10 +25,12 @@ public class BYRAttachment: NSTextAttachment {
                 if let att = tag.attributes, no = (att["upload"] as? String)?.integerValue {
                     type = .Upload(no)
                 }
+                image = UIImage(named: "loading_image") // loading
             case "img":
                 if let att = tag.attributes, url = att["img"] as? String {
                     type = .Img(url)
                 }
+                image = UIImage(named: "loading_image") // loading
                 // TODO: - add more type
             default:
                 break
@@ -37,10 +39,14 @@ public class BYRAttachment: NSTextAttachment {
     }
     var type: AttachmentType = .OtherFile
     var imageUrl: String?
-    var images: [UIImage]? {
+    var decoder: ImageDecoder? {
         didSet {
-            if images?.count == 1 {
-                self.image = images?[0]
+            guard let decoder = decoder else {
+                image = UIImage(named: "load_image_fail") // load failed
+                return
+            }
+            if let first = decoder.firstFrame where decoder.frameCount == 1 {
+                image = first
             }
         }
     }
@@ -65,8 +71,8 @@ public class BYRAttachment: NSTextAttachment {
             }
         }
         var size: CGSize
-        if let images = self.images where images.count > 0 {
-            size = images[0].size
+        if let decoder = self.decoder, first = decoder.firstFrame {
+            size = first.size
         } else if let image = self.image {
             size = image.size
         } else {

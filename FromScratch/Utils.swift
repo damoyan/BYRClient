@@ -63,43 +63,27 @@ class Utils: NSObject {
         return images
     }
     
-    static func getImageInfoFromData(data: NSData, requestURLString urlString: String) throws -> ImageInfo {
-        guard let source = CGImageSourceCreateWithData(data, nil) else {
-            throw BYRError.CreateImageSourceFailed
+    static func getEmotionData(name: String) -> NSData? {
+        var imageName: String, imageFolder: String
+        let folderPrefix = "emotions/"
+        if name.hasPrefix("emc") {
+            imageFolder = folderPrefix + "emc"
+            imageName = (name as NSString).substringFromIndex(3)
+        } else if name.hasPrefix("emb") {
+            imageFolder = folderPrefix + "emb"
+            imageName = (name as NSString).substringFromIndex(3)
+        } else if name.hasPrefix("ema") {
+            imageFolder = folderPrefix + "ema"
+            imageName = (name as NSString).substringFromIndex(3)
+        } else {
+            imageFolder = folderPrefix + "em"
+            imageName = (name as NSString).substringFromIndex(2)
         }
-        let frameCount = CGImageSourceGetCount(source)
-        autoreleasepool {
-            for var i = 0; i < frameCount; i++ {
-                if let cgimage = CGImageSourceCreateImageAtIndex(source, i, nil) {
-                    let image = UIImage(CGImage: cgimage)
-                    if let data = UIImagePNGRepresentation(image) {
-                        writeToFile(data, inDirectory: urlString.sha1, fileSerialNo: i)
-                    }
-                }
-            }
+        let path = NSBundle.mainBundle().pathForResource(imageName, ofType: "gif", inDirectory: imageFolder)
+        if let path = path, data = NSData(contentsOfFile: path) {
+            return data
         }
-        return ImageInfo(baseFileName: urlString, frameCount: frameCount)
-    }
-    
-    static func writeToFile(data: NSData, inDirectory dir: String, fileSerialNo no: Int) -> Bool {
-        let path = NSSearchPathForDirectoriesInDomains(.CachesDirectory, .UserDomainMask, true)
-        print(path)
-        let p = NSFileManager.defaultManager().URLsForDirectory(.CachesDirectory, inDomains: .UserDomainMask)[0]
-        let imagec = NSURL(fileURLWithPath: dir, isDirectory: true, relativeToURL: p)
-        guard let _ = try? NSFileManager.defaultManager().createDirectoryAtURL(imagec, withIntermediateDirectories: true, attributes: nil) else { return false }
-        guard NSFileManager.defaultManager().fileExistsAtPath(imagec.path!, isDirectory: nil) else {
-            print("not created")
-            return false
-        }
-        let imagep = NSURL(fileURLWithPath: "\(no).dat", isDirectory: false, relativeToURL: imagec)
-        print(imagep)
-        do {
-            try data.writeToURL(imagep, options: [.DataWritingAtomic])
-            return true
-        } catch {
-            print((error as NSError).localizedDescription)
-            return false
-        }
+        return nil
     }
 }
 

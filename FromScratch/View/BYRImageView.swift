@@ -10,59 +10,78 @@ import UIKit
 import RxSwift
 
 class BYRImageView: UIImageView {
+//    
+    let byr_subject = PublishSubject<String>()
+    var byr_disposeBag = DisposeBag()
+    private var player: ImagePlayer?
     
-    private var displayLink: CADisplayLink?
-    private var byr_images: [UIImage] = []
-    private var currentIndex: Int = 0
-    
-    override var animationImages: [UIImage]? {
-        get {
-            return byr_images
-        }
-        set {
-            byr_setImages(newValue)
-        }
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
     }
     
-    private func resetStatus() {
-        displayLink?.invalidate()
-        displayLink = nil
-        currentIndex = 0
+    override init(image: UIImage?) {
+        super.init(image: image)
+        setup()
     }
     
-    private func clearContent() {
-        resetStatus()
-        byr_images = []
+    override init(image: UIImage?, highlightedImage: UIImage?) {
+        super.init(image: image, highlightedImage: highlightedImage)
+        setup()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setup()
     }
     
-    /// 这个子类实际上不需要调用这两个方法.
-    override func startAnimating() {
-        displayLink = CADisplayLink(target: WeakReferenceProxy(target: self), selector: "handle:")
-        displayLink?.frameInterval = 2
-        displayLink?.addToRunLoop(NSRunLoop.mainRunLoop(), forMode: NSDefaultRunLoopMode)
-    }
-    override func stopAnimating() {
-        resetStatus()
-    }
     
-    override func byr_setImages(images: [UIImage]?) {
-        clearContent()
-        guard let images = images where images.count > 0 else { return }
-        if images.count == 1 {
-            image = images[0]
+    func byr_setImageDecoder(decoder: ImageDecoder) {
+        byr_reset()
+        guard decoder.frameCount > 0 else { return }
+        if decoder.frameCount == 1 {
+            image = decoder.firstFrame
         } else {
-            byr_images = images
-            startAnimating()
+            player = ImagePlayer(decoder: decoder) { [weak self] image in
+                self?.image = image
+            }
         }
     }
     
-    @objc private func handle(dl: CADisplayLink) {
-        image = byr_images[currentIndex]
-        currentIndex = (currentIndex + 1) % byr_images.count
+    private func setup() {
+        byr_subject
+            .map { urlString -> Observable<(ImageDecoder?, NSError?)> in
+                return Observable.create { observer in
+                    ImageHelper.getImageWithURLString(urlString, completionHandler: { (urlString, decoder, error) -> () in
+                        observer.onNext((decoder, error))
+                        observer.onCompleted()
+                    })
+                    return AnonymousDisposable {
+                        print("dispose")
+                    }
+                }
+            }
+            .switchLatest()
+            .observeOn(MainScheduler.instance)
+            .subscribeNext { [weak self] res in
+                guard let decoder = res.0 else { return }
+                self?.byr_setImageDecoder(decoder)
+            }
+            .addDisposableTo(byr_disposeBag)
+    }
+    
+    func byr_setImageWithURLString(urlString: String) {
+        byr_subject.onNext(urlString)
+    }
+    
+    func byr_reset() {
+        player?.stop()
+        player = nil
+        image = nil
     }
     
     deinit {
-        clearContent()
-        print("deinit imageview")
+        byr_reset()
+        print("deinit BYRImageView")
     }
 }

@@ -20,9 +20,7 @@ class ArticleHeader: UITableViewHeaderFooterView {
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        avatar.image = nil
-        avatar.stopAnimating()
-        avatar.animationImages = nil
+        avatar.byr_reset()
         idLabel.text = nil
         nameLabel.text = nil
     }
@@ -31,7 +29,7 @@ class ArticleHeader: UITableViewHeaderFooterView {
         if let url = article.article.user?.faceURL {
             avatar.byr_setImageWithURLString(url)
         } else {
-            avatar.image = UIImage(named: "")
+            avatar.image = UIImage(named: "default_avatar")
         }
         idLabel.text = article.article.user?.id
         nameLabel.text = article.article.user?.userName
