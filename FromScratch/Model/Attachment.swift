@@ -37,6 +37,13 @@ class Attachment: NSObject {
             }
             return false
         }
+        var isGif: Bool {
+            guard let name = self.name else { return false }
+            if (name as NSString).pathExtension.lowercaseString == "gif" {
+                return true
+            }
+            return false
+        }
         
         init(data: JSON) {
             name = data[_keys.name].string

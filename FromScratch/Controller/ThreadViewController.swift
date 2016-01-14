@@ -134,7 +134,22 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
     
     func dataDidChanged(data: ArticleCellData) {
         data.contentHeight = nil
-        tableView.reloadData()
+        content.enumerate().filter { (index, d) -> Bool in
+            d === data
+        }.forEach { (index, d) -> () in
+            var isVisible = false
+            if let visibles = tableView.indexPathsForVisibleRows {
+                for ip in visibles {
+                    if ip.section == index {
+                        isVisible = true
+                        break
+                    }
+                }
+            }
+            if isVisible {
+                tableView.reloadSections(NSIndexSet(index: index), withRowAnimation: UITableViewRowAnimation.Automatic)
+            }
+        }
     }
     
     deinit {

@@ -9,7 +9,7 @@
 import UIKit
 import ImageIO
 
-typealias BYRResourceDownloadCompletionHandler = (NSData?, NSError?) -> ()
+typealias BYRResourceDownloadCompletionHandler = (String, NSData?, NSError?) -> ()
 
 class ArticleNetResourceHelper {
     
@@ -22,9 +22,10 @@ class ArticleNetResourceHelper {
 
     /// `handler` is called on background thread after task is completed.
     func getResourceWithURLString(urlString: String, completionHandler handler: BYRResourceDownloadCompletionHandler) {
-        guard let url = NSURL(string: urlString + "?oauth_token=\(AppSharedInfo.sharedInstance.userToken!)") else { return }
+        let s = urlString + "?oauth_token=\(AppSharedInfo.sharedInstance.userToken!)"
+        guard let url = NSURL(string: s) else { return }
         let task = session.dataTaskWithURL(url)
-        (session.delegate as? DataDelegate)?.imageDownloadCompletionHandlers[task] = handler
+        (session.delegate as? DataDelegate)?.imageDownloadCompletionHandlers[task] = (urlString, handler)
         task.resume()
     }
     
@@ -37,7 +38,7 @@ class ArticleNetResourceHelper {
             var progress: Double = 0
         }
         var datas = [NSURLSessionTask: TaskData]()
-        var imageDownloadCompletionHandlers: [NSURLSessionTask: BYRResourceDownloadCompletionHandler] = [:]
+        var imageDownloadCompletionHandlers: [NSURLSessionTask: (String, BYRResourceDownloadCompletionHandler)] = [:]
         
         func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveResponse response: NSURLResponse, completionHandler: (NSURLSessionResponseDisposition) -> Void) {
             let data = TaskData()
@@ -70,7 +71,7 @@ class ArticleNetResourceHelper {
         
         func handleCallback(task: NSURLSessionTask, data: NSData?, error: NSError?) {
             if let handler = imageDownloadCompletionHandlers[task] {
-                handler(data, error)
+                handler.1(handler.0, data, error)
             }
             datas.removeValueForKey(task)
             imageDownloadCompletionHandlers.removeValueForKey(task)
@@ -80,27 +81,32 @@ class ArticleNetResourceHelper {
 
 class ImageHelper {
     
-    typealias Handler = ([UIImage]?, NSError?) -> ()
+    typealias Handler = (String?, ImageDecoder?, NSError?) -> ()
+    static let _queue = NSOperationQueue()
     
     class func getImageWithURLString(urlString: String, completionHandler handler: Handler) {
-        ArticleNetResourceHelper.defaultHelper.getResourceWithURLString(urlString) { (data, error) -> () in
-            guard let data = data else {
-                runHandlerOnMain(handler, images: nil, error: error)
-                return
-            }
-            do {
-                let images = try Utils.getImagesFromData(data)
-                runHandlerOnMain(handler, images: images, error: nil)
-            } catch {
-                let e = NSError(domain: BYRErrorDomain, code: -1, userInfo: [NSLocalizedDescriptionKey: "returned data is not image convertable."])
-                runHandlerOnMain(handler, images: nil, error: e)
+        _queue.addOperationWithBlock {
+            ArticleNetResourceHelper.defaultHelper.getResourceWithURLString(urlString) { (urlString, data, error) -> () in
+                guard let data = data else {
+                    runHandlerOnMain(handler, urlString: urlString, decoder: nil, error: error)
+                    return
+                }
+                let decoder = BYRImageDecoder(data: data)
+                runHandlerOnMain(handler, urlString: urlString, decoder: decoder, error: nil)
             }
         }
     }
     
-    class func runHandlerOnMain(handler: Handler, images: [UIImage]?, error: NSError?) {
+    class func getImageWithData(data: NSData, completionHandler handler: Handler) {
+        _queue.addOperationWithBlock { () -> Void in
+            let decoder = BYRImageDecoder(data: data)
+            runHandlerOnMain(handler, urlString: nil, decoder: decoder, error: nil)
+        }
+    }
+    
+    class func runHandlerOnMain(handler: Handler, urlString: String?, decoder: ImageDecoder?, error: NSError?) {
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
-            handler(images, error)
+            handler(urlString, decoder, error)
         })
     }
 }

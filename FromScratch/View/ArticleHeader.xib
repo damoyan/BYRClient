@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
     </dependencies>
     <objects>
@@ -14,17 +13,12 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LK0-oT-Wo3">
                     <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                     <subviews>
-                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default_avatar" translatesAutoresizingMaskIntoConstraints="NO" id="ZEd-eo-o4T">
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="default_avatar" translatesAutoresizingMaskIntoConstraints="NO" id="ZEd-eo-o4T" customClass="BYRImageView" customModule="FromScratch" customModuleProvider="target">
                             <rect key="frame" x="8" y="2" width="44" height="40"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="44" id="Bkt-wf-oZQ"/>
                                 <constraint firstAttribute="height" constant="40" id="NGV-Gz-4Jf"/>
                             </constraints>
-                            <userDefinedRuntimeAttributes>
-                                <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                    <real key="value" value="20"/>
-                                </userDefinedRuntimeAttribute>
-                            </userDefinedRuntimeAttributes>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SyusukeFuji" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I4V-A6-RKY">
                             <rect key="frame" x="64" y="4" width="77" height="17"/>
@@ -38,8 +32,14 @@
                             <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                             <nil key="highlightedColor"/>
                         </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bNG-kS-h5h">
+                            <rect key="frame" x="277" y="4" width="31" height="14.5"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            <nil key="highlightedColor"/>
+                        </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t1i-ho-1eE">
-                            <rect key="frame" x="278" y="7.5" width="30" height="29"/>
+                            <rect key="frame" x="278" y="15" width="30" height="29"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <state key="normal" title="回复"/>
                             <userDefinedRuntimeAttributes>
@@ -60,10 +60,12 @@
                         <constraint firstItem="I4V-A6-RKY" firstAttribute="leading" secondItem="ZEd-eo-o4T" secondAttribute="trailing" constant="12" id="9ps-Vb-sAU"/>
                         <constraint firstAttribute="trailing" secondItem="t1i-ho-1eE" secondAttribute="trailing" constant="12" id="9sG-SH-WiG"/>
                         <constraint firstItem="ZEd-eo-o4T" firstAttribute="leading" secondItem="LK0-oT-Wo3" secondAttribute="leading" constant="8" id="FKR-PO-KvK"/>
-                        <constraint firstItem="t1i-ho-1eE" firstAttribute="centerY" secondItem="LK0-oT-Wo3" secondAttribute="centerY" id="KD4-98-2mU"/>
                         <constraint firstItem="cT0-90-vmb" firstAttribute="top" secondItem="I4V-A6-RKY" secondAttribute="bottom" constant="4" id="Los-TX-vN8"/>
                         <constraint firstItem="cT0-90-vmb" firstAttribute="leading" secondItem="ZEd-eo-o4T" secondAttribute="trailing" constant="12" id="Lyg-id-bb7"/>
+                        <constraint firstAttribute="trailing" secondItem="bNG-kS-h5h" secondAttribute="trailing" constant="12" id="Uus-s0-BpA"/>
                         <constraint firstItem="I4V-A6-RKY" firstAttribute="top" secondItem="LK0-oT-Wo3" secondAttribute="top" constant="4" id="ezE-H2-kE6"/>
+                        <constraint firstItem="bNG-kS-h5h" firstAttribute="top" secondItem="I4V-A6-RKY" secondAttribute="top" id="gVQ-jM-g4n"/>
+                        <constraint firstAttribute="bottom" secondItem="t1i-ho-1eE" secondAttribute="bottom" id="vnx-Bf-jL3"/>
                         <constraint firstItem="ZEd-eo-o4T" firstAttribute="top" secondItem="LK0-oT-Wo3" secondAttribute="top" constant="2" id="yO4-4o-2jN"/>
                     </constraints>
                 </view>
@@ -79,11 +81,12 @@
                 <outlet property="avatar" destination="ZEd-eo-o4T" id="Ooi-sM-JDU"/>
                 <outlet property="idLabel" destination="I4V-A6-RKY" id="jNo-U9-M86"/>
                 <outlet property="nameLabel" destination="cT0-90-vmb" id="HKi-rz-4dZ"/>
+                <outlet property="positionLabel" destination="bNG-kS-h5h" id="BdN-GL-Pit"/>
             </connections>
             <point key="canvasLocation" x="236" y="-197"/>
         </view>
     </objects>
     <resources>
-        <image name="default_avatar" width="60" height="59"/>
+        <image name="default_avatar" width="60" height="60"/>
     </resources>
 </document>

@@ -12,4 +12,9 @@ enum BYRError: ErrorType {
     case CreateImageSourceFailed
 }
 
-let imageExtensions = ["tiff", "ico", "gif", "jpg", "png", "bmp", "jfif", "iptc"]
+enum BYRFileHandleError: ErrorType {
+    case NotFilePath(String), CreateFileFail(String)
+}
+
+// supported image type
+let imageExtensions = ["tiff", "ico", "gif", "jpg", "jpeg", "png", "bmp", "jfif", "iptc"]

@@ -22,6 +22,7 @@ class ArticleCellData {
     let article: Article
     var displayContent: NSAttributedString?
     var contentHeight: CGFloat?
+    var hasAttachment = false
     weak var delegate: ArticleCellDataDelegate?
     var disposeBag = DisposeBag()
     
@@ -32,9 +33,8 @@ class ArticleCellData {
     
     func getDisplayContent() -> NSAttributedString? {
         guard let content = article.content else { return nil }
-        let parser = BYRUBBParser(font: ArticleConfig.font, color: ArticleConfig.color)
-        parser.parse(content)
-        let result = NSMutableAttributedString(attributedString: parser.resultAttributedString)
+        let parser = Parser(uploadCount: article.attachment?.file?.count ?? 0)
+        let result = NSMutableAttributedString(attributedString: parser.parse(content))
         // 找出所有图片类型的附件
         var attachments = parser.attachments.filter { att in
             if case .Upload(let no) = att.type {
@@ -42,9 +42,14 @@ class ArticleCellData {
                 guard no > 0 && files.count > 0 && no <= files.count else { return false }
                 let file = files[no - 1]
                 if file.isImage {
-                    att.imageUrl = file.url ?? file.middle ?? file.small
+                    if file.isGif {
+                        att.imageUrl = file.url ?? file.middle ?? file.small
+                    } else {
+                        att.imageUrl = file.middle ?? file.url ?? file.small
+                    }
                     return true
                 }
+                print("not image")
                 return false
             } else if case .Emotion = att.type {
                 return true
@@ -55,81 +60,51 @@ class ArticleCellData {
             }
         }
         article.attachment?.file?.enumerate().filter { (i, f) in
-            return !parser.uploadTagNo.contains(i + 1)
+            return (!parser.uploadTagNo.contains(i + 1)) && f.isImage // TODO: - 只处理image类型
         }.map { (i, f) -> NSAttributedString in
             let attachment = BYRAttachment()
-            if f.isImage {
-                attachment.tag = Tag(tagName: "img", attributes: ["img": f.url ?? f.middle ?? f.small ?? ""])
-            } else {
-                attachment.type = .OtherFile
-            }
+            attachment.type = .Img(f.middle ?? f.small ?? f.url ?? "")
             attachments.append(attachment)
             return NSAttributedString(attachment: attachment)
         }.forEach {
             result.appendAttributedString($0)
         }
+        hasAttachment = attachments.count > 0 ? true : false
+        attachments.forEach { print($0.imageUrl, $0.type) }
+        if !hasAttachment { return result }
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { [unowned self] () -> Void in
             // get images
-            attachments.map { (a) -> Observable<([UIImage]?, BYRAttachment)> in
+            attachments.map { (a) -> Observable<(ImageDecoder?, BYRAttachment)> in
                 Observable.create { (observer) -> Disposable in
-                    let handler: ImageHelper.Handler = { (images, error) -> () in
-                        guard let images = images where images.count > 0 else {
-                            observer.onNext((nil, a))
-                            observer.onCompleted()
-                            return
-                        }
-                        a.bounds = CGRect(origin: CGPointZero, size: images[0].size)
-                        a.images = images
-                        observer.onNext((images, a))
+                    let handler: ImageHelper.Handler = { (urlString, info, error) -> () in
+                        a.decoder = info
+                        observer.onNext((info, a))
                         observer.onCompleted()
                     }
                     if case .Upload = a.type, let url = a.imageUrl {
                         ImageHelper.getImageWithURLString(url, completionHandler: handler)
                     } else if case .Emotion(let name) = a.type {
-                        var imageName: String, imageFolder: String
-                        let folderPrefix = "emotions/"
-                        if name.hasPrefix("emc") {
-                            imageFolder = folderPrefix + "emc"
-                            imageName = (name as NSString).substringFromIndex(3)
-                        } else if name.hasPrefix("emb") {
-                            imageFolder = folderPrefix + "emb"
-                            imageName = (name as NSString).substringFromIndex(3)
-                        } else if name.hasPrefix("ema") {
-                            imageFolder = folderPrefix + "ema"
-                            imageName = (name as NSString).substringFromIndex(3)
+                        if let data = Utils.getEmotionData(name) {
+                            ImageHelper.getImageWithData(data, completionHandler: handler)
                         } else {
-                            imageFolder = folderPrefix + "em"
-                            imageName = (name as NSString).substringFromIndex(2)
-                        }
-                        let path = NSBundle.mainBundle().pathForResource(imageName, ofType: "gif", inDirectory: imageFolder)
-                        print(imageName, imageFolder, "emotion path: ", path)
-                        if let path = path, data = NSData(contentsOfFile: path) {
-                            let images = try? Utils.getImagesFromData(data)
-                            handler(images, nil)
-                        } else {
-                            handler(nil, nil)
+                            handler(nil, nil, nil)
                         }
                     } else if case .Img(let url) = a.type {
                         ImageHelper.getImageWithURLString(url, completionHandler: handler)
                     } else {
-                        observer.onNext((nil, a))
-                        observer.onCompleted()
+                        handler(nil, nil, nil)
                     }
                     return AnonymousDisposable {
-                        print("disposable")
                     }
                 }
-            }.zip { (x) -> [([UIImage]?, BYRAttachment)] in
+            }.zip { (x) -> [(ImageDecoder?, BYRAttachment)] in
                 return x
             }.subscribeOn(MainScheduler.instance)
-            .subscribeNext { (res) -> Void in
+            .subscribeNext { [weak self] (res) -> Void in
                 guard res.count > 0 else { return }
-                for r in res {
-                    if let images = r.0 where images.count > 0 {
-                        self.delegate?.dataDidChanged(self)
-                        return
-                    }
-                }
+                guard let this = self else { return }
+                print("finish download!", this.article.position)
+                this.delegate?.dataDidChanged(this)
             }.addDisposableTo(self.disposeBag)
         }
         return result
@@ -164,6 +139,8 @@ class ArticleCell: UITableViewCell {
         label.textContainerInset = UIEdgeInsetsZero
         label.textContainer.lineFragmentPadding = 0
         label.scrollsToTop = false
+        label.layoutManager.delegate = self
+        label.delegate = self
     }
     
     override func prepareForReuse() {
@@ -171,48 +148,6 @@ class ArticleCell: UITableViewCell {
         cleanViews()
         label.attributedText = nil
         articleData = nil
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        let layoutManager = label.layoutManager
-        if let attriString = layoutManager.textStorage {
-            attriString.enumerateAttribute(NSAttachmentAttributeName, inRange: NSMakeRange(0, attriString.length), options: [], usingBlock: { (v, range, _) -> Void in
-                print("v: ", v)
-                // 只处理指定类型的attachment
-                guard let attachment = v as? BYRAttachment else { return }
-                // attachment的image不为空或者images数量不够的时候, 直接展示image, 不添加imageView
-                guard let images = attachment.images where attachment.image == nil && images.count > 1 else {
-                    if let v = self.views["\(unsafeAddressOf(attachment))"] {
-                        v.removeFromSuperview()
-                        self.views.removeValueForKey("\(unsafeAddressOf(attachment))")
-                    }
-                    return
-                }
-                print("attachment", attachment)
-                print("imageurl:", attachment.imageUrl)
-                print("images: ", attachment.images)
-                print("type: ", attachment.type)
-                print("=======================================================================================")
-                let glyphRange = layoutManager.glyphRangeForCharacterRange(range, actualCharacterRange: nil)
-                let size = layoutManager.attachmentSizeForGlyphAtIndex(glyphRange.location)
-                let lineFrag = layoutManager.lineFragmentRectForGlyphAtIndex(glyphRange.location, effectiveRange: nil)
-                let location = layoutManager.locationForGlyphAtIndex(glyphRange.location)
-                var rect = CGRectZero
-                rect.origin.x = lineFrag.origin.x + location.x
-                rect.origin.y = lineFrag.origin.y + location.y - size.height
-                rect.size = size
-                // TODO
-                if let v = self.views["\(unsafeAddressOf(attachment))"] {
-                    v.frame = rect
-                } else if let images = attachment.images {
-                    let v = UIImageView(frame: rect)
-                    v.byr_setImages(images)
-                    self.views["\(unsafeAddressOf(attachment))"] = v
-                    self.label.addSubview(v)
-                }
-            })
-        }
     }
     
     func update(article: ArticleCellData) {
@@ -225,6 +160,7 @@ class ArticleCell: UITableViewCell {
             if let view = $0.1 as? UIImageView {
                 view.stopAnimating()
                 view.animationImages = nil
+                view.image = nil
             }
             $0.1.removeFromSuperview()
         }
@@ -232,9 +168,54 @@ class ArticleCell: UITableViewCell {
     }
     
     deinit {
+        label.layoutManager.delegate = nil
         label.attributedText = nil
         cleanViews()
         print("cell deinit")
+    }
+}
+
+extension ArticleCell: UITextViewDelegate {
+    // fix crash for iOS9 issue: https://forums.developer.apple.com/thread/19480
+    func textView(textView: UITextView, shouldInteractWithTextAttachment textAttachment: NSTextAttachment, inRange characterRange: NSRange) -> Bool {
+        return false
+    }
+}
+
+extension ArticleCell: NSLayoutManagerDelegate {
+    func layoutManager(layoutManager: NSLayoutManager, didCompleteLayoutForTextContainer textContainer: NSTextContainer?, atEnd layoutFinishedFlag: Bool) {
+        guard let d = articleData where d.hasAttachment else { return }
+        if let attriString = layoutManager.textStorage {
+            attriString.enumerateAttribute(NSAttachmentAttributeName, inRange: NSMakeRange(0, attriString.length), options: [], usingBlock: { (v, range, _) -> Void in
+                // 只处理指定类型的attachment
+                guard let attachment = v as? BYRAttachment else { return }
+                // attachment的image不为空或者images数量不够的时候, 直接展示image, 不添加imageView
+                guard let decoder = attachment.decoder where decoder.frameCount > 1 else {
+                    if let v = self.views["\(unsafeAddressOf(attachment))"] {
+                        v.removeFromSuperview()
+                        self.views.removeValueForKey("\(unsafeAddressOf(attachment))")
+                    }
+                    return
+                }
+                let glyphRange = layoutManager.glyphRangeForCharacterRange(range, actualCharacterRange: nil)
+                let size = layoutManager.attachmentSizeForGlyphAtIndex(glyphRange.location)
+                let lineFrag = layoutManager.lineFragmentRectForGlyphAtIndex(glyphRange.location, effectiveRange: nil)
+                let location = layoutManager.locationForGlyphAtIndex(glyphRange.location)
+                var rect = CGRectZero
+                rect.origin.x = lineFrag.origin.x + location.x
+                rect.origin.y = lineFrag.origin.y + location.y - size.height
+                rect.size = size
+                // TODO
+                if let v = self.views["\(unsafeAddressOf(attachment))"] {
+                    v.frame = rect
+                } else if let decoder = attachment.decoder {
+                    let v = BYRImageView(frame: rect)
+                    v.byr_setImageDecoder(decoder)
+                    self.views["\(unsafeAddressOf(attachment))"] = v
+                    self.label.addSubview(v)
+                }
+            })
+        }
     }
 }
 

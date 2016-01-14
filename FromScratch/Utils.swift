@@ -32,16 +32,58 @@ class Utils: NSObject {
         guard let source = CGImageSourceCreateWithData(data, nil) else {
             throw BYRError.CreateImageSourceFailed
         }
-        let frameCount = CGImageSourceGetCount(source)
-//        let type = CGImageSourceGetType(source)
-//        print("image type: ", type)
         var images = [UIImage]()
-        for var i = 0; i < frameCount; i++ {
-            if let cgimage = CGImageSourceCreateImageAtIndex(source, i, nil) {
-                images.append(UIImage(CGImage: cgimage))
+        autoreleasepool {
+            let frameCount = CGImageSourceGetCount(source)
+            for var i = 0; i < frameCount; i++ {
+                if let image = CGImageSourceCreateImageAtIndex(source, i, nil) {
+                    let alphaInfo = CGImageGetAlphaInfo(image).rawValue & CGBitmapInfo.AlphaInfoMask.rawValue
+                    let hasAlpha: Bool
+                    if (alphaInfo == CGImageAlphaInfo.PremultipliedLast.rawValue ||
+                        alphaInfo == CGImageAlphaInfo.PremultipliedFirst.rawValue ||
+                        alphaInfo == CGImageAlphaInfo.Last.rawValue ||
+                        alphaInfo == CGImageAlphaInfo.First.rawValue) {
+                            hasAlpha = true
+                    } else {
+                        hasAlpha = false
+                    }
+                    //            // BGRA8888 (premultiplied) or BGRX8888
+                    //            // same as UIGraphicsBeginImageContext() and -[UIView drawRect:]
+                    
+                    
+                    var bitmapInfo = CGBitmapInfo.ByteOrderDefault.rawValue // kCGBitmapByteOrder32Host;
+                    bitmapInfo |= hasAlpha ? CGImageAlphaInfo.PremultipliedLast.rawValue : CGImageAlphaInfo.NoneSkipFirst.rawValue;
+                    let context = CGBitmapContextCreate(nil, CGImageGetWidth(image), CGImageGetHeight(image), 8, 0, CGColorSpaceCreateDeviceRGB(), bitmapInfo)
+                    CGContextDrawImage(context, CGRect(x: 0, y: 0, width: CGImageGetWidth(image), height: CGImageGetHeight(image)), image) // decode
+                    let newImage = CGBitmapContextCreateImage(context)!
+                    images.append(UIImage(CGImage: newImage))
+                }
             }
         }
         return images
+    }
+    
+    static func getEmotionData(name: String) -> NSData? {
+        var imageName: String, imageFolder: String
+        let folderPrefix = "emotions/"
+        if name.hasPrefix("emc") {
+            imageFolder = folderPrefix + "emc"
+            imageName = (name as NSString).substringFromIndex(3)
+        } else if name.hasPrefix("emb") {
+            imageFolder = folderPrefix + "emb"
+            imageName = (name as NSString).substringFromIndex(3)
+        } else if name.hasPrefix("ema") {
+            imageFolder = folderPrefix + "ema"
+            imageName = (name as NSString).substringFromIndex(3)
+        } else {
+            imageFolder = folderPrefix + "em"
+            imageName = (name as NSString).substringFromIndex(2)
+        }
+        let path = NSBundle.mainBundle().pathForResource(imageName, ofType: "gif", inDirectory: imageFolder)
+        if let path = path, data = NSData(contentsOfFile: path) {
+            return data
+        }
+        return nil
     }
 }
 
@@ -78,30 +120,6 @@ extension UIViewController {
 
 extension NSDate {
     
-}
-
-extension UIImageView {
-    func byr_setImageWithURLString(urlString: String) {
-        ImageHelper.getImageWithURLString(urlString) { (images, error) -> () in
-            guard let images = images where images.count > 0 else { return }
-            if images.count > 1 {
-                self.animationImages = images
-                self.startAnimating()
-            } else {
-                self.image = images[0]
-            }
-        }
-    }
-    
-    func byr_setImages(images: [UIImage]) {
-        guard images.count > 0 else { return }
-        if images.count > 1 {
-            self.animationImages = images
-            self.startAnimating()
-        } else {
-            self.image = images[0]
-        }
-    }
 }
 
 extension UIImage {
@@ -167,5 +185,13 @@ extension String {
     
     var integerValue: Int {
         return (self as NSString).integerValue
+    }
+    
+    var sha1: String {
+        let data = self.dataUsingEncoding(NSUTF8StringEncoding)!
+        var digest = [UInt8](count:Int(CC_SHA1_DIGEST_LENGTH), repeatedValue: 0)
+        CC_SHA1(data.bytes, CC_LONG(data.length), &digest)
+        let hexBytes = digest.map { String(format: "%02hhx", $0) }
+        return hexBytes.joinWithSeparator("")
     }
 }
