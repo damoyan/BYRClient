@@ -32,7 +32,7 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
     var loadingCell: LoadingCell?
     private func loadData() {
         guard !isLoading else { return }
-        guard let name = topic?.boardName, id = topic?.groupID ?? topic?.id else { return }
+        guard let name = topic?.boardName, id = topic?.id ?? topic?.replyID ?? topic?.groupID else { return }
         isLoading = true
         API.Thread(name: name, id: id, uid: nil, perPage: perPage, page: page).handleResponse { [weak self] (_, _, d, e) -> () in
             guard let this = self else { return }
