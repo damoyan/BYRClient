@@ -220,7 +220,7 @@ class Parser {
 
     var attachments = [BYRAttachment]()
     var uploadTagNo = [Int]()
-    func parse(content: String) -> NSMutableAttributedString {
+    func parse(content: String) -> NSAttributedString {
         attachments.removeAll(keepCapacity: false)
         uploadTagNo.removeAll(keepCapacity: false)
         // 1. ingore
@@ -254,7 +254,7 @@ class Parser {
         rangesToDelete.sort { $0.0.location > $0.1.location }.forEach { res.deleteCharactersInRange($0) }
         parseQuote(res)
         res.fixAttributesInRange(NSMakeRange(0, res.length))
-        return res
+        return res.copy() as! NSAttributedString
     }
     
     private func parseQuote(result: NSMutableAttributedString) {

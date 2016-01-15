@@ -24,7 +24,6 @@ class ArticleCellData {
     var contentHeight: CGFloat?
     var hasAttachment = false
     weak var delegate: ArticleCellDataDelegate?
-    var disposeBag = DisposeBag()
     
     init(article: Article) {
         self.article = article
@@ -70,48 +69,35 @@ class ArticleCellData {
             result.appendAttributedString($0)
         }
         hasAttachment = attachments.count > 0 ? true : false
-        attachments.forEach { print($0.imageUrl, $0.type) }
         if !hasAttachment { return result }
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { [unowned self] () -> Void in
-            // get images
-            attachments.map { (a) -> Observable<(ImageDecoder?, BYRAttachment)> in
-                Observable.create { (observer) -> Disposable in
-                    let handler: ImageHelper.Handler = { (urlString, info, error) -> () in
-                        a.decoder = info
-                        observer.onNext((info, a))
-                        observer.onCompleted()
-                    }
-                    if case .Upload = a.type, let url = a.imageUrl {
-                        ImageHelper.getImageWithURLString(url, completionHandler: handler)
-                    } else if case .Emotion(let name) = a.type {
-                        if let data = Utils.getEmotionData(name) {
-                            ImageHelper.getImageWithData(data, completionHandler: handler)
-                        } else {
-                            handler(nil, nil, nil)
-                        }
-                    } else if case .Img(let url) = a.type {
-                        ImageHelper.getImageWithURLString(url, completionHandler: handler)
-                    } else {
-                        handler(nil, nil, nil)
-                    }
-                    return AnonymousDisposable {
-                    }
-                }
-            }.zip { (x) -> [(ImageDecoder?, BYRAttachment)] in
-                return x
-            }.subscribeOn(MainScheduler.instance)
-            .subscribeNext { [weak self] (res) -> Void in
-                guard res.count > 0 else { return }
+
+        // get images
+        attachments.forEach { a in
+            let handler: ImageHelper.Handler = { [weak self] (urlString, info, error) -> () in
                 guard let this = self else { return }
-                print("finish download!", this.article.position)
+                this.contentHeight = nil
+                a.decoder = info
                 this.delegate?.dataDidChanged(this)
-            }.addDisposableTo(self.disposeBag)
+            }
+            if case .Upload = a.type, let url = a.imageUrl {
+                ImageHelper.getImageWithURLString(url, completionHandler: handler)
+            } else if case .Emotion(let name) = a.type {
+                if let data = Utils.getEmotionData(name) {
+                    ImageHelper.getImageWithData(data, completionHandler: handler)
+                } else {
+                    handler(nil, nil, nil)
+                }
+            } else if case .Img(let url) = a.type {
+                ImageHelper.getImageWithURLString(url, completionHandler: handler)
+            } else {
+                handler(nil, nil, nil)
+            }
         }
         return result
     }
     
     deinit {
-        print("deinit cell data")
+        print("deinit cell data", article.position)
     }
 }
 

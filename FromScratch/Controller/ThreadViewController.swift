@@ -17,12 +17,35 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
     let ids = (cell: "cell", header: "header", loading: "loading")
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupTitle()
         tableView.tableFooterView = UIView()
         tableView.registerNib(UINib(nibName: "ArticleCell", bundle: nil), forCellReuseIdentifier: ids.cell)
         tableView.registerNib(UINib(nibName: "LoadingCell", bundle: nil), forCellReuseIdentifier: ids.loading)
         tableView.registerNib(UINib(nibName: "ArticleHeader", bundle: nil), forHeaderFooterViewReuseIdentifier: ids.header)
-        title = topic?.title
+        setTitleLabelText("Loading...")
         loadData()
+    }
+    
+    private func setupTitle() {
+        if let bar = navigationController?.navigationBar {
+            let h = bar.frame.height
+            let w = bar.frame.width - h * 2 - 32
+            let label = UILabel(frame: CGRect(origin: CGPointZero, size: CGSize(width: w, height: h)))
+            label.textColor = UIColor.whiteColor()
+            label.numberOfLines = 0
+            label.font = UIFont.systemFontOfSize(18)
+            label.textAlignment = .Center
+            label.adjustsFontSizeToFitWidth = true
+            label.minimumScaleFactor = 0.5
+            navigationItem.titleView = label
+            print(label.frame)
+        }
+    }
+    
+    private func setTitleLabelText(title: String?) {
+        if let label = navigationItem.titleView as? UILabel {
+            label.text = title
+        }
     }
     
     var isLoading = false
@@ -48,7 +71,7 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
     
     private func display() {
         renewPageInfo()
-        title = topic?.title
+        setTitleLabelText(topic?.title)
         content += (topic?.replys ?? []).map {
             let ar = ArticleCellData(article: $0)
             ar.delegate = self
