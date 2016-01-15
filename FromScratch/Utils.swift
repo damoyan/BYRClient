@@ -119,7 +119,22 @@ extension UIViewController {
 }
 
 extension NSDate {
-    
+    func friendly() -> String {
+        let elapsed = NSDate().timeIntervalSinceDate(self)
+        if elapsed < 60 {
+            return "刚刚"
+        } else if elapsed < 3600 {
+            return "\(Int(elapsed / 60))分钟前"
+        } else if elapsed < 86400 {
+            return "\(Int(elapsed / 3600))小时前"
+        } else if elapsed < 2592000 {
+            return "\(Int(elapsed / 86400))天前"
+        } else if elapsed < 31536000 {
+            return "\(Int(elapsed / 2592000))个月前"
+        } else {
+            return "\(Int(elapsed / 31536000))年前"
+        }
+    }
 }
 
 extension UIImage {

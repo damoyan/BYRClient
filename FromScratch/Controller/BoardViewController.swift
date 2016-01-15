@@ -27,8 +27,11 @@ class BoardViewController: BaseTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Loading..."
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 60
         tableView.tableFooterView = UIView()
         tableView.registerNib(UINib(nibName: "LoadingCell", bundle: nil), forCellReuseIdentifier: ids.loading)
+        tableView.registerNib(UINib(nibName: "BoardCell", bundle: nil), forCellReuseIdentifier: ids.cellID)
         loadData()
     }
     
@@ -120,20 +123,9 @@ class BoardViewController: BaseTableViewController {
             loadData()
             return cell
         }
-        var cell = tableView.dequeueReusableCellWithIdentifier(ids.cellID)
-        if cell == nil {
-            cell = UITableViewCell(style: .Subtitle, reuseIdentifier: ids.cellID)
-        }
-        let article = content[indexPath.row]
-        if let istop = article.isTop where istop {
-            cell?.textLabel?.textColor = AppSharedInfo.sharedInstance.currentTheme.TopArticleTitleColor
-        } else {
-            cell?.textLabel?.textColor = AppSharedInfo.sharedInstance.currentTheme.BoardNaviCellTitleColor
-        }
-        cell?.textLabel?.text = article.title
-        cell?.detailTextLabel?.text = article.user?.id
-        cell?.detailTextLabel?.textColor = AppSharedInfo.sharedInstance.currentTheme.BoardNaviCellSubtitleColor
-        return cell!
+        let cell = tableView.dequeueReusableCellWithIdentifier(ids.cellID, forIndexPath: indexPath) as! BoardCell
+        cell.update(content[indexPath.row])
+        return cell
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
