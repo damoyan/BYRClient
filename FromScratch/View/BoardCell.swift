@@ -21,19 +21,24 @@ class BoardCell: UITableViewCell {
         // Initialization code
     }
 
-    func update(article: Article) {
+    func update(article: Article, isTopTen: Bool = false) {
         titleLabel.text = article.title
         if article.isTop == true {
             titleLabel.textColor = AppSharedInfo.sharedInstance.currentTheme.TopArticleTitleColor
         } else {
             titleLabel.textColor = AppSharedInfo.sharedInstance.currentTheme.BoardNaviCellTitleColor
         }
-        userLabel.text = article.user?.id
+        if isTopTen {
+            userLabel.text = "[\(article.boardName ?? "")] \(article.user?.id ?? "")"
+        } else {
+            userLabel.text = article.user?.id
+        }
         if true == article.hasAttachment {
             attachmentLabel.hidden = false
         } else {
             attachmentLabel.hidden = true
         }
+        replyCountLabel.hidden = isTopTen
         if let reply = article.replyCount {
             replyCountLabel.text = "\(reply)💬"
         } else {

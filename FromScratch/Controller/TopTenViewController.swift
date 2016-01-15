@@ -15,6 +15,9 @@ class TopTenViewController: BaseTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 60
+        tableView.registerNib(UINib(nibName: "BoardCell", bundle: nil), forCellReuseIdentifier: cellID)
         tableView.tableFooterView = UIView()
         loadData()
     }
@@ -44,15 +47,9 @@ class TopTenViewController: BaseTableViewController {
     
     let cellID = "cell"
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCellWithIdentifier(cellID)
-        if cell ==  nil {
-            cell = UITableViewCell(style: .Subtitle, reuseIdentifier: cellID)
-        }
-        let data = content[indexPath.row]
-        cell?.textLabel?.text = data.title
-        cell?.detailTextLabel?.text = "[\(data.boardName ?? "")] \(data.user?.id ?? "")"
-        cell?.detailTextLabel?.textColor = AppSharedInfo.sharedInstance.currentTheme.BoardNaviCellSubtitleColor
-        return cell!
+        let cell = tableView.dequeueReusableCellWithIdentifier(cellID, forIndexPath: indexPath) as! BoardCell
+        cell.update(content[indexPath.row], isTopTen: true)
+        return cell
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
