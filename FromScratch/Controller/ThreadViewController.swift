@@ -91,6 +91,9 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
     }
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        if indexPath.row == 1 {
+            return 44 // loading Cell
+        }
         return ArticleCell.calculateHeight(content[indexPath.section], boundingWidth: tableView.bounds.width)
     }
     
