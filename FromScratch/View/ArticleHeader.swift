@@ -15,8 +15,11 @@ class ArticleHeader: UITableViewHeaderFooterView {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var positionLabel: UILabel!
     
+    var articleData: ArticleCellData?
+    
     @IBAction func onReply(sender: UIButton) {
         po("reply")
+        viewController?.navigateToCompose(articleData?.article)
     }
     
     override func prepareForReuse() {
@@ -27,6 +30,7 @@ class ArticleHeader: UITableViewHeaderFooterView {
     }
     
     func update(article: ArticleCellData) {
+        articleData = article
         if let url = article.article.user?.faceURL {
             avatar.byr_setImageWithURLString(url)
         } else {

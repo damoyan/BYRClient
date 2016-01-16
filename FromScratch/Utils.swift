@@ -116,6 +116,13 @@ extension UIViewController {
         vc.topic = article
         navigationController?.pushViewController(vc, animated: true)
     }
+    
+    func navigateToCompose(article: Article?) {
+        let vc = Utils.main.instantiateViewControllerWithIdentifier("vcCompose") as! ComposeViewController
+        vc.article = article
+        let navi = UINavigationController(rootViewController: vc)
+        presentViewController(navi, animated: true, completion: nil)
+    }
 }
 
 extension NSDate {

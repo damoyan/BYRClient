@@ -38,4 +38,16 @@ extension UIView {
             layer.cornerRadius = newValue
         }
     }
+    
+    var viewController: UIViewController? {
+        var responder: UIResponder = self
+        while let res = responder.nextResponder() {
+            if let vc = res as? UIViewController {
+                return vc
+            } else {
+                responder = res
+            }
+        }
+        return nil
+    }
 }

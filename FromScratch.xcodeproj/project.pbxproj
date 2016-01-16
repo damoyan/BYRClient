@@ -47,6 +47,7 @@
 		B3D1F5D61BE07BFC00E2E296 /* AppSharedInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D1F5D51BE07BFC00E2E296 /* AppSharedInfo.swift */; };
 		B3D361021C48DF4D00E4DA7F /* BoardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D361001C48DF4D00E4DA7F /* BoardCell.swift */; };
 		B3D361031C48DF4D00E4DA7F /* BoardCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B3D361011C48DF4D00E4DA7F /* BoardCell.xib */; };
+		B3D361051C4A874F00E4DA7F /* ComposeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D361041C4A874F00E4DA7F /* ComposeViewController.swift */; };
 		B3DDD79D1C44E35C00043C4B /* FileCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3DDD79C1C44E35C00043C4B /* FileCache.swift */; };
 		B3DDD79F1C45EF9800043C4B /* ImageDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3DDD79E1C45EF9800043C4B /* ImageDecoder.swift */; };
 		B3EFA9391C3E46660011043B /* emotions in Resources */ = {isa = PBXBuildFile; fileRef = B3EFA9381C3E46660011043B /* emotions */; };
@@ -114,6 +115,7 @@
 		B3D1F5D51BE07BFC00E2E296 /* AppSharedInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSharedInfo.swift; sourceTree = "<group>"; };
 		B3D361001C48DF4D00E4DA7F /* BoardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardCell.swift; sourceTree = "<group>"; };
 		B3D361011C48DF4D00E4DA7F /* BoardCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BoardCell.xib; sourceTree = "<group>"; };
+		B3D361041C4A874F00E4DA7F /* ComposeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComposeViewController.swift; sourceTree = "<group>"; };
 		B3DDD79C1C44E35C00043C4B /* FileCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileCache.swift; sourceTree = "<group>"; };
 		B3DDD79E1C45EF9800043C4B /* ImageDecoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageDecoder.swift; sourceTree = "<group>"; };
 		B3EFA9381C3E46660011043B /* emotions */ = {isa = PBXFileReference; lastKnownFileType = folder; path = emotions; sourceTree = "<group>"; };
@@ -209,6 +211,7 @@
 				B3163D6A1C2900A000C0F831 /* TopTenViewController.swift */,
 				B3163D6C1C29287300C0F831 /* BoardViewController.swift */,
 				B3163D801C2A7F9E00C0F831 /* ThreadViewController.swift */,
+				B3D361041C4A874F00E4DA7F /* ComposeViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -456,6 +459,7 @@
 				B305ED921C34DDE600AC2858 /* BYRUBBParser.swift in Sources */,
 				B3C6C58E1BDE148C004B1000 /* LoginViewController.swift in Sources */,
 				B3D361021C48DF4D00E4DA7F /* BoardCell.swift in Sources */,
+				B3D361051C4A874F00E4DA7F /* ComposeViewController.swift in Sources */,
 				B3C6C58C1BDE148C004B1000 /* AppDelegate.swift in Sources */,
 				B3EFA9411C43C1CA0011043B /* ImagePlayer.swift in Sources */,
 				B3DDD79F1C45EF9800043C4B /* ImageDecoder.swift in Sources */,

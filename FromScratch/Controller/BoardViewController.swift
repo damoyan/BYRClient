@@ -99,6 +99,7 @@ class BoardViewController: BaseTableViewController {
     
     @objc @IBAction private func onCompose(sender: UIBarButtonItem) {
         po("compose")
+        navigateToCompose(nil)
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
