@@ -13,6 +13,7 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
     
     var topic: Article?
     var content = [ArticleCellData]()
+    var titleLabel: UILabel?
     
     let ids = (cell: "cell", header: "header", loading: "loading")
     override func viewDidLoad() {
@@ -29,23 +30,25 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
     private func setupTitle() {
         if let bar = navigationController?.navigationBar {
             let h = bar.frame.height
-            let w = bar.frame.width - h * 2 - 32
+            let w = bar.frame.width - 80 * 2
+            let view = UIView()
+            view.frame = CGRect(origin: CGPointZero, size: CGSize(width: w, height: h))
             let label = UILabel(frame: CGRect(origin: CGPointZero, size: CGSize(width: w, height: h)))
+            view.addSubview(label)
+            po("label.frame", label.frame)
             label.textColor = UIColor.whiteColor()
             label.numberOfLines = 0
             label.font = UIFont.systemFontOfSize(18)
             label.textAlignment = .Center
             label.adjustsFontSizeToFitWidth = true
             label.minimumScaleFactor = 0.5
-            navigationItem.titleView = label
-            po(label.frame)
+            titleLabel = label
+            self.navigationItem.titleView = view
         }
     }
     
     private func setTitleLabelText(title: String?) {
-        if let label = navigationItem.titleView as? UILabel {
-            label.text = title
-        }
+        titleLabel?.text = title
     }
     
     var isLoading = false
@@ -103,6 +106,10 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
         page = 1
         content = []
         loadData()
+    }
+    
+    @objc @IBAction private func actionShare(sender: UIBarButtonItem) {
+        po("share")
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {

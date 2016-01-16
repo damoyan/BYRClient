@@ -111,6 +111,16 @@
                             <outlet property="delegate" destination="7ln-dd-7un" id="Y6E-6Z-iuO"/>
                         </connections>
                     </tableView>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="bMC-DP-FQ2">
+                        <barButtonItem key="backBarButtonItem" title=" " id="Vhl-eJ-bHQ"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="9eY-1J-XXH">
+                            <connections>
+                                <action selector="actionShare:" destination="7ln-dd-7un" id="eu7-h6-Ang"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="pfU-ws-Fav">
                         <autoresizingMask key="autoresizingMask"/>
                         <connections>
