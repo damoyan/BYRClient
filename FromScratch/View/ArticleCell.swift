@@ -48,7 +48,7 @@ class ArticleCellData {
                     }
                     return true
                 }
-                print("not image")
+                po("not image")
                 return false
             } else if case .Emotion = att.type {
                 return true
@@ -73,31 +73,13 @@ class ArticleCellData {
 
         // get images
         attachments.forEach { a in
-            let handler: ImageHelper.Handler = { [weak self] (urlString, info, error) -> () in
-                guard let this = self else { return }
-                this.contentHeight = nil
-                a.decoder = info
-                this.delegate?.dataDidChanged(this)
-            }
-            if case .Upload = a.type, let url = a.imageUrl {
-                ImageHelper.getImageWithURLString(url, completionHandler: handler)
-            } else if case .Emotion(let name) = a.type {
-                if let data = Utils.getEmotionData(name) {
-                    ImageHelper.getImageWithData(data, completionHandler: handler)
-                } else {
-                    handler(nil, nil, nil)
-                }
-            } else if case .Img(let url) = a.type {
-                ImageHelper.getImageWithURLString(url, completionHandler: handler)
-            } else {
-                handler(nil, nil, nil)
-            }
+            loadAttachmentImage(a, articleData: self)
         }
         return result
     }
     
     deinit {
-        print("deinit cell data", article.position)
+        po("deinit cell data", article.position)
     }
 }
 
@@ -157,13 +139,16 @@ class ArticleCell: UITableViewCell {
         label.layoutManager.delegate = nil
         label.attributedText = nil
         cleanViews()
-        print("cell deinit")
+        po("cell deinit")
     }
 }
 
 extension ArticleCell: UITextViewDelegate {
     // fix crash for iOS9 issue: https://forums.developer.apple.com/thread/19480
     func textView(textView: UITextView, shouldInteractWithTextAttachment textAttachment: NSTextAttachment, inRange characterRange: NSRange) -> Bool {
+        if let a = textAttachment as? BYRAttachment, articleData = self.articleData where a.loadingFail {
+            loadAttachmentImage(a, articleData: articleData)
+        }
         return false
     }
 }
@@ -202,6 +187,26 @@ extension ArticleCell: NSLayoutManagerDelegate {
                 }
             })
         }
+    }
+}
+
+func loadAttachmentImage(a: BYRAttachment, articleData: ArticleCellData) {
+    let handler: ImageHelper.Handler = { [weak data = articleData, weak a = a] (urlString, info, error) -> () in
+        guard let this = data else { return }
+        this.contentHeight = nil
+        a?.decoder = info
+        this.delegate?.dataDidChanged(this)
+    }
+    if case .Upload = a.type, let url = a.imageUrl {
+        ImageHelper.getImageWithURLString(url, completionHandler: handler)
+    } else if case .Emotion(let name) = a.type {
+        if let data = Utils.getEmotionData(name) {
+            ImageHelper.getImageWithData(data, completionHandler: handler)
+        } else {
+            handler(nil, nil, nil)
+        }
+    } else if case .Img(let url) = a.type {
+        ImageHelper.getImageWithURLString(url, completionHandler: handler)
     }
 }
 

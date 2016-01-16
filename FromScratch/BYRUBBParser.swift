@@ -611,7 +611,7 @@ public class BYRUBBParser {
     deinit {
         attachments.removeAll()
         result = NSMutableAttributedString()
-        print("deinit parser")
+        po("deinit parser")
     }
 }
 */

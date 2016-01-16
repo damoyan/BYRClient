@@ -29,7 +29,7 @@ class TopTenViewController: BaseTableViewController {
         API.TopTen.handleResponse { [weak self] (_, _, d, e) -> () in
             guard let this = self else { return }
             guard let data = d?["article"].array else {
-                print(e?.localizedDescription)
+                po(e?.localizedDescription)
                 return
             }
             this.content = data.map { Article(data: $0) }

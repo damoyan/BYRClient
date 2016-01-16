@@ -48,7 +48,7 @@ class BoardViewController: BaseTableViewController {
             guard let this = self else { return }
             guard let data = d else {
                 this.clearStatus()
-                print(e?.localizedDescription)
+                po(e?.localizedDescription)
                 return
             }
             this.board = Board(data: data)
@@ -91,14 +91,14 @@ class BoardViewController: BaseTableViewController {
     @objc @IBAction private func onAction(sender: UIBarButtonItem) {
         let alert = UIAlertController(title: "更多操作", message: "", preferredStyle: UIAlertControllerStyle.ActionSheet)
         alert.addAction(UIAlertAction(title: "查看版面信息", style: UIAlertActionStyle.Default, handler: { (_) -> Void in
-            print("info")
+            po("info")
         }))
         alert.addAction(UIAlertAction(title: "取消", style: UIAlertActionStyle.Cancel, handler: nil))
         presentViewController(alert, animated: true, completion: nil)
     }
     
     @objc @IBAction private func onCompose(sender: UIBarButtonItem) {
-        print("compose")
+        po("compose")
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {

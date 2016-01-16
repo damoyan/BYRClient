@@ -81,6 +81,6 @@ class BYRImageView: UIImageView {
     
     deinit {
         byr_reset()
-        print("deinit BYRImageView")
+        po("deinit BYRImageView")
     }
 }

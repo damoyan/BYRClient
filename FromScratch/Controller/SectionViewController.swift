@@ -22,7 +22,7 @@ class SectionViewController: BaseTableViewController {
     var isLoading = false
     private func loadData() {
         if isLoading {
-            print("isloading or section is nil")
+            po("isloading or section is nil")
             return
         }
         isLoading = true
@@ -34,7 +34,7 @@ class SectionViewController: BaseTableViewController {
                 strongSelf.isLoading = false
                 guard let data = data else {
                     // TODO: -
-                    print(error?.localizedDescription)
+                    po(error?.localizedDescription)
                     return
                 }
                 strongSelf.content = Section.generateArray(data["section"])
@@ -43,13 +43,13 @@ class SectionViewController: BaseTableViewController {
             return
         }
         guard let name = section.name else {
-            print("name is nil of section", section)
+            po("name is nil of section", section)
             isLoading = false
             return
         }
         API.Section(name: name).handleResponse { [weak self] (_, _, d, e) -> () in
             guard let data = d else {
-                print(e!.localizedDescription)
+                po(e!.localizedDescription)
                 self?.isLoading = false
                 return
             }

@@ -21,13 +21,13 @@ class FavoriteViewController: BaseTableViewController {
     var isLoading = false
     private func loadData() {
         if isLoading {
-            print("is loading")
+            po("is loading")
             return
         }
         isLoading = true
         API.Favorite(level: level).handleResponse { [weak self] (_, _, d, e) -> () in
             guard let data = d else {
-                print(e?.localizedDescription)
+                po(e?.localizedDescription)
                 self?.isLoading = false
                 return
             }

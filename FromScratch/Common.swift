@@ -18,3 +18,10 @@ enum BYRFileHandleError: ErrorType {
 
 // supported image type
 let imageExtensions = ["tiff", "ico", "gif", "jpg", "jpeg", "png", "bmp", "jfif", "iptc"]
+
+let debug = true
+func po(items: Any...) {
+    if debug {
+        print(items)
+    }
+}

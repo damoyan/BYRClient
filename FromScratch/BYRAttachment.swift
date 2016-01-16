@@ -28,6 +28,7 @@ public class BYRAttachment: NSTextAttachment {
         }
     }
     
+    var loadingFail = true
     var imageUrl: String?
     var decoder: ImageDecoder? {
         didSet {
@@ -35,6 +36,7 @@ public class BYRAttachment: NSTextAttachment {
                 image = UIImage(named: "load_image_fail") // load failed
                 return
             }
+            loadingFail = false
             if let first = decoder.firstFrame where decoder.frameCount == 1 {
                 image = first
             } else {
@@ -78,6 +80,6 @@ public class BYRAttachment: NSTextAttachment {
     }
     
     deinit {
-        print("deinit attachment")
+        po("deinit attachment")
     }
 }

@@ -67,12 +67,12 @@ class AppSharedInfo: NSObject {
         super.init()
         if userToken != nil && !tokenExpired {
             // update user info
-            print("token is good", userToken, expiresDateString)
+            po("token is good", userToken, expiresDateString)
         } else {
-            print("token is expired.")
+            po("token is expired.")
             if refreshToken != nil {
                 // FIXME: refresh token
-                print("need refresh: ", refreshToken)
+                po("need refresh: ", refreshToken)
             }
             // if refresh fail, show login
         }

@@ -16,7 +16,7 @@ class ArticleHeader: UITableViewHeaderFooterView {
     @IBOutlet weak var positionLabel: UILabel!
     
     @IBAction func onReply(sender: UIButton) {
-        print("reply")
+        po("reply")
     }
     
     override func prepareForReuse() {
@@ -56,6 +56,6 @@ class ArticleHeader: UITableViewHeaderFooterView {
         avatar.stopAnimating()
         avatar.animationImages = nil
         avatar.image = nil
-        print("deinit header")
+        po("deinit header")
     }
 }

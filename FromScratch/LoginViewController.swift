@@ -48,14 +48,14 @@ class ViewController: UIViewController, UIWebViewDelegate {
     func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
         if let url = request.URL, index = url.absoluteString.rangeOfString("?")?.startIndex where url.absoluteString.substringToIndex(index) == oauthRedirectUri {
             if let res = parseRedirectURL(url) where res.state == state  {
-                print("授权成功", res)
+                po("授权成功", res)
                 AppSharedInfo.sharedInstance.userToken = res.token
                 AppSharedInfo.sharedInstance.expires = res.expires
                 AppSharedInfo.sharedInstance.refreshToken = res.refreshToken
                 presentHome()
                 return false
             } else {
-                print("授权失败")
+                po("授权失败")
             }
         }
         return true

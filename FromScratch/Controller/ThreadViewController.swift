@@ -38,7 +38,7 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
             label.adjustsFontSizeToFitWidth = true
             label.minimumScaleFactor = 0.5
             navigationItem.titleView = label
-            print(label.frame)
+            po(label.frame)
         }
     }
     
@@ -61,7 +61,7 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
             guard let this = self else { return }
             guard let data = d else {
                 this.clearStatus()
-                print(e?.localizedDescription)
+                po(e?.localizedDescription)
                 return
             }
             this.topic = Article(data: data)
@@ -180,6 +180,6 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
     
     deinit {
         content.removeAll()
-        print("thread deinit")
+        po("thread deinit")
     }
 }

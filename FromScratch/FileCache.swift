@@ -35,7 +35,7 @@ class FileCache {
         guard let fpath = url.path else { throw BYRFileHandleError.NotFilePath(path) }
         let isFolderP = UnsafeMutablePointer<ObjCBool>.alloc(1)
         let manager = NSFileManager.defaultManager()
-        print(manager.currentDirectoryPath)
+        po(manager.currentDirectoryPath)
         if !manager.fileExistsAtPath(fpath, isDirectory: isFolderP) {
             if isDirectory {
                 try manager.createDirectoryAtURL(url, withIntermediateDirectories: true, attributes: nil)

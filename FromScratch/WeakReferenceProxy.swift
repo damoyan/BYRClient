@@ -21,6 +21,6 @@ class WeakReferenceProxy: NSObject {
     }
     
     deinit {
-        print("deinit WeakProxy")
+        po("deinit WeakProxy")
     }
 }
