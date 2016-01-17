@@ -203,4 +203,28 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
         content.removeAll()
         po("thread deinit")
     }
+    
+    var needLoadMore = false
+}
+
+// MARK: - UIScrollViewDelegate
+extension ThreadViewController {
+    override func scrollViewDidScroll(scrollView: UIScrollView) {
+        if (scrollView.contentSize.height <= scrollView.frame.height) && (scrollView.contentOffset.y > 45) {
+            po("need refresh", scrollView.contentOffset.y, scrollView.frame.height)
+            needLoadMore = true
+            return
+        } else if (scrollView.contentSize.height > scrollView.frame.height) && (scrollView.contentOffset.y + scrollView.frame.height - scrollView.contentSize.height > 45) {
+            po("need refresh when high", scrollView.contentOffset.y, "content: ", scrollView.contentSize.height, "frame: ", scrollView.frame.height)
+            needLoadMore = true
+            return
+        }
+    }
+    
+    override func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+        if needLoadMore {
+            po("refresh now")
+            needLoadMore = false
+        }
+    }
 }
