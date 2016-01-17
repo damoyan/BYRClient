@@ -348,6 +348,7 @@
 				TargetAttributes = {
 					B3C6C5851BDE148C004B1000 = {
 						CreatedOnToolsVersion = 6.4;
+						DevelopmentTeam = 2NMTX997TT;
 					};
 					B3C6C59A1BDE148C004B1000 = {
 						CreatedOnToolsVersion = 6.4;
@@ -619,6 +620,8 @@
 			baseConfigurationReference = 74FF23AD0362C066F839CE8A /* Pods-FromScratch.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = FromScratch/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -627,8 +630,9 @@
 					"$(PROJECT_DIR)/libSMTH",
 				);
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.caishuo.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = cn.ypy.byrclient;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = FromScratch/Header.h;
 				VALID_ARCHS = "armv7 armv7s arm64";
 			};
@@ -639,6 +643,8 @@
 			baseConfigurationReference = 52D6896FB73703B69B65675C /* Pods-FromScratch.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = FromScratch/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -647,8 +653,9 @@
 					"$(PROJECT_DIR)/libSMTH",
 				);
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.caishuo.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = cn.ypy.byrclient;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = FromScratch/Header.h;
 				VALID_ARCHS = "armv7 armv7s arm64";
 			};
