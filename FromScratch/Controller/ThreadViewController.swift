@@ -35,7 +35,7 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
             view.frame = CGRect(origin: CGPointZero, size: CGSize(width: w, height: h))
             let label = UILabel(frame: CGRect(origin: CGPointZero, size: CGSize(width: w, height: h)))
             view.addSubview(label)
-            po("label.frame", label.frame)
+//            po("label.frame", label.frame)
             label.textColor = UIColor.whiteColor()
             label.numberOfLines = 0
             label.font = UIFont.systemFontOfSize(18)
@@ -53,10 +53,10 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
     
     var isLoading = false
     var isLoaded = false
-    let perPage = 20
+    let perPage = 5
     var page = 1
     var loadingCell: LoadingCell?
-    private func loadData() {
+    func loadData() {
         guard !isLoading else { return }
         guard let name = topic?.boardName, id = topic?.id ?? topic?.replyID ?? topic?.groupID else { return }
         isLoading = true
@@ -73,13 +73,25 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
     }
     
     private func display() {
-        renewPageInfo()
         setTitleLabelText(topic?.title)
+        let before = (page - 1) * perPage
+        assert(before <= content.count, "before should less than content.count")
+        if content.count > before {
+            po("reload current page")
+            if page == 1 {
+                content = []
+            } else {
+                content = [ArticleCellData](content[0..<before])
+            }
+        } else {
+            po("just load new")
+        }
         content += (topic?.replys ?? []).map {
             let ar = ArticleCellData(article: $0)
             ar.delegate = self
             return ar
         }
+        renewPageInfo()
         clearStatus()
         tableView.reloadData()
     }
@@ -137,6 +149,7 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
                 loadingCell = cell
             }
             cell.spin()
+            po("load more")
             loadData()
             return cell
         }
@@ -158,6 +171,7 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
         let view = tableView.dequeueReusableHeaderFooterViewWithIdentifier(ids.header) as! ArticleHeader
         let data = content[section]
         view.update(data)
+        view.threadVC = self
         return view
     }
     

@@ -55,6 +55,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     private func setupUI() {
         UITabBarItem.appearance().setTitleTextAttributes([NSFontAttributeName: UIFont.systemFontOfSize(16)], forState: [.Normal, .Highlighted])
+        UINavigationBar.appearance().translucent = false
         UINavigationBar.appearance().setBackgroundImage(UIImage.imageWithColor(UIColor(rgb: 0x3b8ede), side: 1), forBarMetrics: .Default)
         UINavigationBar.appearance().tintColor = UIColor.whiteColor()
         UINavigationBar.appearance().backIndicatorImage = UIImage(named: "navi_back")

@@ -292,6 +292,12 @@
                     <navigationItem key="navigationItem" title="热点话题" id="CfE-6d-bgG">
                         <barButtonItem key="backBarButtonItem" title=" " id="ZUP-2v-qXQ"/>
                     </navigationItem>
+                    <refreshControl key="refreshControl" opaque="NO" multipleTouchEnabled="YES" contentMode="center" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="eqb-xe-Yrl">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <connections>
+                            <action selector="actionRefresh:" destination="fX0-rq-ecL" eventType="valueChanged" id="lBG-Q6-7dS"/>
+                        </connections>
+                    </refreshControl>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Uu0-RA-jXI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

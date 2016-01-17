@@ -48,7 +48,7 @@ class ArticleCellData {
                     }
                     return true
                 }
-                po("not image")
+//                po("not image")
                 return false
             } else if case .Emotion = att.type {
                 return true
@@ -79,7 +79,7 @@ class ArticleCellData {
     }
     
     deinit {
-        po("deinit cell data", article.position)
+//        po("deinit cell data", article.position)
     }
 }
 
@@ -139,7 +139,7 @@ class ArticleCell: UITableViewCell {
         label.layoutManager.delegate = nil
         label.attributedText = nil
         cleanViews()
-        po("cell deinit")
+//        po("cell deinit")
     }
 }
 

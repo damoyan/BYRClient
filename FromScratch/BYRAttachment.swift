@@ -80,6 +80,6 @@ public class BYRAttachment: NSTextAttachment {
     }
     
     deinit {
-        po("deinit attachment")
+//        po("deinit attachment")
     }
 }

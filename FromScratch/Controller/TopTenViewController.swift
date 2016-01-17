@@ -30,11 +30,22 @@ class TopTenViewController: BaseTableViewController {
             guard let this = self else { return }
             guard let data = d?["article"].array else {
                 po(e?.localizedDescription)
+                this.clearStatus()
                 return
             }
             this.content = data.map { Article(data: $0) }
             this.tableView.reloadData()
+            this.clearStatus()
         }
+    }
+    
+    private func clearStatus() {
+        isLoading = false
+        refreshControl?.endRefreshing()
+    }
+    
+    @objc @IBAction private func actionRefresh(sender: UIRefreshControl) {
+        loadData()
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {

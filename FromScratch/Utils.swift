@@ -117,9 +117,11 @@ extension UIViewController {
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    func navigateToCompose(article: Article?) {
+    func presentCompose(article: Article?, boardName: String? = nil, callback: (Bool, Article?, NSError?) -> Void) {
         let vc = Utils.main.instantiateViewControllerWithIdentifier("vcCompose") as! ComposeViewController
         vc.article = article
+        vc.boardName = boardName
+        vc.callback = callback
         let navi = UINavigationController(rootViewController: vc)
         presentViewController(navi, animated: true, completion: nil)
     }

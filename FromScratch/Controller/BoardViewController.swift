@@ -99,7 +99,15 @@ class BoardViewController: BaseTableViewController {
     
     @objc @IBAction private func onCompose(sender: UIBarButtonItem) {
         po("compose")
-        navigateToCompose(nil)
+        presentCompose(nil, boardName: board?.name) { [weak self] isCancel, article, error in
+            guard let this = self else { return }
+            this.dismissViewControllerAnimated(true, completion: nil)
+            if let _ = article {
+                this.page = 1
+                this.content = []
+                this.loadData()
+            }
+        }
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {

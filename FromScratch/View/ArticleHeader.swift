@@ -16,10 +16,19 @@ class ArticleHeader: UITableViewHeaderFooterView {
     @IBOutlet weak var positionLabel: UILabel!
     
     var articleData: ArticleCellData?
+    weak var threadVC: ThreadViewController?
     
     @IBAction func onReply(sender: UIButton) {
         po("reply")
-        viewController?.navigateToCompose(articleData?.article)
+        threadVC?.presentCompose(articleData?.article) { [weak vc = threadVC] isCancel, article, error in
+            guard let vc = vc else { return }
+            vc.dismissViewControllerAnimated(true, completion: nil)
+            if let _ = article {
+                vc.loadData()
+            } else {
+                po("no data return")
+            }
+        }
     }
     
     override func prepareForReuse() {
@@ -60,6 +69,6 @@ class ArticleHeader: UITableViewHeaderFooterView {
         avatar.stopAnimating()
         avatar.animationImages = nil
         avatar.image = nil
-        po("deinit header")
+//        po("deinit header")
     }
 }

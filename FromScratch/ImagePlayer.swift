@@ -76,13 +76,13 @@ class ImagePlayer {
     }
     
     func stop() {
-        po("stop")
+//        po("stop")
         block = nil
         link.invalidate()
     }
     
     deinit {
         link.invalidate()
-        po("deinit ImagePlayer")
+//        po("deinit ImagePlayer")
     }
 }
