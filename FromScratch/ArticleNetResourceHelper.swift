@@ -32,9 +32,9 @@ class ArticleNetResourceHelper {
         guard let url = NSURL(string: s) else { return }
         let task = session.dataTaskWithURL(url)
         if let delegate = session.delegate as? DataDelegate {
-            if urlString.containsString("middle") {
-                po("add handler for ", urlString)
-            }
+//            if urlString.containsString("middle") {
+//                po("add handler for ", urlString)
+//            }
             OSSpinLockLock(&lock)
             delegate.imageDownloadCompletionHandlers[task] = (urlString, handler)
             OSSpinLockUnlock(&lock)
@@ -70,7 +70,7 @@ class ArticleNetResourceHelper {
         }
         
         func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?) {
-            if task.currentRequest!.URLString.containsString("middle")  { po("task finish") }
+//            if task.currentRequest!.URLString.containsString("middle")  { po("task finish") }
             guard let taskData = datas[task] else {
                 let error = NSError(domain: BYRErrorDomain, code: -1, userInfo: [NSLocalizedDescriptionKey: "No data return."])
                 handleCallback(task, data: nil, error: error)
@@ -103,7 +103,7 @@ class ImageHelper {
     class func getImageWithURLString(urlString: String, completionHandler handler: Handler) {
         _queue.addOperationWithBlock {
             ArticleNetResourceHelper.defaultHelper.getResourceWithURLString(_queue.underlyingQueue, urlString: urlString) { (urlString, data, error) -> () in
-                if urlString.containsString("middle") { po("finish", urlString) }
+//                if urlString.containsString("middle") { po("finish", urlString) }
                 guard let data = data else {
                     runHandlerOnMain(handler, urlString: urlString, decoder: nil, error: error)
                     return

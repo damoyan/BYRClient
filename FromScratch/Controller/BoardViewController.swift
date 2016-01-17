@@ -93,12 +93,15 @@ class BoardViewController: BaseTableViewController {
         alert.addAction(UIAlertAction(title: "查看版面信息", style: UIAlertActionStyle.Default, handler: { (_) -> Void in
             po("info")
         }))
+        alert.addAction(UIAlertAction(title: "收藏版面", style: UIAlertActionStyle.Default, handler: { (_) -> Void in
+            po("add to favour")
+        }))
         alert.addAction(UIAlertAction(title: "取消", style: UIAlertActionStyle.Cancel, handler: nil))
         presentViewController(alert, animated: true, completion: nil)
     }
     
     @objc @IBAction private func onCompose(sender: UIBarButtonItem) {
-        po("compose")
+//        po("compose")
         presentCompose(nil, boardName: board?.name) { [weak self] isCancel, article, error in
             guard let this = self else { return }
             this.dismissViewControllerAnimated(true, completion: nil)

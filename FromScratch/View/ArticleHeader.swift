@@ -19,7 +19,7 @@ class ArticleHeader: UITableViewHeaderFooterView {
     weak var threadVC: ThreadViewController?
     
     @IBAction func onReply(sender: UIButton) {
-        po("reply")
+//        po("reply")
         threadVC?.presentCompose(articleData?.article) { [weak vc = threadVC] isCancel, article, error in
             guard let vc = vc else { return }
             vc.dismissViewControllerAnimated(true, completion: nil)
