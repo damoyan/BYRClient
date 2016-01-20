@@ -14,6 +14,7 @@ class BYRImageView: UIImageView {
     let byr_subject = PublishSubject<String>()
     var byr_disposeBag = DisposeBag()
     private var player: ImagePlayer?
+    var currentUrlString: String?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -70,13 +71,17 @@ class BYRImageView: UIImageView {
     }
     
     func byr_setImageWithURLString(urlString: String) {
-        byr_subject.onNext(urlString)
+        if currentUrlString != urlString {
+            byr_subject.onNext(urlString)
+            currentUrlString = urlString
+        }
     }
     
     func byr_reset() {
         player?.stop()
         player = nil
         image = nil
+        currentUrlString = nil
     }
     
     deinit {
