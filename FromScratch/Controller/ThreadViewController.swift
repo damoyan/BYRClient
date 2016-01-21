@@ -59,7 +59,7 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
     
     var isLoading = false
     var isLoaded = false
-    let perPage = 5
+    let perPage = 20
     var page = 1
     var loadingCell: LoadingCell?
     func loadData() {
