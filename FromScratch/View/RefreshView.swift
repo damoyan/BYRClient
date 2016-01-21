@@ -48,6 +48,8 @@ class RefreshView: UIView {
     init(size: CGSize, block: RefreshingBlock) {
         self.block = block
         super.init(frame: CGRect(origin: CGPointZero, size: size))
+        label.font = UIFont.systemFontOfSize(defaultArticleFontSize)
+        label.textColor = UIColor.darkTextColor()
 //        backgroundColor = UIColor.whiteColor()
         addSubview(label)
         addSubview(indicator)
