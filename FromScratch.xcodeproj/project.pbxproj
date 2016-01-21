@@ -54,6 +54,7 @@
 		B3EFA93B1C3F60390011043B /* BYRImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3EFA93A1C3F60390011043B /* BYRImageView.swift */; };
 		B3EFA93F1C438D930011043B /* WeakReferenceProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3EFA93E1C438D930011043B /* WeakReferenceProxy.swift */; };
 		B3EFA9411C43C1CA0011043B /* ImagePlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3EFA9401C43C1CA0011043B /* ImagePlayer.swift */; };
+		B3FB50AD1C4F6966007991ED /* RefreshView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3FB50AC1C4F6966007991ED /* RefreshView.swift */; };
 		F3737BD9C57FBC385C4E7EDF /* Pods_FromScratch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E057D3E5DA288EE2701B16B6 /* Pods_FromScratch.framework */; };
 /* End PBXBuildFile section */
 
@@ -122,6 +123,7 @@
 		B3EFA93A1C3F60390011043B /* BYRImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BYRImageView.swift; sourceTree = "<group>"; };
 		B3EFA93E1C438D930011043B /* WeakReferenceProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WeakReferenceProxy.swift; sourceTree = "<group>"; };
 		B3EFA9401C43C1CA0011043B /* ImagePlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagePlayer.swift; sourceTree = "<group>"; };
+		B3FB50AC1C4F6966007991ED /* RefreshView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RefreshView.swift; sourceTree = "<group>"; };
 		E057D3E5DA288EE2701B16B6 /* Pods_FromScratch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FromScratch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -197,6 +199,7 @@
 				B3EFA93A1C3F60390011043B /* BYRImageView.swift */,
 				B3D361001C48DF4D00E4DA7F /* BoardCell.swift */,
 				B3D361011C48DF4D00E4DA7F /* BoardCell.xib */,
+				B3FB50AC1C4F6966007991ED /* RefreshView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -455,6 +458,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B305ED941C34DE3900AC2858 /* BYRAttachment.swift in Sources */,
+				B3FB50AD1C4F6966007991ED /* RefreshView.swift in Sources */,
 				B38299FB1BEE350E00826B25 /* ArticleInfoCell.swift in Sources */,
 				B3C6C5B61BDE2B9A004B1000 /* APIManager.swift in Sources */,
 				B305ED921C34DDE600AC2858 /* BYRUBBParser.swift in Sources */,

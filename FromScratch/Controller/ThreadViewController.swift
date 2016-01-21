@@ -14,11 +14,16 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
     var topic: Article?
     var content = [ArticleCellData]()
     var titleLabel: UILabel?
+    var refresh: RefreshView?
     
     let ids = (cell: "cell", header: "header", loading: "loading")
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTitle()
+        refresh = RefreshView(size: CGSize(width: tableView.frame.width, height: 40)) { [weak self] () -> () in
+            self?.loadData()
+        }
+        tableView.addSubview(refresh!)
         tableView.tableFooterView = UIView()
         tableView.registerNib(UINib(nibName: "ArticleCell", bundle: nil), forCellReuseIdentifier: ids.cell)
         tableView.registerNib(UINib(nibName: "LoadingCell", bundle: nil), forCellReuseIdentifier: ids.loading)
@@ -93,6 +98,7 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
         }
         renewPageInfo()
         clearStatus()
+        refresh?.endRefreshing()
         tableView.reloadData()
     }
     
@@ -129,7 +135,7 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1 + ((section == content.count - 1) ? (isLoaded ? 0 : 1) : 0)
+        return 1 //+ ((section == content.count - 1) ? (isLoaded ? 0 : 1) : 0)
     }
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -203,28 +209,26 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
         content.removeAll()
         po("thread deinit")
     }
-    
-    var needLoadMore = false
 }
 
 // MARK: - UIScrollViewDelegate
 extension ThreadViewController {
-    override func scrollViewDidScroll(scrollView: UIScrollView) {
-        if (scrollView.contentSize.height <= scrollView.frame.height) && (scrollView.contentOffset.y > 45) {
-            po("need refresh", scrollView.contentOffset.y, scrollView.frame.height)
-            needLoadMore = true
-            return
-        } else if (scrollView.contentSize.height > scrollView.frame.height) && (scrollView.contentOffset.y + scrollView.frame.height - scrollView.contentSize.height > 45) {
-            po("need refresh when high", scrollView.contentOffset.y, "content: ", scrollView.contentSize.height, "frame: ", scrollView.frame.height)
-            needLoadMore = true
-            return
-        }
-    }
-    
-    override func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-        if needLoadMore {
-            po("refresh now")
-            needLoadMore = false
-        }
-    }
+//    override func scrollViewDidScroll(scrollView: UIScrollView) {
+//        if (scrollView.contentSize.height <= scrollView.frame.height) && (scrollView.contentOffset.y > 45) {
+//            po("need refresh", scrollView.contentOffset.y, scrollView.frame.height)
+//            needLoadMore = true
+//            return
+//        } else if (scrollView.contentSize.height > scrollView.frame.height) && (scrollView.contentOffset.y + scrollView.frame.height - scrollView.contentSize.height > 45) {
+//            po("need refresh when high", scrollView.contentOffset.y, "content: ", scrollView.contentSize.height, "frame: ", scrollView.frame.height)
+//            needLoadMore = true
+//            return
+//        }
+//    }
+//    
+//    override func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+//        if needLoadMore {
+//            po("refresh now")
+//            needLoadMore = false
+//        }
+//    }
 }

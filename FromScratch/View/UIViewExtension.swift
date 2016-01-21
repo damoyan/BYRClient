@@ -38,7 +38,9 @@ extension UIView {
             layer.cornerRadius = newValue
         }
     }
-    
+}
+
+extension UIView {
     var viewController: UIViewController? {
         var responder: UIResponder = self
         while let res = responder.nextResponder() {
@@ -49,5 +51,77 @@ extension UIView {
             }
         }
         return nil
+    }
+}
+
+extension UIView {
+    var py_x: CGFloat {
+        get {
+            return frame.origin.x
+        }
+        set {
+            let f = CGRect(x: newValue, y: py_y, width: py_width, height: py_height)
+            frame = f
+        }
+    }
+    
+    var py_y: CGFloat {
+        get {
+            return frame.origin.y
+        }
+        set {
+            let f = CGRect(x: py_x, y: newValue, width: py_width, height: py_height)
+            frame = f
+        }
+    }
+    
+    var py_width: CGFloat {
+        get {
+            return frame.width
+        }
+        set {
+            let f = CGRect(x: py_x, y: py_y, width: newValue, height: py_height)
+            frame = f
+        }
+    }
+    
+    var py_height: CGFloat {
+        get {
+            return frame.height
+        }
+        set {
+            let f = CGRect(x: py_x, y: py_y, width: py_width, height: newValue)
+            frame = f
+        }
+    }
+}
+
+extension UIScrollView {
+    var py_contentHeight: CGFloat {
+        return contentSize.height
+    }
+    
+    var py_top: CGFloat {
+        get {
+            return contentInset.top
+        }
+        set {
+            contentInset.top = newValue
+        }
+    }
+    
+    var py_bottom: CGFloat {
+        get {
+            return contentInset.bottom
+        }
+        set {
+            contentInset.bottom = newValue
+        }
+    }
+    
+    var py_offsetY: CGFloat {
+        get {
+            return contentOffset.y
+        }
     }
 }
