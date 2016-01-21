@@ -14,16 +14,17 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
     var topic: Article?
     var content = [ArticleCellData]()
     var titleLabel: UILabel?
-    var refresh: RefreshView?
+    weak var refresh: RefreshView?
     
     let ids = (cell: "cell", header: "header", loading: "loading")
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTitle()
-        refresh = RefreshView(size: CGSize(width: tableView.frame.width, height: 40)) { [weak self] () -> () in
+        let re = RefreshView(size: CGSize(width: tableView.frame.width, height: 40)) { [weak self] () -> () in
             self?.loadData()
         }
-        tableView.addSubview(refresh!)
+        refresh = re
+        tableView.addSubview(re)
         tableView.tableFooterView = UIView()
         tableView.registerNib(UINib(nibName: "ArticleCell", bundle: nil), forCellReuseIdentifier: ids.cell)
         tableView.registerNib(UINib(nibName: "LoadingCell", bundle: nil), forCellReuseIdentifier: ids.loading)
@@ -206,7 +207,6 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
     }
     
     deinit {
-        content.removeAll()
         po("thread deinit")
     }
 }

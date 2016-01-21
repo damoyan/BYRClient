@@ -43,7 +43,7 @@ class RefreshView: UIView {
     
     weak var scrollView: UIScrollView?
     private var insetBottomChanged: Bool = false
-    weak var pan: UIPanGestureRecognizer?
+//    weak var pan: UIPanGestureRecognizer?
     
     init(size: CGSize, block: RefreshingBlock) {
         self.block = block
@@ -58,18 +58,15 @@ class RefreshView: UIView {
     }
     
     override func willMoveToSuperview(newSuperview: UIView?) {
-        if let new = newSuperview as? UIScrollView {
-            clearBottom()
+        super.willMoveToSuperview(newSuperview)
+        unregisterObserver()
+        clearBottom()
+        if let new = newSuperview as? UIScrollView where new !== scrollView {
             scrollView = new
             //            pan = new.panGestureRecognizer
             py_y = new.py_contentHeight
             updateBottom()
             registerObserver()
-        } else {
-            unregisterObserver()
-            clearBottom()
-            pan = nil
-            scrollView = nil
         }
     }
     
@@ -97,6 +94,7 @@ class RefreshView: UIView {
     
     deinit {
         unregisterObserver()
+        po("deinit")
     }
     
 }
@@ -105,22 +103,18 @@ extension RefreshView {
     private func stateChanged() {
         switch status {
         case .Idle:
-            po("idle")
             indicator.stopAnimating()
             label.text = nil
             label.sizeToFit()
         case .ReadyRefresh:
-            po("ready")
             label.text = "松手立即刷新"
             label.sizeToFit()
         case .Refreshing:
-            po("refreshing")
             label.text = "正在刷新..."
             label.sizeToFit()
             indicator.startAnimating()
             executeRefreshingBlock()
         case .NoMore:
-            po("no more")
             label.text = "没有更多了"
             label.sizeToFit()
             indicator.stopAnimating()
@@ -128,8 +122,8 @@ extension RefreshView {
     }
     
     private func executeRefreshingBlock() {
-        dispatch_async(dispatch_get_main_queue()) { () -> Void in
-            self.block()
+        dispatch_async(dispatch_get_main_queue()) { [weak self] () -> Void in
+            self?.block()
         }
     }
 }
@@ -143,8 +137,9 @@ extension RefreshView {
     }
     
     private func unregisterObserver() {
-        scrollView?.removeObserver(self, forKeyPath: contentSizeKey)
-        scrollView?.removeObserver(self, forKeyPath: contentOffsetKey)
+        // remove的时候需要用superview而不能用scrollView, 因为scrollView可能已经是nil了.
+        superview?.removeObserver(self, forKeyPath: contentSizeKey, context: nil)
+        superview?.removeObserver(self, forKeyPath: contentOffsetKey, context: nil)
         //        pan?.removeObserver(self, forKeyPath: stateKey)
     }
     
