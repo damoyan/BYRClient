@@ -20,7 +20,7 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTitle()
-        let re = RefreshView(size: CGSize(width: tableView.frame.width, height: 40)) { [weak self] () -> () in
+        let re = RefreshView(size: CGSize(width: tableView.frame.width, height: 30)) { [weak self] () -> () in
             self?.loadData()
         }
         refresh = re
@@ -80,27 +80,29 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
     
     private func display() {
         setTitleLabelText(topic?.title)
+        guard let replys = topic?.replys where replys.count > 0 else {
+            clearStatus()
+            return
+        }
         let before = (page - 1) * perPage
-        assert(before <= content.count, "before should less than content.count")
-        if content.count > before {
-            po("reload current page")
-            if page == 1 {
-                content = []
-            } else {
-                content = [ArticleCellData](content[0..<before])
-            }
+        let currentPageCount = content.count - before
+        assert(currentPageCount >= 0, "before should less than content.count")
+        if currentPageCount >= replys.count {
+            clearStatus()
+            return
         } else {
-            po("just load new")
+            let new = replys[currentPageCount..<replys.count].map { article -> ArticleCellData in
+                let ar = ArticleCellData(article: article)
+                ar.delegate = self
+                return ar
+            }
+            clearStatus()
+            tableView.beginUpdates()
+            let count = content.count
+            content += new
+            tableView.insertSections(NSIndexSet(indexesInRange: NSMakeRange(count, new.count)), withRowAnimation: .Fade)
+            tableView.endUpdates()
         }
-        content += (topic?.replys ?? []).map {
-            let ar = ArticleCellData(article: $0)
-            ar.delegate = self
-            return ar
-        }
-        renewPageInfo()
-        clearStatus()
-        refresh?.endRefreshing()
-        tableView.reloadData()
     }
     
     private func renewPageInfo() {
@@ -117,13 +119,15 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
     
     private func clearStatus() {
         loadingCell?.stop()
+        refresh?.endRefreshing()
         refreshControl?.endRefreshing()
         isLoading = false
+        renewPageInfo()
     }
     
     @objc @IBAction private func actionRefresh(sender: UIRefreshControl) {
         page = 1
-        content = []
+//        content = []
         loadData()
     }
     
@@ -209,26 +213,4 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
     deinit {
         po("thread deinit")
     }
-}
-
-// MARK: - UIScrollViewDelegate
-extension ThreadViewController {
-//    override func scrollViewDidScroll(scrollView: UIScrollView) {
-//        if (scrollView.contentSize.height <= scrollView.frame.height) && (scrollView.contentOffset.y > 45) {
-//            po("need refresh", scrollView.contentOffset.y, scrollView.frame.height)
-//            needLoadMore = true
-//            return
-//        } else if (scrollView.contentSize.height > scrollView.frame.height) && (scrollView.contentOffset.y + scrollView.frame.height - scrollView.contentSize.height > 45) {
-//            po("need refresh when high", scrollView.contentOffset.y, "content: ", scrollView.contentSize.height, "frame: ", scrollView.frame.height)
-//            needLoadMore = true
-//            return
-//        }
-//    }
-//    
-//    override func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-//        if needLoadMore {
-//            po("refresh now")
-//            needLoadMore = false
-//        }
-//    }
 }

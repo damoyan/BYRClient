@@ -43,7 +43,8 @@ class RefreshView: UIView {
     
     weak var scrollView: UIScrollView?
     private var insetBottomChanged: Bool = false
-//    weak var pan: UIPanGestureRecognizer?
+    weak var pan: UIPanGestureRecognizer?
+    var panEnd = false
     
     init(size: CGSize, block: RefreshingBlock) {
         self.block = block
@@ -65,7 +66,7 @@ class RefreshView: UIView {
         clearBottom()
         if let new = newSuperview as? UIScrollView where new !== scrollView {
             scrollView = new
-            //            pan = new.panGestureRecognizer
+            pan = new.panGestureRecognizer
             py_y = new.py_contentHeight
             updateBottom()
             registerObserver()
@@ -135,21 +136,21 @@ extension RefreshView {
     private func registerObserver() {
         scrollView?.addObserver(self, forKeyPath: contentSizeKey, options: [.New, .Old], context: nil)
         scrollView?.addObserver(self, forKeyPath: contentOffsetKey, options: [.New, .Old], context: nil)
-        //        pan?.addObserver(self, forKeyPath: stateKey, options: [.New], context: nil)
+        pan?.addObserver(self, forKeyPath: stateKey, options: [.New], context: nil)
     }
     
     private func unregisterObserver() {
         // remove的时候需要用superview而不能用scrollView, 因为scrollView可能已经是nil了.
         superview?.removeObserver(self, forKeyPath: contentSizeKey, context: nil)
         superview?.removeObserver(self, forKeyPath: contentOffsetKey, context: nil)
-        //        pan?.removeObserver(self, forKeyPath: stateKey)
+        (superview as? UIScrollView)?.panGestureRecognizer.removeObserver(self, forKeyPath: stateKey, context: nil)
     }
     
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
-        //        if keyPath == stateKey {
-        //            panStateChanged(change)
-        //            return
-        //        }
+        if keyPath == stateKey {
+            panStateChanged(change)
+            return
+        }
         guard let scrollView = object as? UIScrollView where scrollView === self.scrollView else { return }
         if keyPath == contentSizeKey {
             contentSizeChanged(change)
@@ -158,20 +159,23 @@ extension RefreshView {
         }
     }
     
-    //    private func panStateChanged(change: [String: AnyObject]?) {
-    //        guard !isRefreshing else { return }
-    //        if let scrollView = self.scrollView where scrollView.panGestureRecognizer.state == .Ended {
-    //            if scrollView.py_top + scrollView.py_contentHeight < scrollView.py_height {
-    //                if scrollView.py_offsetY > -scrollView.py_top {
-    //                    beginRefreshing()
-    //                }
-    //            } else {
-    //                if scrollView.py_offsetY > scrollView.py_contentHeight - scrollView.py_height {
-    //                    beginRefreshing()
-    //                }
-    //            }
-    //        }
-    //    }
+    private func panStateChanged(change: [String: AnyObject]?) {
+        guard !isRefreshing else { return }
+        if let scrollView = self.scrollView where scrollView.panGestureRecognizer.state == .Ended {
+            panEnd = true
+            if scrollView.py_top + scrollView.py_contentHeight < scrollView.py_height {
+                if scrollView.py_offsetY > -scrollView.py_top {
+                    beginRefreshing()
+                }
+            } else {
+                if scrollView.py_offsetY > scrollView.py_contentHeight - scrollView.py_height {
+                    beginRefreshing()
+                }
+            }
+        } else {
+            panEnd = false
+        }
+    }
     
     private func contentSizeChanged(change: [String: AnyObject]?) {
         guard let scrollView = self.scrollView else { return }
@@ -180,7 +184,7 @@ extension RefreshView {
     }
     
     private func contentOffsetChanged(change: [String: AnyObject]?) {
-        guard !isRefreshing, let scrollView = self.scrollView else { return }
+        guard !isRefreshing && panEnd, let scrollView = self.scrollView else { return }
         // 注，在 didEndDragging 之后，如果有减速过程，scroll view 的 dragging 并不会立即置为 NO，而是要等到减速结束之后，所以这个 dragging 属性的实际语义更接近 scrolling。
         if scrollView.dragging { // 关于dragging何时为true, 参见: http://tech.glowing.com/cn/practice-in-uiscrollview/
             let old = (change?[NSKeyValueChangeOldKey] as? NSValue)?.CGPointValue(), new = (change?[NSKeyValueChangeNewKey] as? NSValue)?.CGPointValue()
