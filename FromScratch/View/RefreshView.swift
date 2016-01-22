@@ -43,7 +43,7 @@ class RefreshView: UIView {
     
     weak var scrollView: UIScrollView?
     private var insetBottomChanged: Bool = false
-    weak var pan: UIPanGestureRecognizer?
+    var pan: UIPanGestureRecognizer?
     var panEnd = false
     
     init(size: CGSize, block: RefreshingBlock) {
@@ -143,7 +143,8 @@ extension RefreshView {
         // remove的时候需要用superview而不能用scrollView, 因为scrollView可能已经是nil了.
         superview?.removeObserver(self, forKeyPath: contentSizeKey, context: nil)
         superview?.removeObserver(self, forKeyPath: contentOffsetKey, context: nil)
-        (superview as? UIScrollView)?.panGestureRecognizer.removeObserver(self, forKeyPath: stateKey, context: nil)
+        pan?.removeObserver(self, forKeyPath: stateKey, context: nil)
+        pan = nil
     }
     
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
