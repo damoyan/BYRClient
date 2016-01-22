@@ -183,6 +183,10 @@ extension RefreshView {
         guard !isRefreshing, let scrollView = self.scrollView else { return }
         // 注，在 didEndDragging 之后，如果有减速过程，scroll view 的 dragging 并不会立即置为 NO，而是要等到减速结束之后，所以这个 dragging 属性的实际语义更接近 scrolling。
         if scrollView.dragging { // 关于dragging何时为true, 参见: http://tech.glowing.com/cn/practice-in-uiscrollview/
+            let old = (change?[NSKeyValueChangeOldKey] as? NSValue)?.CGPointValue(), new = (change?[NSKeyValueChangeNewKey] as? NSValue)?.CGPointValue()
+            if old?.y >= new?.y {
+                return
+            }
             if scrollView.py_top + scrollView.py_contentHeight < scrollView.py_height {
                 if scrollView.py_offsetY > -scrollView.py_top {
                     beginRefreshing()
