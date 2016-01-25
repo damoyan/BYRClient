@@ -10,7 +10,14 @@ import UIKit
 import ImageIO
 
 class Utils: NSObject {
-    static var defaultDateFormatter: NSDateFormatter = {
+    static var mediumStyleDateFormatter: NSDateFormatter = {
+        let formatter = NSDateFormatter()
+        formatter.dateStyle = .MediumStyle
+        formatter.timeStyle = .MediumStyle
+        return formatter
+    }()
+    
+    static var longStyleDateFormatter: NSDateFormatter = {
         let formatter = NSDateFormatter()
         formatter.dateStyle = .LongStyle
         formatter.timeStyle = .LongStyle

@@ -26,8 +26,10 @@ class TopTenViewController: BaseTableViewController {
     private func loadData() {
         guard !isLoading else { return }
         isLoading = true
+        navigationItem.title = "Loading..."
         API.TopTen.handleResponse { [weak self] (_, _, d, e) -> () in
             guard let this = self else { return }
+            this.navigationItem.title = "热点话题"
             guard let data = d?["article"].array else {
                 po(e?.localizedDescription)
                 this.clearStatus()

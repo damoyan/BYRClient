@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		99F2AAAB1C566FEF00A67B4F /* UserProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99F2AAAA1C566FEF00A67B4F /* UserProfileViewController.swift */; };
 		99F37FB21C3C10C400DF0CB5 /* ArticleNetResourceHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99F37FB11C3C10C400DF0CB5 /* ArticleNetResourceHelper.swift */; };
 		99F37FB41C3C257200DF0CB5 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99F37FB31C3C257200DF0CB5 /* ImageIO.framework */; };
 		B30484E01C359FC300150580 /* Attachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = B30484DF1C359FC300150580 /* Attachment.swift */; };
@@ -71,6 +72,7 @@
 /* Begin PBXFileReference section */
 		52D6896FB73703B69B65675C /* Pods-FromScratch.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FromScratch.release.xcconfig"; path = "Pods/Target Support Files/Pods-FromScratch/Pods-FromScratch.release.xcconfig"; sourceTree = "<group>"; };
 		74FF23AD0362C066F839CE8A /* Pods-FromScratch.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FromScratch.debug.xcconfig"; path = "Pods/Target Support Files/Pods-FromScratch/Pods-FromScratch.debug.xcconfig"; sourceTree = "<group>"; };
+		99F2AAAA1C566FEF00A67B4F /* UserProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfileViewController.swift; sourceTree = "<group>"; };
 		99F37FB11C3C10C400DF0CB5 /* ArticleNetResourceHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleNetResourceHelper.swift; sourceTree = "<group>"; };
 		99F37FB31C3C257200DF0CB5 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		B30484DF1C359FC300150580 /* Attachment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Attachment.swift; sourceTree = "<group>"; };
@@ -215,6 +217,7 @@
 				B3163D6C1C29287300C0F831 /* BoardViewController.swift */,
 				B3163D801C2A7F9E00C0F831 /* ThreadViewController.swift */,
 				B3D361041C4A874F00E4DA7F /* ComposeViewController.swift */,
+				99F2AAAA1C566FEF00A67B4F /* UserProfileViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -478,6 +481,7 @@
 				B33B21FF1BE375780089A679 /* BaseTableViewController.swift in Sources */,
 				B3163D651C27FF8300C0F831 /* Favorite.swift in Sources */,
 				B3163D811C2A7F9E00C0F831 /* ThreadViewController.swift in Sources */,
+				99F2AAAB1C566FEF00A67B4F /* UserProfileViewController.swift in Sources */,
 				B3163D6D1C29287300C0F831 /* BoardViewController.swift in Sources */,
 				B3300BF21BE748EB00178909 /* User.swift in Sources */,
 				B3D1F5D41BDF7D4F00E2E296 /* Common.swift in Sources */,

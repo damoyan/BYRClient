@@ -32,6 +32,8 @@ class User: NSObject {
     let loginCount: Int?
     let isAdmin: Bool?
     let stayCount: Int?
+    let role: String? // TODO: - update model
+    let score: Int?
     
     init(data: JSON) {
         id              = data[_keys.id].string
@@ -56,9 +58,11 @@ class User: NSObject {
         loginCount      = data[_keys.loginCount].int
         isAdmin         = data[_keys.isAdmin].bool
         stayCount       = data[_keys.stayCount].int
+        role            = data[_keys.role].string
+        score           = data[_keys.score].int
     }
     
     struct _keys {
-        static let id = "id", userName = "user_name", faceURL = "face_url", faceWidth = "face_width", faceHeight = "face_height", gender = "gender", astro = "astro", life = "life", qq = "qq", msn = "msn", homePage = "home_page", level = "level", isOnline = "is_online", postCount = "post_count", lastLoginTime = "last_login_time", lastLoginIP = "last_login_ip", isHide = "is_hide", isRegister = "is_register", firstLoginTime = "first_login_time", loginCount = "login_count", isAdmin = "is_admin", stayCount = "stay_count"
+        static let id = "id", userName = "user_name", faceURL = "face_url", faceWidth = "face_width", faceHeight = "face_height", gender = "gender", astro = "astro", life = "life", qq = "qq", msn = "msn", homePage = "home_page", level = "level", isOnline = "is_online", postCount = "post_count", lastLoginTime = "last_login_time", lastLoginIP = "last_login_ip", isHide = "is_hide", isRegister = "is_register", firstLoginTime = "first_login_time", loginCount = "login_count", isAdmin = "is_admin", stayCount = "stay_count", role = "role", score = "score"
     }
 }

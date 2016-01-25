@@ -27,7 +27,7 @@ class AppSharedInfo: NSObject {
     
     var expires: String? {
         get {
-            if let e = expiresDateString, date = Utils.defaultDateFormatter.dateFromString(e) {
+            if let e = expiresDateString, date = Utils.longStyleDateFormatter.dateFromString(e) {
                 return String(UInt(date.timeIntervalSinceNow))
             }
             return nil
@@ -35,7 +35,7 @@ class AppSharedInfo: NSObject {
         set {
             if let e = newValue, interval = NSTimeInterval(e) {
                 let date = NSDate(timeIntervalSinceNow: interval)
-                expiresDateString = Utils.defaultDateFormatter.stringFromDate(date)
+                expiresDateString = Utils.longStyleDateFormatter.stringFromDate(date)
             }
         }
     }
@@ -49,7 +49,7 @@ class AppSharedInfo: NSObject {
     // only calculate use native saved info,
     // won't check with server
     var tokenExpired: Bool {
-        if let e = expiresDateString, date = Utils.defaultDateFormatter.dateFromString(e) {
+        if let e = expiresDateString, date = Utils.longStyleDateFormatter.dateFromString(e) {
             if date.compare(NSDate()) == NSComparisonResult.OrderedDescending {
                 return false
             }

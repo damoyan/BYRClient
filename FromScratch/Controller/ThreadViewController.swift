@@ -214,3 +214,27 @@ class ThreadViewController: BaseTableViewController, ArticleCellDataDelegate {
         po("thread deinit")
     }
 }
+
+extension ThreadViewController {
+    func presentUserProfile(id: String, sender: AnyObject) {
+        let vc = storyboard?.instantiateViewControllerWithIdentifier("vcUserProfile") as! UserProfileViewController
+        vc.modalPresentationStyle = .Popover
+        vc.userId = id
+        if let pvc = vc.popoverPresentationController {
+            if let view = sender as? UIView {
+                pvc.sourceView = view
+                pvc.sourceRect = view.bounds
+            } else if let item = sender as? UIBarButtonItem {
+                pvc.barButtonItem = item
+            }
+            pvc.delegate = self
+        }
+        presentViewController(vc, animated: true, completion: nil)
+    }
+}
+
+extension ThreadViewController: UIPopoverPresentationControllerDelegate {
+    func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .None
+    }
+}
