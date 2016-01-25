@@ -32,6 +32,8 @@ enum API: URLRequestConvertible {
     
     case Compose(name: String, title: String, content: String, replyID: Int?)
     
+    case UserInfo(id: String)
+    
     var URLRequest: NSMutableURLRequest {
         var v = generateURLComponents()
         if v.params == nil {
@@ -82,6 +84,8 @@ enum API: URLRequestConvertible {
             return (.GET, "/threads/\(name)/\(id).json", API.filterParams(["au": uid, "count": perPage, "page": page]))
         case .Compose(let name, let title, let content, let replyID):
             return (.POST, "/article/\(name)/post.json", API.filterParams(["content": content, "title": title, "reid": replyID]))
+        case .UserInfo(let id):
+            return (.GET, "/user/query/\(id).json", nil)
         }
     }
     

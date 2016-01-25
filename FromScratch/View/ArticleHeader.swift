@@ -18,7 +18,20 @@ class ArticleHeader: UITableViewHeaderFooterView {
     var articleData: ArticleCellData?
     weak var threadVC: ThreadViewController?
     
-    @IBAction func onReply(sender: UIButton) {
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        let tapGR = UITapGestureRecognizer(target: self, action: "handleTap:")
+        avatar.addGestureRecognizer(tapGR)
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        avatar.byr_reset()
+        idLabel.text = nil
+        nameLabel.text = nil
+    }
+    
+    @objc @IBAction private func onReply(sender: UIButton) {
 //        po("reply")
         threadVC?.presentCompose(articleData?.article) { [weak vc = threadVC] isCancel, article, error in
             guard let vc = vc else { return }
@@ -31,11 +44,8 @@ class ArticleHeader: UITableViewHeaderFooterView {
         }
     }
     
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        avatar.byr_reset()
-        idLabel.text = nil
-        nameLabel.text = nil
+    @objc private func handleTap(tap: UITapGestureRecognizer) {
+        po("tap")
     }
     
     func update(article: ArticleCellData) {
