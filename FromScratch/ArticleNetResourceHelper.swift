@@ -20,7 +20,6 @@ class ArticleNetResourceHelper {
     }()
     
     let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration(), delegate: DataDelegate(), delegateQueue: nil)
-    var imageDownloadCompletionHandler: BYRResourceDownloadCompletionHandler?
 
     /// `handler` is called on background thread after task is completed.
     func getResourceWithURLString(queue: dispatch_queue_t? = dispatch_get_main_queue(), urlString: String, completionHandler handler: BYRResourceDownloadCompletionHandler) {
@@ -32,11 +31,8 @@ class ArticleNetResourceHelper {
         guard let url = NSURL(string: s) else { return }
         let task = session.dataTaskWithURL(url)
         if let delegate = session.delegate as? DataDelegate {
-//            if urlString.containsString("middle") {
-//                po("add handler for ", urlString)
-//            }
             OSSpinLockLock(&lock)
-            delegate.imageDownloadCompletionHandlers[task] = (urlString, handler)
+            delegate.imageDownloadCompletionHandlers[task] = (queue, urlString, handler)
             OSSpinLockUnlock(&lock)
         }
         task.resume()
@@ -51,7 +47,7 @@ class ArticleNetResourceHelper {
             var progress: Double = 0
         }
         var datas = [NSURLSessionTask: TaskData]()
-        var imageDownloadCompletionHandlers: [NSURLSessionTask: (String, BYRResourceDownloadCompletionHandler)] = [:]
+        var imageDownloadCompletionHandlers: [NSURLSessionTask: (queue: dispatch_queue_t?, urlString: String, handler: BYRResourceDownloadCompletionHandler)] = [:]
         
         func URLSession(session: NSURLSession, dataTask: NSURLSessionDataTask, didReceiveResponse response: NSURLResponse, completionHandler: (NSURLSessionResponseDisposition) -> Void) {
             let data = TaskData()
@@ -70,7 +66,6 @@ class ArticleNetResourceHelper {
         }
         
         func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?) {
-//            if task.currentRequest!.URLString.containsString("middle")  { po("task finish") }
             guard let taskData = datas[task] else {
                 let error = NSError(domain: BYRErrorDomain, code: -1, userInfo: [NSLocalizedDescriptionKey: "No data return."])
                 handleCallback(task, data: nil, error: error)
@@ -86,7 +81,13 @@ class ArticleNetResourceHelper {
         func handleCallback(task: NSURLSessionTask, data: NSData?, error: NSError?) {
             OSSpinLockLock(&lock)
             if let handler = imageDownloadCompletionHandlers[task] {
-                handler.1(handler.0, data, error)
+                if let queue = handler.queue {
+                    dispatch_async(queue, { () -> Void in
+                        handler.handler(handler.urlString, data, error)
+                    })
+                } else {
+                    handler.handler(handler.urlString, data, error)
+                }
             }
             datas.removeValueForKey(task)
             imageDownloadCompletionHandlers.removeValueForKey(task)
