@@ -97,6 +97,7 @@
 		B3163D801C2A7F9E00C0F831 /* ThreadViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThreadViewController.swift; sourceTree = "<group>"; };
 		B3300BF11BE748EB00178909 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		B33B21FE1BE375780089A679 /* BaseTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseTableViewController.swift; path = ../BaseTableViewController.swift; sourceTree = "<group>"; };
+		B382387F1C5B1E2A00B95992 /* Task.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Task.playground; sourceTree = "<group>"; };
 		B38299F91BEE350E00826B25 /* ArticleInfoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArticleInfoCell.swift; sourceTree = "<group>"; };
 		B38299FA1BEE350E00826B25 /* ArticleInfoCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ArticleInfoCell.xib; sourceTree = "<group>"; };
 		B38299FF1BEE375600826B25 /* Section.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Section.swift; sourceTree = "<group>"; };
@@ -225,6 +226,7 @@
 		B3C6C57D1BDE148C004B1000 = {
 			isa = PBXGroup;
 			children = (
+				B382387F1C5B1E2A00B95992 /* Task.playground */,
 				B3C6C5881BDE148C004B1000 /* FromScratch */,
 				B3C6C59E1BDE148C004B1000 /* FromScratchTests */,
 				B3C6C5871BDE148C004B1000 /* Products */,
