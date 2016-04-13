@@ -9,6 +9,14 @@
 import UIKit
 import ImageIO
 
+
+func delayBySeconds(seconds: Double, queue: dispatch_queue_t = dispatch_get_main_queue(), delayedCode: ()->()) {
+    let targetTime = dispatch_time(DISPATCH_TIME_NOW, Int64(Double(NSEC_PER_SEC) * seconds))
+    dispatch_after(targetTime, queue) {
+        delayedCode()
+    }
+}
+
 class Utils: NSObject {
     static var mediumStyleDateFormatter: NSDateFormatter = {
         let formatter = NSDateFormatter()
