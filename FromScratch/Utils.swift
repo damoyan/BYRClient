@@ -105,7 +105,7 @@ class Utils: NSObject {
 extension UIViewController {
     
     func navigateToLogin() {
-        dismissViewControllerAnimated(true, completion: nil)
+        UIApplication.sharedApplication().keyWindow?.rootViewController?.dismissViewControllerAnimated(true, completion: nil)
     }
     
     func navigateToSectionDetail(section: Section) {
