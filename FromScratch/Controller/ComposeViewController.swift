@@ -22,8 +22,8 @@ class ComposeViewController: UIViewController {
 
         // Do any additional setup after loading the view.
         setup(article)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "notifyKeyboardShow:", name: UIKeyboardDidShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "notifyKeyboardHide:", name: UIKeyboardDidHideNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ComposeViewController.notifyKeyboardShow(_:)), name: UIKeyboardDidShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ComposeViewController.notifyKeyboardHide(_:)), name: UIKeyboardDidHideNotification, object: nil)
     }
 
     override func didReceiveMemoryWarning() {

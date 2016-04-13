@@ -23,7 +23,7 @@ class ImagePlayer {
     init(decoder: ImageDecoder, block: (UIImage?) -> ()) {
         self.decoder = decoder
         self.block = block
-        self.link = CADisplayLink(target: WeakReferenceProxy(target: self), selector: "step:")
+        self.link = CADisplayLink(target: WeakReferenceProxy(target: self), selector: #selector(ImagePlayer.step(_:)))
         link.addToRunLoop(NSRunLoop.mainRunLoop(), forMode: NSRunLoopCommonModes)
         if let image = decoder.firstFrame {
             block(image)

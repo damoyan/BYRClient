@@ -104,7 +104,7 @@ class Parser {
         guard let match = match where match.numberOfRanges > 1 else { return [] }
         let range = match.range
         let characterRange = match.rangeAtIndex(1) // range contains characterRange
-        for var i = 0; i < characterRange.length; i++ {
+        for i in 0 ..< characterRange.length {
             let index = characterRange.location + i
             if let font = res.attribute(NSFontAttributeName, atIndex: index, effectiveRange: nil) as? UIFont {
                 var fontDes = font.fontDescriptor()
@@ -121,7 +121,7 @@ class Parser {
         guard let match = match where match.numberOfRanges > 1 else { return [] }
         let range = match.range
         let characterRange = match.rangeAtIndex(1) // range contains characterRange
-        for var i = 0; i < characterRange.length; i++ {
+        for i in 0 ..< characterRange.length {
             let index = characterRange.location + i
             if let font = res.attribute(NSFontAttributeName, atIndex: index, effectiveRange: nil) as? UIFont {
                 var fontDes = font.fontDescriptor()
@@ -158,7 +158,7 @@ class Parser {
         let sizeRange = match.rangeAtIndex(1)
         let size = (res.string as NSString).substringWithRange(sizeRange).floatValue
         let characterRange = match.rangeAtIndex(2) // range contains characterRange
-        for var i = 0; i < characterRange.length; i++ {
+        for i in 0 ..< characterRange.length {
             let index = characterRange.location + i
             if let font = res.attribute(NSFontAttributeName, atIndex: index, effectiveRange: nil) as? UIFont {
                 let newFont = font.fontWithSize(font.pointSize + CGFloat(size))
@@ -176,7 +176,7 @@ class Parser {
         let facer = match.rangeAtIndex(1)
         let face = (res.string as NSString).substringWithRange(facer)
         let characterRange = match.rangeAtIndex(2) // range contains characterRange
-        for var i = 0; i < characterRange.length; i++ {
+        for i in 0 ..< characterRange.length {
             let index = characterRange.location + i
             if let font = res.attribute(NSFontAttributeName, atIndex: index, effectiveRange: nil) as? UIFont {
                 let symbolicTraints = font.fontDescriptor().symbolicTraits

@@ -42,7 +42,7 @@ class Utils: NSObject {
         var images = [UIImage]()
         autoreleasepool {
             let frameCount = CGImageSourceGetCount(source)
-            for var i = 0; i < frameCount; i++ {
+            for i in 0 ..< frameCount {
                 if let image = CGImageSourceCreateImageAtIndex(source, i, nil) {
                     let alphaInfo = CGImageGetAlphaInfo(image).rawValue & CGBitmapInfo.AlphaInfoMask.rawValue
                     let hasAlpha: Bool
@@ -206,7 +206,7 @@ extension String {
         get {
             let startIndex = self.startIndex.advancedBy(r.startIndex)
             let endIndex = startIndex.advancedBy(r.endIndex - r.startIndex)
-            return self[Range(start: startIndex, end: endIndex)]
+            return self[startIndex ..< endIndex]
         }
     }
     

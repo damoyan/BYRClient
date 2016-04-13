@@ -76,7 +76,7 @@ class AppSharedInfo: NSObject {
             }
             // if refresh fail, show login
         }
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "onInvalidToken:", name: Notifications.InvalidToken, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AppSharedInfo.onInvalidToken(_:)), name: Notifications.InvalidToken, object: nil)
     }
     
     private func persistToken() {

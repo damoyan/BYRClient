@@ -20,7 +20,7 @@ class ArticleHeader: UITableViewHeaderFooterView {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        let tapGR = UITapGestureRecognizer(target: self, action: "handleTap:")
+        let tapGR = UITapGestureRecognizer(target: self, action: #selector(ArticleHeader.handleTap(_:)))
         avatar.userInteractionEnabled = true
         avatar.addGestureRecognizer(tapGR)
     }
