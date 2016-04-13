@@ -112,42 +112,52 @@ enum Result<T>: ErrorType {
 //    
 //}
 
-protocol Task {
-    func resume()
-    func cancel()
-}
+//protocol Task {
+//    func resume()
+//    func cancel()
+//}
+//
+//typealias ProcessMonitor = (NSURL, NSProgress) -> Void
+//typealias CompletionHandler = (NSURL, Result<NSData>) -> Void
+//
+//class Downloader: NSObject, Task {
+//    
+//    static let queue = NSOperationQueue()
+//    static let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration(), delegate: DownloaderDelegate(), delegateQueue: queue)
+//    
+//    var task: NSURLSessionTask?
+//    
+//    static func createDownloader(url: NSURL, startImmediately: Bool = true, processMonitor: ProcessMonitor?, completionHandler: CompletionHandler?) -> Downloader {
+//        let d = Downloader()
+//        let task = Downloader.session.dataTaskWithURL(url)
+//        (Downloader.session.delegate as! DownloaderDelegate).tasks[task] = (processMonitor, completionHandler)
+//        d.task = task
+//        if startImmediately {
+//            task.resume()
+//        }
+//        return d
+//    }
+//    
+//    
+//    func resume() {
+//        task?.resume()
+//    }
+//    
+//    func cancel() {
+//        task?.cancel()
+//    }
+//}
 
-typealias ProcessMonitor = (NSURL, NSProgress) -> Void
-typealias CompletionHandler = (NSURL, Result<NSData>) -> Void
-
-class Downloader: NSObject, Task {
-    
-    static let queue = NSOperationQueue()
-    static let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration(), delegate: DownloaderDelegate(), delegateQueue: queue)
-    
-    var task: NSURLSessionTask?
-    
-    static func createDownloader(url: NSURL, startImmediately: Bool = true, processMonitor: ProcessMonitor?, completionHandler: CompletionHandler?) -> Downloader {
-        let d = Downloader()
-        let task = Downloader.session.dataTaskWithURL(url)
-        (Downloader.session.delegate as! DownloaderDelegate).tasks[task] = (processMonitor, completionHandler)
-        d.task = task
-        if startImmediately {
-            task.resume()
-        }
-        return d
+public struct Thermometer: FloatLiteralConvertible {
+    public typealias FloatLiteralType = Double
+    public var temperature: Double
+    public init(temperature: Double) {
+        self.temperature = temperature
     }
     
-    
-    func resume() {
-        task?.resume()
-    }
-    
-    func cancel() {
-        task?.cancel()
+    public init(floatLiteral value: FloatLiteralType) {
+        temperature = value
     }
 }
 
-class DownloaderDelegate: NSObject, NSURLSessionDataDelegate {
-    var tasks = [NSURLSessionTask: (ProcessMonitor?, CompletionHandler?)]()
-}
+let t: Thermometer = 56.8
