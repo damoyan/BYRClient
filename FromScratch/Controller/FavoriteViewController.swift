@@ -15,7 +15,13 @@ class FavoriteViewController: BaseTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // TODO: observe favorite changes
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.favoriteAdded(_:)), name: Notifications.NewFavoriteAdded, object: nil)
         loadData()
+    }
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
     var isLoading = false
@@ -50,6 +56,32 @@ class FavoriteViewController: BaseTableViewController {
         tableView.reloadData()
     }
     
+    private func deleteFavorite(name: String, dir: Int) {
+        // TODO: add delete confirm alert
+        API.DeleteFavorite(level: self.level, name: name, dir: dir).handleResponse { [weak self] (_, _, d, e) in
+            guard let data = d else {
+                po("delete error: \(e)")
+                return
+            }
+            po("delete success: name - \(name), dir - \(dir)")
+            guard let this = self else { return }
+            this.display(Favorite(data: data))
+        }
+    }
+    
+    // MARK: Notifications
+    @objc private func favoriteAdded(notification: NSNotification) {
+        guard let userInfo = notification.userInfo else { return }
+        guard let level = userInfo[Keys.FavoriteLevel] as? Int, fav = userInfo[Keys.FavoriteInfo] as? Favorite else {
+            return
+        }
+        if level == self.level {
+            display(fav)
+        }
+    }
+    
+    
+    // MARK: TableView DataSource
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
@@ -83,6 +115,34 @@ class FavoriteViewController: BaseTableViewController {
         return cell!
     }
     
+    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        switch editingStyle {
+        case .Insert:
+            break
+        case .Delete:
+            let data = content[indexPath.row]
+            switch data {
+            case let sub as Favorite:
+                if let name = sub.desc {
+                    deleteFavorite(name, dir: 1)
+                }
+            case let sec as Section:
+                if let name = sec.name {
+                    deleteFavorite(name, dir: 0)
+                }
+            case let b as Board:
+                if let name = b.name {
+                    deleteFavorite(name, dir: 0)
+                }
+            default:
+                break
+            }
+        default:
+            break
+        }
+    }
+    
+    // MARK: TableView Delegate
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         let data = content[indexPath.row]

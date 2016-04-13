@@ -82,6 +82,21 @@ class BoardViewController: BaseTableViewController {
         }
     }
     
+    private func addToFavorite() {
+        guard let board = board, name = board.name else { return }
+        let level = 0
+        API.AddToFavorite(level: level, name: name, dir: 0).handleResponse { (_, _, data, e) in
+            guard let data = data else {
+                // FIXME: add error handler
+                print(e)
+                return
+            }
+            let fav = Favorite(data: data)
+            NSNotificationCenter.defaultCenter().postNotificationName(Notifications.NewFavoriteAdded, object: nil, userInfo: [Keys.FavoriteLevel: level, Keys.FavoriteInfo: fav])
+            po("版面收藏成功")
+        }
+    }
+    
     @objc @IBAction private func onRefresh(sender: UIRefreshControl) {
         page = 1
         content = []
@@ -93,15 +108,17 @@ class BoardViewController: BaseTableViewController {
         alert.addAction(UIAlertAction(title: "查看版面信息", style: UIAlertActionStyle.Default, handler: { (_) -> Void in
             po("info")
         }))
-        alert.addAction(UIAlertAction(title: "收藏版面", style: UIAlertActionStyle.Default, handler: { (_) -> Void in
-            po("add to favour")
+        // TODO: If board is already added. what to do
+        alert.addAction(UIAlertAction(title: "收藏版面", style: UIAlertActionStyle.Default, handler: { [weak self] (_) -> Void in
+            // for now, just support add to top level in favorite.
+            self?.addToFavorite()
         }))
         alert.addAction(UIAlertAction(title: "取消", style: UIAlertActionStyle.Cancel, handler: nil))
         presentViewController(alert, animated: true, completion: nil)
     }
     
     @objc @IBAction private func onCompose(sender: UIBarButtonItem) {
-//        po("compose")
+        po("compose")
         presentCompose(nil, boardName: board?.name) { [weak self] isCancel, article, error in
             guard let this = self else { return }
             this.dismissViewControllerAnimated(true, completion: nil)
