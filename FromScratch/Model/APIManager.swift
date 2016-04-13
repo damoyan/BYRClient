@@ -22,7 +22,11 @@ enum API: URLRequestConvertible {
     
     case Sections
     case Section(name: String)
+    
+    // Favorite
     case Favorite(level: Int)
+    case AddToFavorite(level: Int, name: String, dir: Int)
+    case DeleteFavorite(level: Int, name: String, dir: Int)
     
     case Board(name: String, mode: BoardMode?, perPage: Int?, page: Int?)
     
@@ -76,6 +80,10 @@ enum API: URLRequestConvertible {
             return (.GET, "/section/\(name).json", nil)
         case .Favorite(let level):
             return (.GET, "/favorite/\(level).json", nil)
+        case .AddToFavorite(let level, let name, let dir):
+            return (.POST, "/favorite/add/\(level).json", API.filterParams(["name": name, "dir": dir]))
+        case .DeleteFavorite(let level, let name, let dir):
+            return (.POST, "/favorite/delete/\(level).json", API.filterParams(["name": name, "dir": dir]))
         case .TopTen:
             return (.GET, "/widget/topten.json", nil)
         case .Board(let name, let mode, let perPage, let page):
