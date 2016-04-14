@@ -24,7 +24,13 @@ class FavoriteViewController: BaseTableViewController {
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
-    var isLoading = false
+    var isLoading = false {
+        didSet {
+            if !isLoading {
+                self.refreshControl?.endRefreshing()
+            }
+        }
+    }
     private func loadData() {
         if isLoading {
             po("is loading")
@@ -67,6 +73,11 @@ class FavoriteViewController: BaseTableViewController {
             guard let this = self else { return }
             this.display(Favorite(data: data))
         }
+    }
+    
+    // MARK: Actions
+    @objc @IBAction private func refresh(sender: AnyObject) {
+        loadData()
     }
     
     // MARK: Notifications
