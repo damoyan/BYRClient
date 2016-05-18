@@ -18,6 +18,18 @@ let BYRErrorDomain = "BYRErrorDomain"
 let ErrorInvalidToken = 1702 //msg: "非法的 oauth_token"
 let ErrorTokenExpired = 1703
 
+struct TokenRefresh: URLRequestConvertible {
+    let refreshToken: String?
+    var URLRequest: NSMutableURLRequest {
+        let request = NSMutableURLRequest(URL: oauthTokenRefreshURL)
+        request.HTTPMethod = Method.POST.rawValue
+        let params: [String: AnyObject] = ["client_id": appKey, "client_secret": appSecret, "grant_type": "refresh_token", "refresh_token": refreshToken ?? "", "appleid": appSecret, "bundleid": bundleID]
+        let ret = Alamofire.ParameterEncoding.URL.encode(request, parameters: params).0
+        po("request", ret.description)
+        return ret
+    }
+}
+
 enum API: URLRequestConvertible {
     
     case Sections

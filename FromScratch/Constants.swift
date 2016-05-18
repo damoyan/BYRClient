@@ -10,7 +10,7 @@ import Foundation
 
 let appKey = "7f7bcb6eb5c510ce85bdca2473de844b"
 let appSecret = "44c3edb39e6c18af91296ae617e97846"
-let bundleID = NSBundle.mainBundle().bundleIdentifier ?? "com.caishuo.FromScratch"
+let bundleID = NSBundle.mainBundle().bundleIdentifier ?? "cn.ypy.byrclient"
 
 let state = "\(Int64(NSDate.timeIntervalSinceReferenceDate()))"
 
@@ -19,6 +19,7 @@ let baseURL = NSURL(string: baseURLString)!
 let oauth2URLString = "http://bbs.byr.cn/oauth2/authorize"
 let oauthResponseType = "token"
 let oauthRedirectUri = "http://bbs.byr.cn/oauth2/callback"
+let oauthTokenRefreshURL = NSURL(string: "http://bbs.byr.cn/oauth2/token")!
 
 struct Notifications {
     static let UserLogin = "cn.ypy.byr.notifications.UserLogin"

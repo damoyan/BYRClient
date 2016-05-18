@@ -24,11 +24,9 @@ class ViewController: UIViewController, UIWebViewDelegate {
             // 1. 用户没登录或已注销
             // 2. 用户token在本地判断过期
             if AppSharedInfo.sharedInstance.isRenewing {
-                NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(userChanged), name: Notifications.UserRenewal, object: nil)
+                NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(userRenewalEnd), name: Notifications.UserRenewal, object: nil)
             } else {
-                let urlComponents = NSURLComponents(string: oauth2URLString)!
-                urlComponents.queryItems = [NSURLQueryItem(name: "client_id", value: appKey), NSURLQueryItem(name: "state", value: "\(state)"), NSURLQueryItem(name: "redirect_uri", value: oauthRedirectUri), NSURLQueryItem(name: "response_type", value: oauthResponseType), NSURLQueryItem(name: "appleid", value: appSecret), NSURLQueryItem(name: "bundleid", value: bundleID)]
-                webView.loadRequest(NSURLRequest(URL: urlComponents.URL!))
+                loadWebPage()
             }
         }
     }
@@ -46,12 +44,24 @@ class ViewController: UIViewController, UIWebViewDelegate {
         
     }
     
+    private func loadWebPage() {
+        let urlComponents = NSURLComponents(string: oauth2URLString)!
+        urlComponents.queryItems = [NSURLQueryItem(name: "client_id", value: appKey), NSURLQueryItem(name: "state", value: "\(state)"), NSURLQueryItem(name: "redirect_uri", value: oauthRedirectUri), NSURLQueryItem(name: "response_type", value: oauthResponseType), NSURLQueryItem(name: "appleid", value: appSecret), NSURLQueryItem(name: "bundleid", value: bundleID)]
+        webView.loadRequest(NSURLRequest(URL: urlComponents.URL!))
+    }
+    
     private func presentHome() {
         let tab = Utils.main.instantiateViewControllerWithIdentifier("vcTabHome")
         navigationController?.presentViewController(tab, animated: true, completion: nil)
     }
     
-    @objc private func userChanged() {
+    @objc private func userRenewalEnd() {
+        if AppSharedInfo.sharedInstance.userToken == nil { // renew 失败
+            // show webView
+            loadWebPage()
+        } else {
+            presentHome()
+        }
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
@@ -59,6 +69,7 @@ class ViewController: UIViewController, UIWebViewDelegate {
     
     func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
         if let url = request.URL, index = url.absoluteString.rangeOfString("?")?.startIndex where url.absoluteString.substringToIndex(index) == oauthRedirectUri {
+            po("oauth redirect url: ", url.absoluteString)
             if let res = parseRedirectURL(url) where res.state == state  {
                 po("授权成功", res)
                 AppSharedInfo.sharedInstance.userToken = res.token

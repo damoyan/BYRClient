@@ -8,6 +8,7 @@
 
 import Foundation
 import SSKeychain
+import Alamofire
 
 class AppSharedInfo: NSObject {
     static let sharedInstance = AppSharedInfo()
@@ -69,18 +70,30 @@ class AppSharedInfo: NSObject {
         super.init()
         if userToken != nil && !tokenExpired {
             // update user info
-            po("token is good", userToken, expiresDateString)
+            po("token is good", userToken, expiresDateString, refreshToken)
         } else {
             userToken = nil
             po("token is expired.")
             if refreshToken != nil {
-                isRenewing = true
                 // FIXME: refresh token
-                po("need refresh: ", refreshToken)
+                po("refreshing with refresh token: ", refreshToken)
+                renewToken()
             }
             // if refresh fail, show login
         }
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AppSharedInfo.onInvalidToken(_:)), name: Notifications.InvalidToken, object: nil)
+    }
+    
+    private func renewToken() {
+        isRenewing = true
+        request(TokenRefresh(refreshToken: refreshToken)).responseJSON { [weak self] (res) in
+            if let json = res.result.value {
+                po(json)
+                // TODO: - update token
+                NSNotificationCenter.defaultCenter().postNotificationName(Notifications.UserRenewal, object: nil)
+            }
+            self?.isRenewing = false
+        }
     }
     
     private func persistToken() {
