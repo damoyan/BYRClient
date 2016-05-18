@@ -22,16 +22,8 @@ class Section: NSObject {
         desc = data[_keys.desc].string
         isRoot = data[_keys.isRoot].bool
         parent = data[_keys.parent].string
-        if let subsectionNames = data[_keys.subSections].arrayObject as? [String] {
-            subSections = subsectionNames.map { JSON(["name": $0]) }.map { Section(data: $0) }
-        } else {
-            subSections = nil
-        }
-        if let jsons = data[_keys.boards].array {
-            boards = jsons.map { Board(data: $0) }
-        } else {
-            boards = nil
-        }
+        subSections = (data[_keys.subSections].arrayObject as? [String]).flatMap { $0.map { JSON(["name": $0]) }.map { Section(data: $0) } }
+        boards = data[_keys.boards].array.flatMap { $0.map { Board(data: $0) } }
     }
     
     struct _keys {

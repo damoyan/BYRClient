@@ -37,10 +37,7 @@ class Utils: NSObject {
     }()
     
     static func dateFromUnixTimestamp(ts: Int?) -> NSDate? {
-        guard let ts = ts else {
-            return nil
-        }
-        return NSDate(timeIntervalSince1970: NSTimeInterval(ts))
+        return ts.flatMap { NSDate(timeIntervalSince1970: NSTimeInterval($0)) }
     }
     
     static func getImagesFromData(data: NSData) throws -> [UIImage] {

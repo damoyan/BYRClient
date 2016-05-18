@@ -21,6 +21,9 @@ let oauthResponseType = "token"
 let oauthRedirectUri = "http://bbs.byr.cn/oauth2/callback"
 
 struct Notifications {
+    static let UserLogin = "cn.ypy.byr.notifications.UserLogin"
+    static let UserLogout = "cn.ypy.byr.notifications.UserLogout"
+    static let UserRenewal = "cn.ypy.byr.notifications.UserRenewal"
     static let InvalidToken = "cn.ypy.byr.notifications.InvalidToken"
     static let NewFavoriteAdded = "cn.ypy.byr.notifications.NewFavoriteAdded"
 }

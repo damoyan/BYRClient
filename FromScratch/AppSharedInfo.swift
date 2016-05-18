@@ -57,6 +57,8 @@ class AppSharedInfo: NSObject {
         return true
     }
     
+    var isRenewing: Bool = false
+    
     let service = "FromScratch"
     let account = (token: "token", refreshToken: "refreshToken", expires: "expires")
     
@@ -69,8 +71,10 @@ class AppSharedInfo: NSObject {
             // update user info
             po("token is good", userToken, expiresDateString)
         } else {
+            userToken = nil
             po("token is expired.")
             if refreshToken != nil {
+                isRenewing = true
                 // FIXME: refresh token
                 po("need refresh: ", refreshToken)
             }
