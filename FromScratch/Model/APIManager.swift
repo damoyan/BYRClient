@@ -23,7 +23,7 @@ struct TokenRefresh: URLRequestConvertible {
     var URLRequest: NSMutableURLRequest {
         let request = NSMutableURLRequest(URL: oauthTokenRefreshURL)
         request.HTTPMethod = Method.POST.rawValue
-        let params: [String: AnyObject] = ["client_id": appKey, "client_secret": appSecret, "grant_type": "refresh_token", "refresh_token": refreshToken ?? "", "appleid": appSecret, "bundleid": bundleID]
+        let params: [String: AnyObject] = ["client_id": appKey, "client_secret": appSecret, "grant_type": "refresh_token", "refresh_token": refreshToken ?? ""]
         let ret = Alamofire.ParameterEncoding.URL.encode(request, parameters: params).0
         po("request", ret.description)
         return ret

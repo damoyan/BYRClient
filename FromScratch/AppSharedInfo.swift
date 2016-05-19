@@ -9,6 +9,7 @@
 import Foundation
 import SSKeychain
 import Alamofire
+import SwiftyJSON
 
 class AppSharedInfo: NSObject {
     static let sharedInstance = AppSharedInfo()
@@ -29,7 +30,7 @@ class AppSharedInfo: NSObject {
     var expires: String? {
         get {
             if let e = expiresDateString, date = Utils.longStyleDateFormatter.dateFromString(e) {
-                return String(UInt(date.timeIntervalSinceNow))
+                return String(Int64(date.timeIntervalSinceNow))
             }
             return nil
         }
@@ -75,11 +76,9 @@ class AppSharedInfo: NSObject {
             userToken = nil
             po("token is expired.")
             if refreshToken != nil {
-                // FIXME: refresh token
                 po("refreshing with refresh token: ", refreshToken)
                 renewToken()
             }
-            // if refresh fail, show login
         }
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AppSharedInfo.onInvalidToken(_:)), name: Notifications.InvalidToken, object: nil)
     }
@@ -87,9 +86,18 @@ class AppSharedInfo: NSObject {
     private func renewToken() {
         isRenewing = true
         request(TokenRefresh(refreshToken: refreshToken)).responseJSON { [weak self] (res) in
-            if let json = res.result.value {
-                po(json)
-                // TODO: - update token
+            if let data = res.result.value {
+                po(data)
+                let json = JSON(data)
+                if let errorMessage = json["error"].string {
+                    // handle error
+                    po(errorMessage)
+                } else {
+                    self?.userToken = json["access_token"].string
+                    self?.expires = "\(json["expires_in"].int64 ?? 0)"
+                    self?.refreshToken = json["refresh_token"].string
+                    po("updated: ", self?.userToken, self?.expires, self?.refreshToken)
+                }
                 NSNotificationCenter.defaultCenter().postNotificationName(Notifications.UserRenewal, object: nil)
             }
             self?.isRenewing = false
